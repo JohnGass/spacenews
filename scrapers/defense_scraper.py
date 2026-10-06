@@ -13,7 +13,7 @@ class DefenseGovScraper:
     LISTING_URL = "https://www.defense.gov/News/Contracts/"
 
     def _fetch_html_with_browser(self, url: str) -> Optional[str]:
-        """Launches headless Chromium to bypass Akamai/WAF 403 blocks."""
+        """Launches headless Chromium to bypass Akamai/WAF blocks."""
         try:
             with sync_playwright() as p:
                 browser = p.chromium.launch(
@@ -26,7 +26,7 @@ class DefenseGovScraper:
                 )
                 page = context.new_page()
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(2000)  # Brief delay for DOM hydration
+                page.wait_for_timeout(2000)
                 html = page.content()
                 browser.close()
                 return html
@@ -34,22 +34,31 @@ class DefenseGovScraper:
             logging.error(f"Playwright navigation failed for {url}: {e}")
             return None
 
-    def fetch_latest_contract_url(self) -> Optional[str]:
-        logging.info("Polling Defense.gov Contracts index via Playwright...")
+    def fetch_recent_contract_urls(self, limit: int = 5) -> List[str]:
+        """Collects URLs for the last N daily contract releases."""
+        logging.info(f"Polling Defense.gov Contracts index for the last {limit} releases...")
         html = self._fetch_html_with_browser(self.LISTING_URL)
         if not html:
             logging.error("Failed to retrieve contract listing HTML.")
-            return None
+            return []
 
         soup = BeautifulSoup(html, "html.parser")
+        urls = []
         for link in soup.find_all("a", href=True):
             href = link["href"]
             if "/News/Contracts/Contract/Article/" in href:
-                return href if href.startswith("http") else f"{self.BASE_URL}{href}"
-        return None
+                full_url = href if href.startswith("http") else f"{self.BASE_URL}{href}"
+                if full_url not in urls:
+                    urls.append(full_url)
+                if len(urls) >= limit:
+                    break
+
+        logging.info(f"Identified {len(urls)} recent contract release URLs.")
+        return urls
 
     def parse_contract_article(self, article_url: str) -> List[Dict[str, Any]]:
-        logging.info(f"Ingesting daily contracts from: {article_url} via Playwright...")
+        """Parses individual contract paragraphs from a specific release page."""
+        logging.info(f"Scanning contract release: {article_url}")
         html = self._fetch_html_with_browser(article_url)
         if not html:
             logging.error(f"Failed to retrieve article: {article_url}")
@@ -103,3 +112,20 @@ class DefenseGovScraper:
                 })
 
         return relevant_contracts
+
+    def scrape_recent_releases(self, limit: int = 5) -> List[Dict[str, Any]]:
+        """Scrapes across the last N releases and deduplicates findings."""
+        target_urls = self.fetch_recent_contract_urls(limit=limit)
+        all_contracts = []
+        seen_texts = set()
+
+        for url in target_urls:
+            awards = self.parse_contract_article(url)
+            for award in awards:
+                # Deduplicate by prime contractor + award amount snippet
+                dedup_key = f"{award['contractor']}_{award['award_amount']}"
+                if dedup_key not in seen_texts:
+                    seen_texts.add(dedup_key)
+                    all_contracts.append(award)
+
+        return all_contracts

@@ -19,13 +19,12 @@ def main():
     data_dir.mkdir(exist_ok=True)
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    logging.info("Starting Daily Space & Golden Dome Intelligence Pull...")
+    logging.info("Starting Space & Golden Dome Intelligence Pull...")
 
-    # 1. Scrape Defense.gov Contracts
+    # 1. Scrape Defense.gov Contracts across the last 5 daily releases
     defense_scraper = DefenseGovScraper()
-    latest_url = defense_scraper.fetch_latest_contract_url()
-    contracts = defense_scraper.parse_contract_article(latest_url) if latest_url else []
-    logging.info(f"Captured {len(contracts)} relevant Defense.gov contracts.")
+    contracts = defense_scraper.scrape_recent_releases(limit=5)
+    logging.info(f"Captured {len(contracts)} relevant Defense.gov contracts across recent releases.")
 
     # 2. Scrape Congress.gov Hearings
     congress_client = CongressGovSpaceClient(api_key=api_key)

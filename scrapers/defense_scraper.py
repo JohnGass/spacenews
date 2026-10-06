@@ -2,8 +2,8 @@ import re
 import logging
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
-import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -12,19 +12,36 @@ class DefenseGovScraper:
     BASE_URL = "https://www.defense.gov"
     LISTING_URL = "https://www.defense.gov/News/Contracts/"
 
-    def __init__(self):
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        }
-
-    def fetch_latest_contract_url(self) -> Optional[str]:
-        logging.info("Polling Defense.gov Contracts index...")
-        resp = requests.get(self.LISTING_URL, headers=self.headers, timeout=15)
-        if resp.status_code != 200:
-            logging.error(f"Failed to fetch contract listing: HTTP {resp.status_code}")
+    def _fetch_html_with_browser(self, url: str) -> Optional[str]:
+        """Launches headless Chromium to bypass Akamai/WAF 403 blocks."""
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(
+                    headless=True,
+                    args=["--no-sandbox", "--disable-setuid-sandbox"]
+                )
+                context = browser.new_context(
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                    viewport={"width": 1280, "height": 800}
+                )
+                page = context.new_page()
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(2000)  # Brief delay for DOM hydration
+                html = page.content()
+                browser.close()
+                return html
+        except Exception as e:
+            logging.error(f"Playwright navigation failed for {url}: {e}")
             return None
 
-        soup = BeautifulSoup(resp.text, "html.parser")
+    def fetch_latest_contract_url(self) -> Optional[str]:
+        logging.info("Polling Defense.gov Contracts index via Playwright...")
+        html = self._fetch_html_with_browser(self.LISTING_URL)
+        if not html:
+            logging.error("Failed to retrieve contract listing HTML.")
+            return None
+
+        soup = BeautifulSoup(html, "html.parser")
         for link in soup.find_all("a", href=True):
             href = link["href"]
             if "/News/Contracts/Contract/Article/" in href:
@@ -32,13 +49,13 @@ class DefenseGovScraper:
         return None
 
     def parse_contract_article(self, article_url: str) -> List[Dict[str, Any]]:
-        logging.info(f"Ingesting daily contracts from: {article_url}")
-        resp = requests.get(article_url, headers=self.headers, timeout=15)
-        if resp.status_code != 200:
+        logging.info(f"Ingesting daily contracts from: {article_url} via Playwright...")
+        html = self._fetch_html_with_browser(article_url)
+        if not html:
             logging.error(f"Failed to retrieve article: {article_url}")
             return []
 
-        soup = BeautifulSoup(resp.text, "html.parser")
+        soup = BeautifulSoup(html, "html.parser")
         body = soup.find("div", class_="body") or soup.find("main") or soup
 
         current_branch = "UNKNOWN"

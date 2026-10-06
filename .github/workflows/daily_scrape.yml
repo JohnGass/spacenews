@@ -54,6 +54,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes detected. Skipping commit."
           else
-            git commit -m "chore(intel): update daily space intelligence [skip ci]"
+            git commit -m "chore(intel): update daily space intelligence"
             git push
           fi

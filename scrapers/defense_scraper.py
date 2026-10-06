@@ -6,7 +6,6 @@ from typing import List, Dict, Any, Optional
 import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
 from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -14,10 +13,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 class DefenseGovScraper:
     """
     Ingests DoD contracts by discovering releases via the ArticleCS RSS feed
-    and fetching content through whitelisted print endpoints and edge relays
-    to bypass datacenter IP bans.
+    and retrieving content via the whitelisted DesktopModules Print endpoint.
     """
-    BASE_URL = "https://www.defense.gov"
     RSS_FEED_URL = "https://www.defense.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=400&Site=945&max=10"
 
     def __init__(self):
@@ -41,10 +38,9 @@ class DefenseGovScraper:
                     link = item.find("link")
                     if link is not None and link.text:
                         raw_url = link.text.strip()
-                        clean_url = re.sub(r"https?://(www\.)?war\.gov", "https://www.defense.gov", raw_url)
-                        if clean_url not in discovered and "/Article/" in clean_url:
-                            discovered.append(clean_url)
-                            print(f"[RSS Discovered] {clean_url}", flush=True)
+                        if "/Article/" in raw_url and raw_url not in discovered:
+                            discovered.append(raw_url)
+                            print(f"[RSS Discovered] {raw_url}", flush=True)
             else:
                 logging.error(f"RSS feed returned HTTP {resp.status_code}")
         except Exception as e:
@@ -53,74 +49,42 @@ class DefenseGovScraper:
         logging.info(f"Identified {len(discovered)} contract release URLs.")
         return discovered[:limit]
 
-    def _fetch_article_html(self, url: str) -> Optional[str]:
+    def _fetch_article_html(self, article_url: str) -> Optional[str]:
         """
-        Fetches contract HTML through a multi-route fallback to circumvent Akamai blocks:
-        Route 1: DesktopModules Print Endpoint (whitelisted path)
-        Route 2: Public edge relays (AllOrigins / CodeTabs)
-        Route 3: Playwright with automation flags stripped
+        Retrieves full article text via DotNetNuke ArticleCS Print endpoints,
+        which are allowed through Akamai's path filtering.
         """
-        # Extract the Article ID from the URL (e.g. .../Article/4619270/...)
-        id_match = re.search(r"/Article/(\d+)/", url)
-        article_id = id_match.group(1) if id_match else None
+        # Extract numerical article ID (e.g., 4619270 from /Article/4619270/...)
+        id_match = re.search(r"/Article/(\d+)/", article_url)
+        if not id_match:
+            print(f"[WARN] No Article ID found in URL: {article_url}", flush=True)
+            return None
 
-        # Route 1: Official DoD Print Endpoint (lives under whitelisted DesktopModules)
-        if article_id:
-            print_url = f"https://www.defense.gov/DesktopModules/ArticleCS/Print.aspx?ArticleId={article_id}"
-            try:
-                print(f"--> Trying DoD Print Endpoint: {print_url}", flush=True)
-                resp = self.session.get(print_url, timeout=15)
-                if resp.status_code == 200 and "Access Denied" not in resp.text and len(resp.text) > 3000:
-                    print(f"[SUCCESS] Loaded {len(resp.text)} bytes via DoD Print Endpoint.", flush=True)
-                    return resp.text
-            except Exception as e:
-                print(f"[INFO] Print endpoint unavailable: {e}", flush=True)
+        article_id = id_match.group(1)
 
-        # Route 2: Public Edge Proxies
-        encoded_url = requests.utils.quote(url)
-        proxies = [
-            f"https://api.allorigins.win/raw?url={encoded_url}",
-            f"https://api.codetabs.com/v1/proxy?quest={encoded_url}"
+        # DotNetNuke ArticleCS Print parameter variations
+        candidate_endpoints = [
+            f"https://www.defense.gov/DesktopModules/ArticleCS/Print.aspx?PortalId=1&ModuleId=764&Article={article_id}",
+            f"https://www.war.gov/DesktopModules/ArticleCS/Print.aspx?PortalId=1&ModuleId=764&Article={article_id}",
+            f"https://www.defense.gov/DesktopModules/ArticleCS/Print.aspx?PortalId=1&Article={article_id}",
+            f"https://www.war.gov/DesktopModules/ArticleCS/Print.aspx?PortalId=1&Article={article_id}",
+            f"https://www.defense.gov/DesktopModules/ArticleCS/Print.aspx?Article={article_id}"
         ]
 
-        for p_url in proxies:
+        for endpoint in candidate_endpoints:
             try:
-                print(f"--> Trying Edge Relay: {p_url[:55]}...", flush=True)
-                resp = requests.get(p_url, headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
-                if resp.status_code == 200 and "Access Denied" not in resp.text and len(resp.text) > 3000:
-                    print(f"[SUCCESS] Loaded {len(resp.text)} bytes via Edge Relay.", flush=True)
+                print(f"--> Requesting print endpoint: {endpoint}", flush=True)
+                resp = self.session.get(endpoint, timeout=20)
+                status = resp.status_code
+                content_len = len(resp.text)
+                
+                print(f"    Response: HTTP {status} | Bytes: {content_len}", flush=True)
+
+                if status == 200 and content_len > 2500 and "Access Denied" not in resp.text:
+                    print(f"[SUCCESS] Article body loaded ({content_len} bytes).", flush=True)
                     return resp.text
             except Exception as e:
-                print(f"[INFO] Edge relay skipped: {e}", flush=True)
-
-        # Route 3: Stealth Playwright
-        print("--> Fallback: Launching Playwright Chromium with stealth flags...", flush=True)
-        try:
-            with sync_playwright() as p:
-                browser = p.chromium.launch(
-                    headless=True,
-                    args=[
-                        "--no-sandbox",
-                        "--disable-setuid-sandbox",
-                        "--disable-blink-features=AutomationControlled"
-                    ]
-                )
-                context = browser.new_context(
-                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-                )
-                context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-                page = context.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(3000)
-                content = page.content()
-                browser.close()
-
-                if "Access Denied" not in content and len(content) > 3000:
-                    print(f"[SUCCESS] Loaded {len(content)} bytes via Playwright.", flush=True)
-                    return content
-                print("[WARN] Playwright returned Access Denied.", flush=True)
-        except Exception as e:
-            logging.error(f"Playwright fallback failed: {e}")
+                print(f"    Failed: {e}", flush=True)
 
         return None
 
@@ -133,22 +97,19 @@ class DefenseGovScraper:
             return []
 
         soup = BeautifulSoup(html, "html.parser")
-        page_title = soup.title.string.strip() if soup.title else "No Title"
-        print(f"Loaded Page: '{page_title}' ({len(html)} bytes)", flush=True)
-
-        # Extract paragraphs via <p> tags first
+        
+        # Collect paragraphs from standard tags or double newlines
         paragraphs = []
-        for p in soup.find_all("p"):
+        for p in soup.find_all(["p", "div"]):
             txt = p.get_text().strip()
-            if len(txt) > 70:
+            if len(txt) > 75 and txt not in paragraphs:
                 paragraphs.append(txt)
 
-        # If <p> tags are absent (e.g. plain text or <br> formatting), split by double newline
         if len(paragraphs) < 3:
-            body = soup.find("div", class_="body") or soup.find("main") or soup.body or soup
-            paragraphs = [b.strip() for b in body.get_text("\n\n").split("\n\n") if len(b.strip()) > 70]
+            body_text = soup.get_text("\n\n")
+            paragraphs = [b.strip() for b in body_text.split("\n\n") if len(b.strip()) > 75]
 
-        print(f"Extracted {len(paragraphs)} paragraph blocks to evaluate...", flush=True)
+        print(f"Evaluating {len(paragraphs)} paragraph blocks...", flush=True)
 
         current_branch = "UNKNOWN"
         relevant_contracts = []
@@ -161,7 +122,7 @@ class DefenseGovScraper:
         activity_pattern = re.compile(r"The\s+contracting\s+activity\s+is\s+([^,\.\(]+)", re.IGNORECASE)
 
         for text in paragraphs:
-            # Check for service branch header (e.g. 'AIR FORCE', 'MISSILE DEFENSE AGENCY')
+            # Check for branch headers (e.g. 'AIR FORCE', 'MISSILE DEFENSE AGENCY')
             clean_hdr = text.lstrip("#* -").strip()
             if clean_hdr.isupper() and len(clean_hdr) < 40 and not clean_hdr.startswith("$"):
                 current_branch = clean_hdr

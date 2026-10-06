@@ -1,156 +1,129 @@
 import re
+import os
 import logging
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
-from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
+from typing import List, Dict, Any
+import requests
 from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 class DefenseGovScraper:
-    BASE_URL = "https://www.defense.gov"
-    LISTING_URL = "https://www.defense.gov/News/Contracts/"
+    """
+    Ingests DoD contracts by routing requests through Jina Reader (https://r.jina.ai/)
+    to bypass Akamai data center IP blocks on GitHub Actions runners.
+    """
+    PROXY_PREFIX = "https://r.jina.ai/"
+    TARGET_INDEX_URL = "https://www.defense.gov/News/Contracts/"
 
-    def _fetch_html_with_browser(self, url: str, wait_for_articles: bool = False) -> Optional[str]:
-        """
-        Launches headless Chromium with anti-detection flags and waits
-        for client-side AJAX article grids to hydrate.
-        """
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": "SpaceIntelPipeline/1.0",
+            "Accept": "text/plain"
+        })
+
+    def _fetch_markdown(self, target_url: str) -> str:
+        """Proxies URL through Jina Reader and returns clean markdown text."""
+        proxy_url = f"{self.PROXY_PREFIX}{target_url}"
         try:
-            with sync_playwright() as p:
-                browser = p.chromium.launch(
-                    headless=True,
-                    args=[
-                        "--no-sandbox",
-                        "--disable-setuid-sandbox",
-                        "--disable-blink-features=AutomationControlled",
-                        "--disable-infobars"
-                    ]
-                )
-                context = browser.new_context(
-                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-                    viewport={"width": 1920, "height": 1080}
-                )
-                # Strip navigator.webdriver flag to prevent Akamai bot detection
-                context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-
-                page = context.new_page()
-                page.goto(url, wait_until="networkidle", timeout=45000)
-
-                # Wait for the client-side JavaScript cards to inject into the DOM
-                if wait_for_articles:
-                    try:
-                        page.wait_for_selector("a[href*='Article'], a[href*='article'], .listing-item", timeout=12000)
-                    except Exception:
-                        logging.warning("Selector wait timed out; extracting current DOM state.")
-
-                page.wait_for_timeout(3000)
-                page_title = page.title()
-                logging.info(f"Loaded page title: '{page_title}' | URL: {page.url}")
-
-                html = page.content()
-                browser.close()
-                return html
+            resp = self.session.get(proxy_url, timeout=30)
+            if resp.status_code == 200:
+                return resp.text
+            logging.error(f"Failed to fetch {proxy_url}: HTTP {resp.status_code}")
+            return ""
         except Exception as e:
-            logging.error(f"Playwright navigation failed for {url}: {e}")
-            return None
+            logging.error(f"Error requesting {proxy_url}: {e}")
+            return ""
 
     def fetch_recent_contract_urls(self, limit: int = 5) -> List[str]:
-        """Identifies recent contract announcement links from the listing page."""
-        logging.info("Polling Defense.gov Contracts index...")
-        html = self._fetch_html_with_browser(self.LISTING_URL, wait_for_articles=True)
-        if not html:
-            logging.error("Failed to retrieve contract listing HTML.")
+        """Identifies recent contract release URLs from the listing index."""
+        logging.info("Polling Defense.gov Contracts index via proxy...")
+        md_content = self._fetch_markdown(self.TARGET_INDEX_URL)
+        if not md_content:
+            logging.error("Empty response from contracts index.")
             return []
 
-        soup = BeautifulSoup(html, "html.parser")
-        urls = []
+        # Find all Defense.gov contract article URLs in the markdown text
+        article_pattern = re.compile(
+            r"https://www\.defense\.gov/News/Contracts/Contract/Article/[0-9]+/[^/\)\s]+",
+            re.IGNORECASE
+        )
+        
+        discovered_urls = []
+        for match in article_pattern.finditer(md_content):
+            url = match.group(0).rstrip(")")
+            if url not in discovered_urls:
+                discovered_urls.append(url)
+                logging.info(f"Discovered Release Link: {url}")
+            if len(discovered_urls) >= limit:
+                break
 
-        for link in soup.find_all("a", href=True):
-            href = link["href"].strip()
-            text = link.get_text().strip().lower()
-
-            # Catch links by URL structure OR anchor text
-            is_contract_url = "/article/" in href.lower() and "contract" in href.lower()
-            is_contract_text = "contracts for" in text
-
-            if is_contract_url or is_contract_text:
-                # Ensure clean absolute URL
-                full_url = href if href.startswith("http") else f"{self.BASE_URL}{href}"
-                
-                # Normalize duplicates and filter out query parameter links
-                clean_url = full_url.split("?")[0]
-                if clean_url not in urls and "/article/" in clean_url.lower():
-                    urls.append(clean_url)
-                    logging.info(f"Discovered Release Link: {clean_url}")
-                
-                if len(urls) >= limit:
-                    break
-
-        logging.info(f"Identified {len(urls)} recent contract release URLs.")
-        return urls
+        logging.info(f"Identified {len(discovered_urls)} recent contract release URLs.")
+        return discovered_urls
 
     def parse_contract_article(self, article_url: str) -> List[Dict[str, Any]]:
-        """Extracts and filters contract paragraphs recursively from a release."""
+        """Parses individual contract paragraphs from a release markdown."""
         logging.info(f"Scanning contract release: {article_url}")
-        html = self._fetch_html_with_browser(article_url, wait_for_articles=False)
-        if not html:
-            logging.error(f"Failed to retrieve article: {article_url}")
+        md_text = self._fetch_markdown(article_url)
+        if not md_text:
             return []
 
-        soup = BeautifulSoup(html, "html.parser")
+        # Split into distinct paragraphs
+        paragraphs = md_text.split("\n\n")
+        logging.info(f"Evaluating {len(paragraphs)} paragraph blocks in release...")
+
         current_branch = "UNKNOWN"
         relevant_contracts = []
 
-        dollar_pattern = re.compile(r"\$([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?(?:\s+(?:million|billion))?)", re.IGNORECASE)
+        dollar_pattern = re.compile(
+            r"\$([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?(?:\s+(?:million|billion))?)",
+            re.IGNORECASE
+        )
         contractor_pattern = re.compile(r"^([^,]+),\s*([^,]+),\s*([^,\.]+)")
         activity_pattern = re.compile(r"The\s+contracting\s+activity\s+is\s+([^,\.\(]+)", re.IGNORECASE)
 
-        # Recursively search all headings and paragraphs
-        elements = soup.find_all(["h2", "h3", "h4", "p"])
-        logging.info(f"Evaluating {len(elements)} structural elements on release page...")
-
-        for elem in elements:
-            text = elem.get_text().strip()
-
-            # Service branch header check
-            if text.isupper() and len(text) < 40 and not text.startswith("$"):
-                current_branch = text
+        for p in paragraphs:
+            text = p.strip().replace("\n", " ")
+            
+            # Identify Branch Headers (e.g., '### AIR FORCE', 'MISSILE DEFENSE AGENCY')
+            clean_header = text.lstrip("#").strip()
+            if clean_header.isupper() and len(clean_header) < 40 and not clean_header.startswith("$"):
+                current_branch = clean_header
                 continue
 
-            if elem.name == "p":
-                if len(text) < 70:
-                    continue
+            if len(text) < 80:
+                continue
 
-                relevance = evaluate_relevance(text)
-                if not relevance["is_relevant"]:
-                    continue
+            # Run through the Space / Golden Dome relevance filter
+            relevance = evaluate_relevance(text)
+            if not relevance["is_relevant"]:
+                continue
 
-                logging.info(f"MATCH [{relevance['classification']}]: {text[:85]}...")
+            logging.info(f"MATCH [{relevance['classification']}]: {text[:80]}...")
 
-                dollar_match = dollar_pattern.search(text)
-                awarded_amount = f"${dollar_match.group(1)}" if dollar_match else "Unspecified"
+            dollar_match = dollar_pattern.search(text)
+            awarded_amount = f"${dollar_match.group(1)}" if dollar_match else "Unspecified"
 
-                contractor_match = contractor_pattern.match(text)
-                contractor = contractor_match.group(1).strip() if contractor_match else "Unknown Contractor"
+            contractor_match = contractor_pattern.match(text)
+            contractor = contractor_match.group(1).strip() if contractor_match else "Unknown Contractor"
 
-                activity_match = activity_pattern.search(text)
-                contracting_activity = activity_match.group(1).strip() if activity_match else current_branch
+            activity_match = activity_pattern.search(text)
+            contracting_activity = activity_match.group(1).strip() if activity_match else current_branch
 
-                relevant_contracts.append({
-                    "source": "Defense.gov Contracts",
-                    "article_url": article_url,
-                    "branch_section": current_branch,
-                    "contractor": contractor,
-                    "award_amount": awarded_amount,
-                    "contracting_activity": contracting_activity,
-                    "classification": relevance["classification"],
-                    "is_golden_dome": relevance["is_golden_dome"],
-                    "is_space": relevance["is_space"],
-                    "raw_text": text,
-                    "ingested_at": datetime.now(timezone.utc).isoformat()
-                })
+            relevant_contracts.append({
+                "source": "Defense.gov Contracts",
+                "article_url": article_url,
+                "branch_section": current_branch,
+                "contractor": contractor,
+                "award_amount": awarded_amount,
+                "contracting_activity": contracting_activity,
+                "classification": relevance["classification"],
+                "is_golden_dome": relevance["is_golden_dome"],
+                "is_space": relevance["is_space"],
+                "raw_text": text,
+                "ingested_at": datetime.now(timezone.utc).isoformat()
+            })
 
         logging.info(f"Extracted {len(relevant_contracts)} space/Golden Dome contracts from this release.")
         return relevant_contracts

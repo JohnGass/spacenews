@@ -1,208 +1,80 @@
-import re
-import os
-import sys
-import logging
-from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
-import xml.etree.ElementTree as ET
-import requests
-from scrapers.filter_rules import evaluate_relevance
+Run python run_pipeline.py
+2026-10-06 16:40:03,815 [INFO] Starting Space & Golden Dome Intelligence Pull...
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+[STEP 1] Testing Official DoD Contracts RSS Feed...
+--> Fetching: https://www.defense.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=400&Site=945&max=10 (proxied=False)
 
-def log_terminal(title: str, content: str):
-    """Prints highlighted diagnostic output to GitHub Actions terminal."""
-    border = "=" * 70
-    print(f"\n{border}\n[DIAGNOSTIC] {title}\n{border}\n{content}\n{border}\n", flush=True)
+======================================================================
+[DIAGNOSTIC] HTTP 200 from https://www.defense.gov/DesktopModules/ArticleCS/RSS.as...
+======================================================================
+Status: 200
+Bytes Received: 6209
+Headers: {'Cache-Control': 'private,private', 'Content-Type': 'text/xml; charset=utf-8', 'pw_value': '3ce3af822980b849665e8c5400e1b45b', 'Access-Control-Allow-Origin': '*', 'X-XSS-Protection': '1; mode=block'}
 
-class DefenseGovScraper:
-    """
-    Ingests DoD contracts with terminal diagnostic output.
-    Attempts official RSS feed first, then falls back to proxied web index.
-    """
-    BASE_URL = "https://www.defense.gov"
-    # Official DoD ArticleCS RSS Feed for Daily Contracts (ContentType 400)
-    RSS_FEED_URL = "https://www.defense.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=400&Site=945&max=10"
-    WEB_INDEX_URL = "https://www.defense.gov/News/Contracts/"
-    PROXY_PREFIX = "https://r.jina.ai/"
+--- BODY PREVIEW (First 800 chars) ---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cf="http://www.microsoft.com/schemas/rss/core/2005">
+  <channel>
+    <title>
+Contracts - U.S. Dept. of War
+</title>
+    <link>
+https://www.war.gov/News/Contracts/
+</link>
+    <description>
+Contract announcements from around the Department of War.
+</description>
+    <language>en-us</language>
+    <pubDate>Mon, 05 Oct 2026 21:00:16 GMT</pubDate>
+    <lastBuildDate>Tue, 06 Oct 2026 16:22:46 GMT</lastBuildDate>
+    <atom:link href="www.war.gov?ContentType=400&amp;Site=945&amp;isdashboardselected=0&amp;max=10" rel="self" type="application/rss+xml" />
+    <item>
+      <title>
+Contracts for Oct. 5, 2026
+</title>
+      <link>https:
+======================================================================
 
-    def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-        })
+[RSS Found] https://www.war.gov/News/Contracts/Contract/Article/4619270/contracts-for-oct-5-2026/
+[RSS Found] https://www.war.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/
+Headers: {'Date': 'Tue, 06 Oct 2026 16:40:04 GMT', 'Content-Type': 'text/html; charset=UTF-8', 'Transfer-Encoding': 'chunked', 'Connection': 'close', 'Accept-Ch': 'Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA'}
 
-    def _fetch_diagnostic(self, url: str, is_proxied: bool = False) -> tuple[int, str]:
-        """Fetches URL, prints diagnostic metrics, and returns (status_code, body)."""
-        target = f"{self.PROXY_PREFIX}{url}" if is_proxied else url
-        print(f"--> Fetching: {target} (proxied={is_proxied})", flush=True)
-        try:
-            resp = self.session.get(target, timeout=25)
-            status = resp.status_code
-            text = resp.text
-            
-            # Print diagnostic snapshot to terminal
-            preview = text[:800] if text else "[EMPTY BODY]"
-            log_terminal(
-                f"HTTP {status} from {target[:55]}...",
-                f"Status: {status}\n"
-                f"Bytes Received: {len(text)}\n"
-                f"Headers: {dict(list(resp.headers.items())[:5])}\n\n"
-                f"--- BODY PREVIEW (First 800 chars) ---\n{preview}"
-            )
-            return status, text
-        except Exception as e:
-            log_terminal(f"CONNECTION ERROR: {target}", str(e))
-            return 0, ""
+--- BODY PREVIEW (First 800 chars) ---
+<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="content-security-policy" content="default-src &#39;none&#39;; script-src &#39;nonce-U4s82js0BayLXYetOrfdOt&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-src-attr &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src &#39;self&#39; https://challenges.cloudflare.com; connect-src &#39;self&#39; https://challenges.cloudflare.com; frame-src &#39;self&#39; https://challenges.cloudflare.com blob:; child-src &#39;self&#39; https://challenges.cloudflare.
+======================================================================
 
-    def fetch_recent_contract_urls(self, limit: int = 5) -> List[str]:
-        """
-        Attempts link discovery across two independent paths:
-        1. Official Contracts RSS Feed (Direct & Proxied)
-        2. Contracts Web Index via Proxy
-        """
-        discovered = []
+[WARN] Failed to load article content for https://www.war.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/
 
-        # ==============================================================
-        # ATTEMPT 1: Official DoD Contracts RSS Feed
-        # ==============================================================
-        print("\n[STEP 1] Testing Official DoD Contracts RSS Feed...", flush=True)
-        status, content = self._fetch_diagnostic(self.RSS_FEED_URL, is_proxied=False)
-        
-        # If direct RSS is blocked by Akamai, try RSS via proxy
-        if status != 200 or "<rss" not in content.lower():
-            print("\n[STEP 1b] Direct RSS blocked. Testing Proxied RSS...", flush=True)
-            status, content = self._fetch_diagnostic(self.RSS_FEED_URL, is_proxied=True)
+--- Parsing Release Article: https://www.war.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/ ---
+--> Fetching: https://r.jina.ai/https://www.war.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/ (proxied=True)
 
-        if status == 200 and ("<item" in content or "<rss" in content.lower()):
-            try:
-                root = ET.fromstring(content)
-                for item in root.findall(".//item"):
-                    link = item.find("link")
-                    if link is not None and link.text:
-                        clean = link.text.strip()
-                        if clean not in discovered:
-                            discovered.append(clean)
-                            print(f"[RSS Found] {clean}", flush=True)
-            except Exception as e:
-                print(f"[WARN] XML parsing failed, extracting with regex: {e}", flush=True)
-                # Regex fallback for RSS items
-                for match in re.findall(r"<link>(https?://[^<]+)</link>", content):
-                    if "/Article/" in match and match not in discovered:
-                        discovered.append(match)
-                        print(f"[RSS Regex Found] {match}", flush=True)
+======================================================================
+[DIAGNOSTIC] HTTP 403 from https://r.jina.ai/https://www.war.gov/News/Contracts/Co...
+======================================================================
+Status: 403
+Bytes Received: 6045
+Headers: {'Date': 'Tue, 06 Oct 2026 16:40:04 GMT', 'Content-Type': 'text/html; charset=UTF-8', 'Transfer-Encoding': 'chunked', 'Connection': 'close', 'Accept-Ch': 'Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA'}
 
-        if discovered:
-            print(f"[SUCCESS] Discovered {len(discovered)} releases via RSS.", flush=True)
-            return discovered[:limit]
+--- BODY PREVIEW (First 800 chars) ---
+<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="content-security-policy" content="default-src &#39;none&#39;; script-src &#39;nonce-nuV5AJwey4qOJpVFE47HQZ&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-src-attr &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src &#39;self&#39; https://challenges.cloudflare.com; connect-src &#39;self&#39; https://challenges.cloudflare.com; frame-src &#39;self&#39; https://challenges.cloudflare.com blob:; child-src &#39;self&#39; https://challenges.cloudflare.
+======================================================================
 
-        # ==============================================================
-        # ATTEMPT 2: Web Listing Index via Proxy
-        # ==============================================================
-        print("\n[STEP 2] RSS empty or blocked. Testing Web Index via Proxy...", flush=True)
-        status, content = self._fetch_diagnostic(self.WEB_INDEX_URL, is_proxied=True)
+[WARN] Failed to load article content for https://www.war.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/
 
-        if status == 200 and content:
-            # Broad regex: catches both absolute and relative contract article links
-            patterns = [
-                r"https://www\.defense\.gov/News/Contracts/Contract/Article/[0-9]+/[a-zA-Z0-9\-_]+",
-                r"/News/Contracts/Contract/Article/[0-9]+/[a-zA-Z0-9\-_]+",
-                r"https://www\.defense\.gov/News/Contracts/Contract/Article/[0-9]+/?",
-                r"/News/Contracts/Contract/Article/[0-9]+/?"
-            ]
+--- Parsing Release Article: https://www.war.gov/News/Contracts/Contract/Article/4614270/contracts-for-sept-29-2026/ ---
+--> Fetching: https://r.jina.ai/https://www.war.gov/News/Contracts/Contract/Article/4614270/contracts-for-sept-29-2026/ (proxied=True)
+2026-10-06 16:40:04,878 [INFO] Captured 0 relevant Defense.gov contracts across recent releases.
 
-            for pattern in patterns:
-                for match in re.findall(pattern, content, re.IGNORECASE):
-                    full = match if match.startswith("http") else f"{self.BASE_URL}{match}"
-                    full = full.rstrip("/").split("?")[0]
-                    if full not in discovered:
-                        discovered.append(full)
-                        print(f"[Web Link Found] {full}", flush=True)
-                    if len(discovered) >= limit:
-                        break
+======================================================================
+[DIAGNOSTIC] HTTP 403 from https://r.jina.ai/https://www.war.gov/News/Contracts/Co...
+======================================================================
+Status: 403
+Bytes Received: 6045
+Headers: {'Date': 'Tue, 06 Oct 2026 16:40:04 GMT', 'Content-Type': 'text/html; charset=UTF-8', 'Transfer-Encoding': 'chunked', 'Connection': 'close', 'Accept-Ch': 'Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA'}
 
-        print(f"\n[SUMMARY] Total release URLs identified: {len(discovered)}", flush=True)
-        return discovered[:limit]
+--- BODY PREVIEW (First 800 chars) ---
+<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="content-security-policy" content="default-src &#39;none&#39;; script-src &#39;nonce-r6PcxqTddwCa0BubiyndkC&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-src-attr &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src &#39;self&#39; https://challenges.cloudflare.com; connect-src &#39;self&#39; https://challenges.cloudflare.com; frame-src &#39;self&#39; https://challenges.cloudflare.com blob:; child-src &#39;self&#39; https://challenges.cloudflare.
+======================================================================
 
-    def parse_contract_article(self, article_url: str) -> List[Dict[str, Any]]:
-        """Parses individual contract paragraphs from a release."""
-        print(f"\n--- Parsing Release Article: {article_url} ---", flush=True)
-        
-        # Ingest via proxy to avoid Akamai 403 blocks on article pages
-        status, content = self._fetch_diagnostic(article_url, is_proxied=True)
-        if status != 200 or not content:
-            print(f"[WARN] Failed to load article content for {article_url}", flush=True)
-            return []
-
-        paragraphs = content.split("\n\n")
-        print(f"Total paragraph blocks to evaluate: {len(paragraphs)}", flush=True)
-
-        current_branch = "UNKNOWN"
-        relevant_contracts = []
-
-        dollar_pattern = re.compile(
-            r"\$([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?(?:\s+(?:million|billion))?)",
-            re.IGNORECASE
-        )
-        contractor_pattern = re.compile(r"^([^,]+),\s*([^,]+),\s*([^,\.]+)")
-        activity_pattern = re.compile(r"The\s+contracting\s+activity\s+is\s+([^,\.\(]+)", re.IGNORECASE)
-
-        for p in paragraphs:
-            text = p.strip().replace("\n", " ")
-            clean_header = text.lstrip("#* ").strip()
-
-            if clean_header.isupper() and len(clean_header) < 40 and not clean_header.startswith("$"):
-                current_branch = clean_header
-                continue
-
-            if len(text) < 70:
-                continue
-
-            relevance = evaluate_relevance(text)
-            if not relevance["is_relevant"]:
-                continue
-
-            print(f"\n>>> MATCH [{relevance['classification']}]: {text[:100]}...", flush=True)
-
-            dollar_match = dollar_pattern.search(text)
-            awarded_amount = f"${dollar_match.group(1)}" if dollar_match else "Unspecified"
-
-            contractor_match = contractor_pattern.match(text)
-            contractor = contractor_match.group(1).strip() if contractor_match else "Unknown Contractor"
-
-            activity_match = activity_pattern.search(text)
-            contracting_activity = activity_match.group(1).strip() if activity_match else current_branch
-
-            relevant_contracts.append({
-                "source": "Defense.gov Contracts",
-                "article_url": article_url,
-                "branch_section": current_branch,
-                "contractor": contractor,
-                "award_amount": awarded_amount,
-                "contracting_activity": contracting_activity,
-                "classification": relevance["classification"],
-                "is_golden_dome": relevance["is_golden_dome"],
-                "is_space": relevance["is_space"],
-                "raw_text": text,
-                "ingested_at": datetime.now(timezone.utc).isoformat()
-            })
-
-        print(f"Extracted {len(relevant_contracts)} contracts from {article_url}", flush=True)
-        return relevant_contracts
-
-    def scrape_recent_releases(self, limit: int = 5) -> List[Dict[str, Any]]:
-        """Scrapes across recent releases and deduplicates findings."""
-        target_urls = self.fetch_recent_contract_urls(limit=limit)
-        all_contracts = []
-        seen_keys = set()
-
-        for url in target_urls:
-            awards = self.parse_contract_article(url)
-            for award in awards:
-                dedup_key = f"{award['contractor']}_{award['award_amount']}"
-                if dedup_key not in seen_keys:
-                    seen_keys.add(dedup_key)
-                    all_contracts.append(award)
-
-        return all_contracts
+[WARN] Failed to load article content for https://www.war.gov/News/Contracts/Contract/Article/4614270/contracts-for-sept-29-2026/
+2026-10-06 16:40:05,253 [INFO] Pipeline complete. Intel written to data/intel_report_2026-10-06.json and data/latest.json

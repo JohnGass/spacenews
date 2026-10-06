@@ -1,10 +1,18 @@
 import re
 
+# Negative filters to eliminate base civil engineering & facility false positives
 EXCLUSION_TERMS = [
     r"\btank\b", r"\barmored vehicle\b", r"\bhowitzer\b", r"\bmortar\b",
     r"\bsubmarine\b", r"\bdestroyer\b", r"\bfrigate\b", r"\bdrydock\b",
-    r"\bfuel oil\b", r"\bbarracks\b", r"\broof replacement\b", r"\bdental\b",
-    r"\bmess hall\b", r"\buniform\b", r"\btruck\b", r"\btreadmill\b"
+    r"\bfuel oil\b", r"\bbarracks\b", r"\bdormitory\b", r"\bmess hall\b",
+    r"\buniform\b", r"\btruck\b", r"\btreadmill\b", r"\bdental\b",
+    # Facility & Civil Works Exclusions
+    r"\basphalt\b", r"\bpaving\b", r"\broad repair\b", r"\broof\b", r"\broofing\b",
+    r"\bjanitorial\b", r"\bcustodial\b", r"\brefuse\b", r"\bgarbage\b",
+    r"\bmowing\b", r"\blandscaping\b", r"\bgrounds maintenance\b",
+    r"\bdemolition\b", r"\bhvac\b", r"\bair conditioning\b", r"\bchiller\b",
+    r"\bsewer\b", r"\bsewage\b", r"\bplumbing\b", r"\bpainting\b",
+    r"\bconcrete\b", r"\bfence\b", r"\bfencing\b", r"\benvironmental remediation\b"
 ]
 
 SPACE_CORE_TERMS = [
@@ -16,6 +24,8 @@ SPACE_CORE_TERMS = [
     r"\bvleo\b", r"\bleo\b", r"\bmeo\b", r"\bgeo\b", r"\bcislunar\b",
     r"\blaunch\s+vehicle\b", r"\bnssl\b", r"\btactically\s+responsive\s+space\b",
     r"\btacrs\b", r"\bspace\s+domain\s+awareness\b", r"\bssa\b",
+    r"\bcommercial\s+augmentation\s+space\s+reserve\b", r"\bcasr\b",
+    r"\bcommercial\s+space\s+office\b", r"\bcomso\b",
     r"\bvandenberg\b", r"\bcape\s+canaveral\b", r"\bpatrick\s+sfb\b",
     r"\bschriever\b", r"\bpeterson\s+sfb\b", r"\bbuckley\s+sfb\b", r"\blos\s+angeles\s+sfb\b"
 ]
@@ -45,6 +55,7 @@ def evaluate_relevance(text: str) -> dict:
     has_space = bool(SPACE_REGEX.search(text))
     has_golden_dome = bool(GOLDEN_DOME_REGEX.search(text))
     
+    # Exclude if base maintenance, unless explicitly tied to Golden Dome tracking / MW
     is_relevant = (has_space or has_golden_dome) and (not is_excluded or has_golden_dome)
     
     return {

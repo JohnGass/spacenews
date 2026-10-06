@@ -5,25 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Space & Defense Intelligence Briefing</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            defense: {
-              900: '#0b1120',
-              800: '#0f172a',
-              700: '#1e293b',
-              600: '#334155',
-              gold: '#eab308',
-              cyan: '#06b6d4',
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
@@ -58,12 +39,19 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
     <!-- KPI Metric Cards -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
-        <div class="text-xs font-semibold uppercase tracking-wider text-amber-400">Golden Dome Priority</div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-amber-400">★ Golden Dome Priority</div>
         <div id="stat-golden-dome" class="text-3xl font-extrabold text-white mt-2">--</div>
         <div class="text-xs text-slate-400 mt-1">Layered missile defense & tracking</div>
         <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Pre-Award Opportunities</div>
+        <div id="stat-solicitations" class="text-3xl font-extrabold text-white mt-2">--</div>
+        <div class="text-xs text-slate-400 mt-1">SAM.gov RFPs, BAAs & DIU CSOs</div>
+        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
@@ -76,7 +64,7 @@
       <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
         <div class="text-xs font-semibold uppercase tracking-wider text-purple-400">Capitol Hill Hearings</div>
         <div id="stat-hearings" class="text-3xl font-extrabold text-white mt-2">--</div>
-        <div class="text-xs text-slate-400 mt-1">HASC / SASC / Approps proceedings</div>
+        <div class="text-xs text-slate-400 mt-1">HASC / SASC testimony analysis</div>
         <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
       </div>
     </section>
@@ -86,17 +74,17 @@
       <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
         <button onclick="setFilter('all')" data-tab="all" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white">All Records</button>
         <button onclick="setFilter('golden-dome')" data-tab="golden-dome" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">★ Golden Dome Only</button>
-        <button onclick="setFilter('contracts')" data-tab="contracts" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Contracts</button>
+        <button onclick="setFilter('solicitations')" data-tab="solicitations" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Pre-Award & RFPs</button>
+        <button onclick="setFilter('contracts')" data-tab="contracts" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Contract Awards</button>
         <button onclick="setFilter('hearings')" data-tab="hearings" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Hearings & Quotes</button>
       </div>
 
       <div class="relative min-w-[260px]">
-        <input type="text" id="search-input" onkeyup="filterCards()" placeholder="Search primes, agencies, keywords..." 
+        <input type="text" id="search-input" onkeyup="filterCards()" placeholder="Search primes, solicitations, agencies..." 
           class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded px-3 py-2 focus:outline-none focus:border-cyan-500">
       </div>
     </section>
 
-    <!-- Content Sections -->
     <div id="loading" class="text-center py-20 text-slate-400 text-sm font-mono">
       Loading latest intelligence payload...
     </div>
@@ -104,6 +92,17 @@
     <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-4 rounded text-rose-300 text-sm"></div>
 
     <div id="dashboard-content" class="hidden space-y-10">
+
+      <!-- Section: Pre-Award Solicitations & Opportunities -->
+      <section id="section-solicitations" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-emerald-500 rounded"></span> Active Pre-Award Solicitations & Solicitations (SAM.gov & DIU)
+          </h2>
+          <span id="solicitations-count" class="text-xs font-mono text-slate-400">0 items</span>
+        </div>
+        <div id="solicitations-list" class="grid grid-cols-1 gap-3"></div>
+      </section>
       
       <!-- Section: Defense Contracts -->
       <section id="section-contracts" class="space-y-4">
@@ -144,7 +143,6 @@
       errBox.classList.add('hidden');
 
       try {
-        // Cache bust query to ensure live updates
         const res = await fetch(`data/latest.json?t=${new Date().getTime()}`);
         if (!res.ok) throw new Error(`HTTP ${res.status} - data/latest.json not found`);
         rawData = await res.json();
@@ -154,7 +152,7 @@
         content.classList.remove('hidden');
       } catch (err) {
         loading.classList.add('hidden');
-        errBox.textContent = `Error loading intelligence stream: ${err.message}. Ensure data/latest.json exists in the repository.`;
+        errBox.textContent = `Error loading intelligence stream: ${err.message}.`;
         errBox.classList.remove('hidden');
       }
     }
@@ -162,12 +160,60 @@
     function renderDashboard(data) {
       document.getElementById('report-date').textContent = `REPORT DATE: ${data.report_date || 'N/A'}`;
       document.getElementById('stat-golden-dome').textContent = data.summary?.golden_dome_priority_count ?? 0;
+      document.getElementById('stat-solicitations').textContent = data.summary?.total_solicitations ?? 0;
       document.getElementById('stat-contracts').textContent = data.summary?.total_contracts ?? 0;
       document.getElementById('stat-hearings').textContent = data.summary?.total_hearings ?? 0;
 
+      renderSolicitations(data.pre_award_solicitations || []);
       renderContracts(data.defense_contracts || []);
       renderHearings(data.congressional_hearings || []);
       filterCards();
+    }
+
+    function renderSolicitations(solicitations) {
+      const container = document.getElementById('solicitations-list');
+      document.getElementById('solicitations-count').textContent = `${solicitations.length} items`;
+      container.innerHTML = '';
+
+      if (solicitations.length === 0) {
+        container.innerHTML = `<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active pre-award solicitations captured. (Add SAM_GOV_API_KEY secret to enable full SAM.gov RFPs).</div>`;
+        return;
+      }
+
+      solicitations.forEach(s => {
+        const isGoldenDome = s.is_golden_dome;
+        const badge = isGoldenDome 
+          ? `<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>`
+          : `<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">${escapeHtml(s.notice_type || 'Pre-Award')}</span>`;
+
+        const card = document.createElement('div');
+        card.className = `solicitation-card bg-slate-900 border ${isGoldenDome ? 'border-amber-500/30' : 'border-slate-800'} rounded-lg p-4 transition hover:border-slate-700`;
+        card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
+        card.setAttribute('data-type', 'solicitation');
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${badge}
+              <span class="text-xs font-mono text-slate-400">${escapeHtml(s.source)} &bull; ${escapeHtml(s.solicitation_number)}</span>
+            </div>
+            <div class="text-xs font-mono text-amber-400">
+              <span class="text-slate-500">Deadline:</span> ${escapeHtml(s.response_deadline)}
+            </div>
+          </div>
+
+          <h3 class="text-sm font-semibold text-white mt-2 leading-snug">
+            <a href="${s.url}" target="_blank" class="hover:text-cyan-400 transition">${escapeHtml(s.title)} ↗</a>
+          </h3>
+
+          <div class="mt-2 text-xs text-slate-400 flex flex-wrap gap-x-4 gap-y-1">
+            <div><span class="text-slate-500">Agency/Office:</span> ${escapeHtml(s.agency_office)}</div>
+            <div><span class="text-slate-500">NAICS:</span> ${escapeHtml(s.naics_code)}</div>
+            <div><span class="text-slate-500">POC:</span> ${escapeHtml(s.point_of_contact)}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
     function renderContracts(contracts) {
@@ -180,7 +226,7 @@
         return;
       }
 
-      contracts.forEach((c, idx) => {
+      contracts.forEach(c => {
         const isGoldenDome = c.is_golden_dome;
         const badge = isGoldenDome 
           ? `<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>`
@@ -296,42 +342,29 @@
 
     function filterCards() {
       const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const solCards = document.querySelectorAll('.solicitation-card');
       const contractCards = document.querySelectorAll('.contract-card');
       const hearingCards = document.querySelectorAll('.hearing-card');
 
+      const secSols = document.getElementById('section-solicitations');
       const secContracts = document.getElementById('section-contracts');
       const secHearings = document.getElementById('section-hearings');
 
-      if (currentFilter === 'hearings') {
-        secContracts.classList.add('hidden');
-      } else {
-        secContracts.classList.remove('hidden');
-      }
-
-      if (currentFilter === 'contracts') {
-        secHearings.classList.add('hidden');
-      } else {
-        secHearings.classList.remove('hidden');
-      }
+      secSols.classList.toggle('hidden', currentFilter === 'contracts' || currentFilter === 'hearings');
+      secContracts.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'hearings');
+      secHearings.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'contracts');
 
       function evaluateVisibility(card) {
         const text = card.textContent.toLowerCase();
         const isGolden = card.getAttribute('data-golden') === 'true';
-
         const matchesQuery = query === '' || text.includes(query);
         let matchesFilter = true;
 
-        if (currentFilter === 'golden-dome') {
-          matchesFilter = isGolden;
-        }
-
-        if (matchesQuery && matchesFilter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+        if (currentFilter === 'golden-dome') matchesFilter = isGolden;
+        card.classList.toggle('hidden', !(matchesQuery && matchesFilter));
       }
 
+      solCards.forEach(evaluateVisibility);
       contractCards.forEach(evaluateVisibility);
       hearingCards.forEach(evaluateVisibility);
     }
@@ -346,7 +379,6 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Initial Load
     document.addEventListener('DOMContentLoaded', loadIntelData);
   </script>
 </body>

@@ -40,6 +40,7 @@ jobs:
         env:
           CONGRESS_GOV_API_KEY: ${{ secrets.CONGRESS_GOV_API_KEY }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          SAM_GOV_API_KEY: ${{ secrets.SAM_GOV_API_KEY }}
         run: |
           python run_pipeline.py
 

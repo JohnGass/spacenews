@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space & Defense Intelligence Briefing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            defense: {
+              900: '#0b1120',
+              800: '#0f172a',
+              700: '#1e293b',
+              600: '#334155',
+              gold: '#eab308',
+              cyan: '#06b6d4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    details summary::-webkit-details-marker { display: none; }
+    details > summary { list-style: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Top Navigation & Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Tactical Feed // OSINT Dashboard</span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2 mt-0.5">
+          National Space & Golden Dome Intel
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span id="report-date" class="text-xs font-mono bg-slate-800 text-slate-300 px-3 py-1.5 rounded border border-slate-700">
+          Syncing...
+        </span>
+        <button onclick="loadIntelData()" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-3 py-1.5 rounded transition">
+          Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- KPI Metric Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-amber-400">Golden Dome Priority</div>
+        <div id="stat-golden-dome" class="text-3xl font-extrabold text-white mt-2">--</div>
+        <div class="text-xs text-slate-400 mt-1">Layered missile defense & tracking</div>
+        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Defense Contract Awards</div>
+        <div id="stat-contracts" class="text-3xl font-extrabold text-white mt-2">--</div>
+        <div class="text-xs text-slate-400 mt-1">Pentagon 17:00 EST daily filings</div>
+        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl pointer-events-none"></div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
+        <div class="text-xs font-semibold uppercase tracking-wider text-purple-400">Capitol Hill Hearings</div>
+        <div id="stat-hearings" class="text-3xl font-extrabold text-white mt-2">--</div>
+        <div class="text-xs text-slate-400 mt-1">HASC / SASC / Approps proceedings</div>
+        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
+      </div>
+    </section>
+
+    <!-- Filters & Search Toolbar -->
+    <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+        <button onclick="setFilter('all')" data-tab="all" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white">All Records</button>
+        <button onclick="setFilter('golden-dome')" data-tab="golden-dome" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">★ Golden Dome Only</button>
+        <button onclick="setFilter('contracts')" data-tab="contracts" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Contracts</button>
+        <button onclick="setFilter('hearings')" data-tab="hearings" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Hearings & Quotes</button>
+      </div>
+
+      <div class="relative min-w-[260px]">
+        <input type="text" id="search-input" onkeyup="filterCards()" placeholder="Search primes, agencies, keywords..." 
+          class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded px-3 py-2 focus:outline-none focus:border-cyan-500">
+      </div>
+    </section>
+
+    <!-- Content Sections -->
+    <div id="loading" class="text-center py-20 text-slate-400 text-sm font-mono">
+      Loading latest intelligence payload...
+    </div>
+
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-4 rounded text-rose-300 text-sm"></div>
+
+    <div id="dashboard-content" class="hidden space-y-10">
+      
+      <!-- Section: Defense Contracts -->
+      <section id="section-contracts" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-cyan-500 rounded"></span> Defense Procurement & Contract Awards
+          </h2>
+          <span id="contracts-count" class="text-xs font-mono text-slate-400">0 items</span>
+        </div>
+        <div id="contracts-list" class="grid grid-cols-1 gap-3"></div>
+      </section>
+
+      <!-- Section: Congressional Hearings -->
+      <section id="section-hearings" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-purple-500 rounded"></span> Congressional Proceedings & Policy Testimony
+          </h2>
+          <span id="hearings-count" class="text-xs font-mono text-slate-400">0 items</span>
+        </div>
+        <div id="hearings-list" class="grid grid-cols-1 gap-4"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    let rawData = null;
+    let currentFilter = 'all';
+
+    async function loadIntelData() {
+      const loading = document.getElementById('loading');
+      const content = document.getElementById('dashboard-content');
+      const errBox = document.getElementById('error-box');
+
+      loading.classList.remove('hidden');
+      content.classList.add('hidden');
+      errBox.classList.add('hidden');
+
+      try {
+        // Cache bust query to ensure live updates
+        const res = await fetch(`data/latest.json?t=${new Date().getTime()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status} - data/latest.json not found`);
+        rawData = await res.json();
+
+        renderDashboard(rawData);
+        loading.classList.add('hidden');
+        content.classList.remove('hidden');
+      } catch (err) {
+        loading.classList.add('hidden');
+        errBox.textContent = `Error loading intelligence stream: ${err.message}. Ensure data/latest.json exists in the repository.`;
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    function renderDashboard(data) {
+      document.getElementById('report-date').textContent = `REPORT DATE: ${data.report_date || 'N/A'}`;
+      document.getElementById('stat-golden-dome').textContent = data.summary?.golden_dome_priority_count ?? 0;
+      document.getElementById('stat-contracts').textContent = data.summary?.total_contracts ?? 0;
+      document.getElementById('stat-hearings').textContent = data.summary?.total_hearings ?? 0;
+
+      renderContracts(data.defense_contracts || []);
+      renderHearings(data.congressional_hearings || []);
+      filterCards();
+    }
+
+    function renderContracts(contracts) {
+      const container = document.getElementById('contracts-list');
+      document.getElementById('contracts-count').textContent = `${contracts.length} items`;
+      container.innerHTML = '';
+
+      if (contracts.length === 0) {
+        container.innerHTML = `<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No contract awards recorded in current window.</div>`;
+        return;
+      }
+
+      contracts.forEach((c, idx) => {
+        const isGoldenDome = c.is_golden_dome;
+        const badge = isGoldenDome 
+          ? `<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>`
+          : `<span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Space Relevant</span>`;
+
+        const card = document.createElement('div');
+        card.className = `contract-card bg-slate-900 border ${isGoldenDome ? 'border-amber-500/30' : 'border-slate-800'} rounded-lg p-4 transition hover:border-slate-700`;
+        card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
+        card.setAttribute('data-type', 'contract');
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${badge}
+              <span class="text-xs font-bold text-slate-200">${escapeHtml(c.contractor)}</span>
+            </div>
+            <div class="text-sm font-mono font-extrabold text-emerald-400">${escapeHtml(c.award_amount)}</div>
+          </div>
+
+          <div class="mt-2.5 text-xs text-slate-400 flex flex-wrap gap-x-4 gap-y-1">
+            <div><span class="text-slate-500">Activity:</span> ${escapeHtml(c.contracting_activity || c.branch_section)}</div>
+            <div><span class="text-slate-500">Branch:</span> ${escapeHtml(c.branch_section)}</div>
+          </div>
+
+          <details class="mt-3 group">
+            <summary class="cursor-pointer text-[11px] text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 select-none">
+              <span class="group-open:rotate-90 transition-transform">▸</span> View Pentagon Announcement Text
+            </summary>
+            <div class="mt-2 p-3 bg-slate-950/70 border border-slate-800/80 rounded text-xs text-slate-300 leading-relaxed font-mono">
+              ${escapeHtml(c.raw_text)}
+            </div>
+          </details>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderHearings(hearings) {
+      const container = document.getElementById('hearings-list');
+      document.getElementById('hearings-count').textContent = `${hearings.length} items`;
+      container.innerHTML = '';
+
+      if (hearings.length === 0) {
+        container.innerHTML = `<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active committee proceedings found.</div>`;
+        return;
+      }
+
+      hearings.forEach(h => {
+        const isGoldenDome = h.is_golden_dome;
+        const badge = isGoldenDome 
+          ? `<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>`
+          : `<span class="bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Space & Defense</span>`;
+
+        const card = document.createElement('div');
+        card.className = `hearing-card bg-slate-900 border ${isGoldenDome ? 'border-amber-500/30' : 'border-slate-800'} rounded-lg p-5 space-y-3 transition hover:border-slate-700`;
+        card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
+        card.setAttribute('data-type', 'hearing');
+
+        let testimoniesHtml = '';
+        if (h.testimonies && h.testimonies.length > 0) {
+          testimoniesHtml = `
+            <div class="mt-4 pt-4 border-t border-slate-800 space-y-3">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Written Witness Statements & Policy Mining</div>
+              ${h.testimonies.map(t => `
+                <div class="bg-slate-950/60 border border-slate-800 rounded p-3 text-xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-slate-200">${escapeHtml(t.witness \vert{}\vert{} 'Witness Statement')}</span>${t.pdf_url ? `<a href="${t.pdf_url}" target="_blank" class="text-cyan-400 hover:underline text-[11px]">PDF ↗</a>` : ''}
+                  </div>
+                  ${(t.quotes || []).map(q => `
+                    <blockquote class="border-l-2 border-cyan-500/60 pl-2.5 py-0.5 text-slate-300 text-xs italic bg-cyan-950/10 rounded-r">
+                      "${escapeHtml(q.quote)}"
+                      <span class="block text-[10px] text-slate-400 not-italic mt-1">Page ${q.page_number} // ${escapeHtml(q.topic_category)}</span>
+                    </blockquote>
+                  `).join('')}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${badge}
+              <span class="text-xs font-mono text-slate-400">${escapeHtml(h.chamber || '')} &bull; ${escapeHtml(h.date || '')}</span>
+            </div>
+            <a href="${h.url}" target="_blank" class="text-xs text-cyan-400 hover:underline font-mono">Congress.gov Event #${escapeHtml(h.event_id || '')} ↗</a>
+          </div>
+
+          <h3 class="text-sm font-semibold text-white leading-snug">${escapeHtml(h.title)}</h3>
+
+          <div class="text-xs text-slate-400">
+            <span class="text-slate-500">Committees:</span> ${(h.committees || []).join(' | ')}
+          </div>
+
+          ${testimoniesHtml}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setFilter(type) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        if (b.getAttribute('data-tab') === type) {
+          b.className = 'filter-btn px-3 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white';
+        } else {
+          b.className = 'filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700';
+        }
+      });
+      filterCards();
+    }
+
+    function filterCards() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const contractCards = document.querySelectorAll('.contract-card');
+      const hearingCards = document.querySelectorAll('.hearing-card');
+
+      const secContracts = document.getElementById('section-contracts');
+      const secHearings = document.getElementById('section-hearings');
+
+      if (currentFilter === 'hearings') {
+        secContracts.classList.add('hidden');
+      } else {
+        secContracts.classList.remove('hidden');
+      }
+
+      if (currentFilter === 'contracts') {
+        secHearings.classList.add('hidden');
+      } else {
+        secHearings.classList.remove('hidden');
+      }
+
+      function evaluateVisibility(card) {
+        const text = card.textContent.toLowerCase();
+        const isGolden = card.getAttribute('data-golden') === 'true';
+
+        const matchesQuery = query === '' || text.includes(query);
+        let matchesFilter = true;
+
+        if (currentFilter === 'golden-dome') {
+          matchesFilter = isGolden;
+        }
+
+        if (matchesQuery && matchesFilter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      }
+
+      contractCards.forEach(evaluateVisibility);
+      hearingCards.forEach(evaluateVisibility);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', loadIntelData);
+  </script>
+</body>
+</html>

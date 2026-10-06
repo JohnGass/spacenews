@@ -85,11 +85,21 @@
       </div>
     </section>
 
+    <!-- Diagnostic and Loading Indicators -->
     <div id="loading" class="text-center py-20 text-slate-400 text-sm font-mono">
-      Loading latest intelligence payload...
+      <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+      <div>Loading latest intelligence payload...</div>
     </div>
 
-    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-4 rounded text-rose-300 text-sm"></div>
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-5 rounded-lg text-rose-300 text-sm space-y-2">
+      <div class="font-bold flex items-center gap-2">
+        <span>⚠</span> Failed to load intelligence payload
+      </div>
+      <div id="error-details" class="font-mono text-xs text-rose-400"></div>
+      <button onclick="loadIntelData()" class="mt-2 text-xs bg-rose-800 hover:bg-rose-700 text-white font-medium px-3 py-1.5 rounded transition">
+        Retry Load
+      </button>
+    </div>
 
     <div id="dashboard-content" class="hidden space-y-10">
 
@@ -97,7 +107,7 @@
       <section id="section-solicitations" class="space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-emerald-500 rounded"></span> Active Pre-Award Solicitations & Solicitations (SAM.gov & DIU)
+            <span class="w-1.5 h-4 bg-emerald-500 rounded"></span> Active Pre-Award Solicitations (SAM.gov & DIU)
           </h2>
           <span id="solicitations-count" class="text-xs font-mono text-slate-400">0 items</span>
         </div>
@@ -133,36 +143,61 @@
     let rawData = null;
     let currentFilter = 'all';
 
+    function getPayloadUrl() {
+      // Calculate robust relative path regardless of trailing slashes or /index.html
+      let path = window.location.pathname;
+      if (path.endsWith('index.html')) {
+        path = path.slice(0, -'index.html'.length);
+      }
+      if (!path.endsWith('/')) {
+        path += '/';
+      }
+      return `${window.location.origin}${path}data/latest.json?t=${Date.now()}`;
+    }
+
     async function loadIntelData() {
       const loading = document.getElementById('loading');
       const content = document.getElementById('dashboard-content');
       const errBox = document.getElementById('error-box');
+      const errDetails = document.getElementById('error-details');
 
       loading.classList.remove('hidden');
       content.classList.add('hidden');
       errBox.classList.add('hidden');
 
+      const targetUrl = getPayloadUrl();
+      console.log('Fetching intelligence data from:', targetUrl);
+
       try {
-        const res = await fetch(`data/latest.json?t=${new Date().getTime()}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status} - data/latest.json not found`);
+        const res = await fetch(targetUrl);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} (${res.statusText}) while requesting ${targetUrl}`);
+        }
         rawData = await res.json();
+        console.log('Loaded payload:', rawData);
 
         renderDashboard(rawData);
         loading.classList.add('hidden');
         content.classList.remove('hidden');
       } catch (err) {
+        console.error('Data load failure:', err);
         loading.classList.add('hidden');
-        errBox.textContent = `Error loading intelligence stream: ${err.message}.`;
+        errDetails.textContent = err.message;
         errBox.classList.remove('hidden');
       }
     }
 
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
     function renderDashboard(data) {
-      document.getElementById('report-date').textContent = `REPORT DATE: ${data.report_date || 'N/A'}`;
-      document.getElementById('stat-golden-dome').textContent = data.summary?.golden_dome_priority_count ?? 0;
-      document.getElementById('stat-solicitations').textContent = data.summary?.total_solicitations ?? 0;
-      document.getElementById('stat-contracts').textContent = data.summary?.total_contracts ?? 0;
-      document.getElementById('stat-hearings').textContent = data.summary?.total_hearings ?? 0;
+      setSafeText('report-date', `REPORT DATE: ${data.report_date || 'N/A'}`);
+      setSafeText('stat-golden-dome', data.summary?.golden_dome_priority_count ?? 0);
+      setSafeText('stat-solicitations', data.summary?.total_solicitations ?? 0);
+      setSafeText('stat-contracts', data.summary?.total_contracts ?? 0);
+      setSafeText('stat-hearings', data.summary?.total_hearings ?? 0);
 
       renderSolicitations(data.pre_award_solicitations || []);
       renderContracts(data.defense_contracts || []);
@@ -172,11 +207,12 @@
 
     function renderSolicitations(solicitations) {
       const container = document.getElementById('solicitations-list');
-      document.getElementById('solicitations-count').textContent = `${solicitations.length} items`;
+      setSafeText('solicitations-count', `${solicitations.length} items`);
+      if (!container) return;
       container.innerHTML = '';
 
       if (solicitations.length === 0) {
-        container.innerHTML = `<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active pre-award solicitations captured. (Add SAM_GOV_API_KEY secret to enable full SAM.gov RFPs).</div>`;
+        container.innerHTML = `<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active pre-award solicitations captured.</div>`;
         return;
       }
 
@@ -218,7 +254,8 @@
 
     function renderContracts(contracts) {
       const container = document.getElementById('contracts-list');
-      document.getElementById('contracts-count').textContent = `${contracts.length} items`;
+      setSafeText('contracts-count', `${contracts.length} items`);
+      if (!container) return;
       container.innerHTML = '';
 
       if (contracts.length === 0) {
@@ -266,7 +303,8 @@
 
     function renderHearings(hearings) {
       const container = document.getElementById('hearings-list');
-      document.getElementById('hearings-count').textContent = `${hearings.length} items`;
+      setSafeText('hearings-count', `${hearings.length} items`);
+      if (!container) return;
       container.innerHTML = '';
 
       if (hearings.length === 0) {
@@ -341,7 +379,7 @@
     }
 
     function filterCards() {
-      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
       const solCards = document.querySelectorAll('.solicitation-card');
       const contractCards = document.querySelectorAll('.contract-card');
       const hearingCards = document.querySelectorAll('.hearing-card');
@@ -350,9 +388,9 @@
       const secContracts = document.getElementById('section-contracts');
       const secHearings = document.getElementById('section-hearings');
 
-      secSols.classList.toggle('hidden', currentFilter === 'contracts' || currentFilter === 'hearings');
-      secContracts.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'hearings');
-      secHearings.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'contracts');
+      if (secSols) secSols.classList.toggle('hidden', currentFilter === 'contracts' || currentFilter === 'hearings');
+      if (secContracts) secContracts.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'hearings');
+      if (secHearings) secHearings.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'contracts');
 
       function evaluateVisibility(card) {
         const text = card.textContent.toLowerCase();
@@ -379,7 +417,12 @@
         .replace(/'/g, '&#039;');
     }
 
-    document.addEventListener('DOMContentLoaded', loadIntelData);
+    // Execute immediately if DOM already parsed, otherwise wait for event
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadIntelData);
+    } else {
+      loadIntelData();
+    }
   </script>
 </body>
 </html>

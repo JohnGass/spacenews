@@ -12,7 +12,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- Top Navigation & Header -->
+  <!-- Header -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
@@ -39,44 +39,54 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
     <!-- KPI Metric Cards -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
-        <div class="text-xs font-semibold uppercase tracking-wider text-amber-400">★ Golden Dome Priority</div>
-        <div id="stat-golden-dome" class="text-3xl font-extrabold text-white mt-2">--</div>
-        <div class="text-xs text-slate-400 mt-1">Layered missile defense & tracking</div>
-        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-amber-400">★ Golden Dome</div>
+        <div id="stat-golden-dome" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">Missile Tracking/C2</div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
-        <div class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Pre-Award Opportunities</div>
-        <div id="stat-solicitations" class="text-3xl font-extrabold text-white mt-2">--</div>
-        <div class="text-xs text-slate-400 mt-1">SAM.gov RFPs, BAAs & DIU CSOs</div>
-        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-cyan-400">Contracts</div>
+        <div id="stat-contracts" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">Pentagon 17:00 Awards</div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
-        <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Defense Contract Awards</div>
-        <div id="stat-contracts" class="text-3xl font-extrabold text-white mt-2">--</div>
-        <div class="text-xs text-slate-400 mt-1">Pentagon 17:00 EST daily filings</div>
-        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl pointer-events-none"></div>
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-purple-400">SpEC & OTAs</div>
+        <div id="stat-spec" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">Prototypes & Consortia</div>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg relative overflow-hidden">
-        <div class="text-xs font-semibold uppercase tracking-wider text-purple-400">Capitol Hill Hearings</div>
-        <div id="stat-hearings" class="text-3xl font-extrabold text-white mt-2">--</div>
-        <div class="text-xs text-slate-400 mt-1">HASC / SASC testimony analysis</div>
-        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-rose-400">SpaceWERX</div>
+        <div id="stat-spacewerx" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">TacFI, StratFI, SBIR</div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-orange-400">DIU & IC</div>
+        <div id="stat-ic-diu" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">CSOs, NRO, NGA, IQT</div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-4 rounded-lg">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">SAM.gov RFPs</div>
+        <div id="stat-solicitations" class="text-2xl font-extrabold text-white mt-1">--</div>
+        <div class="text-[10px] text-slate-500">Pre-Award Solicitations</div>
       </div>
     </section>
 
     <!-- Filters & Search Toolbar -->
     <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
-        <button data-tab="all" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white">All Records</button>
-        <button data-tab="golden-dome" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">★ Golden Dome Only</button>
-        <button data-tab="solicitations" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Pre-Award & RFPs</button>
-        <button data-tab="contracts" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Contract Awards</button>
-        <button data-tab="hearings" class="filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Hearings & Quotes</button>
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+        <button data-tab="all" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white whitespace-nowrap">All Records</button>
+        <button data-tab="golden-dome" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">★ Golden Dome</button>
+        <button data-tab="spec" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">SpEC & OTAs</button>
+        <button data-tab="spacewerx" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">SpaceWERX & SBIR</button>
+        <button data-tab="ic-diu" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">DIU & IC (NRO/NGA)</button>
+        <button data-tab="contracts" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">Contracts</button>
+        <button data-tab="solicitations" class="filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap">SAM.gov RFPs</button>
       </div>
 
       <div class="relative min-w-[260px]">
@@ -85,35 +95,53 @@
       </div>
     </section>
 
-    <!-- Loading and Error Indicators -->
+    <!-- Indicators -->
     <div id="loading" class="text-center py-20 text-slate-400 text-sm font-mono">
       <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
-      <div>Loading latest intelligence payload...</div>
+      <div>Loading intelligence pipeline payload...</div>
     </div>
 
     <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-5 rounded-lg text-rose-300 text-sm space-y-2">
-      <div class="font-bold flex items-center gap-2">
-        <span>⚠</span> Failed to load intelligence payload
-      </div>
+      <div class="font-bold flex items-center gap-2"><span>⚠</span> Failed to load intelligence payload</div>
       <div id="error-details" class="font-mono text-xs text-rose-400"></div>
-      <button id="btn-retry" class="mt-2 text-xs bg-rose-800 hover:bg-rose-700 text-white font-medium px-3 py-1.5 rounded transition">
-        Retry Load
-      </button>
+      <button id="btn-retry" class="mt-2 text-xs bg-rose-800 hover:bg-rose-700 text-white font-medium px-3 py-1.5 rounded transition">Retry Load</button>
     </div>
 
     <div id="dashboard-content" class="hidden space-y-10">
 
-      <!-- Section: Pre-Award Solicitations -->
-      <section id="section-solicitations" class="space-y-4">
+      <!-- Section: SpEC & Non-FAR OTAs -->
+      <section id="section-spec" class="space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-emerald-500 rounded"></span> Active Pre-Award Solicitations (SAM.gov & DIU)
+            <span class="w-1.5 h-4 bg-purple-500 rounded"></span> Space Enterprise Consortium (SpEC) & Prototype OTAs
           </h2>
-          <span id="solicitations-count" class="text-xs font-mono text-slate-400">0 items</span>
+          <span id="spec-count" class="text-xs font-mono text-slate-400">0 items</span>
         </div>
-        <div id="solicitations-list" class="grid grid-cols-1 gap-3"></div>
+        <div id="spec-list" class="grid grid-cols-1 gap-3"></div>
       </section>
-      
+
+      <!-- Section: SpaceWERX, TacFI, StratFI, SBIR -->
+      <section id="section-spacewerx" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-rose-500 rounded"></span> SpaceWERX Ventures, TacFI, StratFI & SBIR Topics
+          </h2>
+          <span id="spacewerx-count" class="text-xs font-mono text-slate-400">0 items</span>
+        </div>
+        <div id="spacewerx-list" class="grid grid-cols-1 gap-3"></div>
+      </section>
+
+      <!-- Section: DIU CSOs, In-Q-Tel, NRO/NGA -->
+      <section id="section-ic-diu" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-orange-500 rounded"></span> DIU Commercial Solutions Openings & IC Ventures (NRO / NGA / IQT)
+          </h2>
+          <span id="ic-diu-count" class="text-xs font-mono text-slate-400">0 items</span>
+        </div>
+        <div id="ic-diu-list" class="grid grid-cols-1 gap-3"></div>
+      </section>
+
       <!-- Section: Defense Contracts -->
       <section id="section-contracts" class="space-y-4">
         <div class="flex items-center justify-between">
@@ -125,15 +153,15 @@
         <div id="contracts-list" class="grid grid-cols-1 gap-3"></div>
       </section>
 
-      <!-- Section: Congressional Hearings -->
-      <section id="section-hearings" class="space-y-4">
+      <!-- Section: SAM.gov RFPs -->
+      <section id="section-solicitations" class="space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-purple-500 rounded"></span> Congressional Proceedings & Policy Testimony
+            <span class="w-1.5 h-4 bg-emerald-500 rounded"></span> SAM.gov Active Pre-Award Solicitations
           </h2>
-          <span id="hearings-count" class="text-xs font-mono text-slate-400">0 items</span>
+          <span id="solicitations-count" class="text-xs font-mono text-slate-400">0 items</span>
         </div>
-        <div id="hearings-list" class="grid grid-cols-1 gap-4"></div>
+        <div id="solicitations-list" class="grid grid-cols-1 gap-3"></div>
       </section>
 
     </div>
@@ -146,11 +174,11 @@
     function escapeHtml(str) {
       if (!str) return '';
       return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .split('&').join('&amp;')
+        .split('<').join('&lt;')
+        .split('>').join('&gt;')
+        .split('"').join('&quot;')
+        .split("'").join('&#039;');
     }
 
     function setSafeText(id, text) {
@@ -160,12 +188,8 @@
 
     function getPayloadUrl() {
       let path = window.location.pathname;
-      if (path.endsWith('index.html')) {
-        path = path.slice(0, -'index.html'.length);
-      }
-      if (!path.endsWith('/')) {
-        path += '/';
-      }
+      if (path.endsWith('index.html')) path = path.slice(0, -'index.html'.length);
+      if (!path.endsWith('/')) path += '/';
       return window.location.origin + path + 'data/latest.json?t=' + Date.now();
     }
 
@@ -180,21 +204,14 @@
       errBox.classList.add('hidden');
 
       const targetUrl = getPayloadUrl();
-      console.log('Fetching intelligence payload from:', targetUrl);
-
       try {
         const res = await fetch(targetUrl);
-        if (!res.ok) {
-          throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
-        }
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
         rawData = await res.json();
-        console.log('Successfully loaded payload:', rawData);
-
         renderDashboard(rawData);
         loading.classList.add('hidden');
         content.classList.remove('hidden');
       } catch (err) {
-        console.error('Data load failure:', err);
         loading.classList.add('hidden');
         if (errDetails) errDetails.textContent = err.message;
         errBox.classList.remove('hidden');
@@ -204,55 +221,57 @@
     function renderDashboard(data) {
       setSafeText('report-date', 'REPORT DATE: ' + (data.report_date || 'N/A'));
       setSafeText('stat-golden-dome', data.summary ? (data.summary.golden_dome_priority_count ?? 0) : 0);
-      setSafeText('stat-solicitations', data.summary ? (data.summary.total_solicitations ?? 0) : 0);
       setSafeText('stat-contracts', data.summary ? (data.summary.total_contracts ?? 0) : 0);
-      setSafeText('stat-hearings', data.summary ? (data.summary.total_hearings ?? 0) : 0);
+      setSafeText('stat-spec', data.summary ? (data.summary.total_spec_and_otas ?? 0) : 0);
+      setSafeText('stat-spacewerx', data.summary ? (data.summary.total_sbir_and_spacewerx ?? 0) : 0);
+      setSafeText('stat-ic-diu', data.summary ? (data.summary.total_ic_and_diu ?? 0) : 0);
+      setSafeText('stat-solicitations', data.summary ? (data.summary.total_solicitations ?? 0) : 0);
 
-      renderSolicitations(data.pre_award_solicitations || []);
+      renderCards('spec-list', 'spec-count', data.spec_and_otas || [], 'purple', 'SpEC / OTA');
+      renderCards('spacewerx-list', 'spacewerx-count', data.sbir_and_spacewerx || [], 'rose', 'SpaceWERX / SBIR');
+      renderCards('ic-diu-list', 'ic-diu-count', data.ic_and_diu || [], 'orange', 'DIU / IC');
+      renderCards('solicitations-list', 'solicitations-count', data.pre_award_solicitations || [], 'emerald', 'SAM.gov RFP');
       renderContracts(data.defense_contracts || []);
-      renderHearings(data.congressional_hearings || []);
       filterCards();
     }
 
-    function renderSolicitations(solicitations) {
-      const container = document.getElementById('solicitations-list');
-      setSafeText('solicitations-count', solicitations.length + ' items');
+    function renderCards(listId, countId, items, themeColor, defaultType) {
+      const container = document.getElementById(listId);
+      setSafeText(countId, items.length + ' items');
       if (!container) return;
       container.innerHTML = '';
 
-      if (solicitations.length === 0) {
-        container.innerHTML = '<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active pre-award solicitations captured.</div>';
+      if (items.length === 0) {
+        container.innerHTML = '<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active opportunities captured in this category.</div>';
         return;
       }
 
-      solicitations.forEach(function(s) {
-        const isGoldenDome = !!s.is_golden_dome;
-        const badge = isGoldenDome 
+      items.forEach(function(item) {
+        const isGoldenDome = !!item.is_golden_dome;
+        const badge = isGoldenDome
           ? '<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>'
-          : '<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">' + escapeHtml(s.notice_type || 'Pre-Award') + '</span>';
+          : '<span class="bg-' + themeColor + '-500/10 border border-' + themeColor + '-500/30 text-' + themeColor + '-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">' + escapeHtml(item.notice_type || defaultType) + '</span>';
 
         const card = document.createElement('div');
-        card.className = 'solicitation-card bg-slate-900 border ' + (isGoldenDome ? 'border-amber-500/30' : 'border-slate-800') + ' rounded-lg p-4 transition hover:border-slate-700';
+        card.className = 'intel-card bg-slate-900 border ' + (isGoldenDome ? 'border-amber-500/30' : 'border-slate-800') + ' rounded-lg p-4 transition hover:border-slate-700';
         card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
-        card.setAttribute('data-type', 'solicitation');
 
-        card.innerHTML = 
+        card.innerHTML =
           '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">' +
             '<div class="flex items-center gap-2 flex-wrap">' +
               badge +
-              '<span class="text-xs font-mono text-slate-400">' + escapeHtml(s.source) + ' &bull; ' + escapeHtml(s.solicitation_number) + '</span>' +
+              '<span class="text-xs font-mono text-slate-400">' + escapeHtml(item.source) + (item.solicitation_number ? ' &bull; ' + escapeHtml(item.solicitation_number) : '') + '</span>' +
             '</div>' +
             '<div class="text-xs font-mono text-amber-400">' +
-              '<span class="text-slate-500">Deadline:</span> ' + escapeHtml(s.response_deadline) +
+              '<span class="text-slate-500">Deadline:</span> ' + escapeHtml(item.response_deadline || 'Open') +
             '</div>' +
           '</div>' +
           '<h3 class="text-sm font-semibold text-white mt-2 leading-snug">' +
-            '<a href="' + escapeHtml(s.url) + '" target="_blank" class="hover:text-cyan-400 transition">' + escapeHtml(s.title) + ' ↗</a>' +
+            '<a href="' + escapeHtml(item.url) + '" target="_blank" class="hover:text-cyan-400 transition">' + escapeHtml(item.title) + ' ↗</a>' +
           '</h3>' +
           '<div class="mt-2 text-xs text-slate-400 flex flex-wrap gap-x-4 gap-y-1">' +
-            '<div><span class="text-slate-500">Agency/Office:</span> ' + escapeHtml(s.agency_office) + '</div>' +
-            '<div><span class="text-slate-500">NAICS:</span> ' + escapeHtml(s.naics_code) + '</div>' +
-            '<div><span class="text-slate-500">POC:</span> ' + escapeHtml(s.point_of_contact) + '</div>' +
+            '<div><span class="text-slate-500">Office:</span> ' + escapeHtml(item.agency_office) + '</div>' +
+            '<div><span class="text-slate-500">POC:</span> ' + escapeHtml(item.point_of_contact || 'See Listing') + '</div>' +
           '</div>';
 
         container.appendChild(card);
@@ -277,9 +296,8 @@
           : '<span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Space Relevant</span>';
 
         const card = document.createElement('div');
-        card.className = 'contract-card bg-slate-900 border ' + (isGoldenDome ? 'border-amber-500/30' : 'border-slate-800') + ' rounded-lg p-4 transition hover:border-slate-700';
+        card.className = 'intel-card bg-slate-900 border ' + (isGoldenDome ? 'border-amber-500/30' : 'border-slate-800') + ' rounded-lg p-4 transition hover:border-slate-700';
         card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
-        card.setAttribute('data-type', 'contract');
 
         card.innerHTML = 
           '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">' +
@@ -306,83 +324,13 @@
       });
     }
 
-    function renderHearings(hearings) {
-      const container = document.getElementById('hearings-list');
-      setSafeText('hearings-count', hearings.length + ' items');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (hearings.length === 0) {
-        container.innerHTML = '<div class="p-4 rounded border border-slate-800 text-slate-500 text-xs">No active committee proceedings found.</div>';
-        return;
-      }
-
-      hearings.forEach(function(h) {
-        const isGoldenDome = !!h.is_golden_dome;
-        const badge = isGoldenDome 
-          ? '<span class="bg-amber-500/10 border border-amber-500/40 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">★ Golden Dome</span>'
-          : '<span class="bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Space & Defense</span>';
-
-        const card = document.createElement('div');
-        card.className = 'hearing-card bg-slate-900 border ' + (isGoldenDome ? 'border-amber-500/30' : 'border-slate-800') + ' rounded-lg p-5 space-y-3 transition hover:border-slate-700';
-        card.setAttribute('data-golden', isGoldenDome ? 'true' : 'false');
-        card.setAttribute('data-type', 'hearing');
-
-        let testimoniesHtml = '';
-        if (h.testimonies && h.testimonies.length > 0) {
-          let testBlocks = '';
-          h.testimonies.forEach(function(t) {
-            let quoteBlocks = '';
-            (t.quotes || []).forEach(function(q) {
-              quoteBlocks += 
-                '<blockquote class="border-l-2 border-cyan-500/60 pl-2.5 py-0.5 text-slate-300 text-xs italic bg-cyan-950/10 rounded-r">' +
-                  '"' + escapeHtml(q.quote) + '"' +
-                  '<span class="block text-[10px] text-slate-400 not-italic mt-1">Page ' + q.page_number + ' // ' + escapeHtml(q.topic_category) + '</span>' +
-                '</blockquote>';
-            });
-
-            testBlocks += 
-              '<div class="bg-slate-950/60 border border-slate-800 rounded p-3 text-xs space-y-2">' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="font-semibold text-slate-200">' + escapeHtml(t.witness || 'Witness Statement') + '</span>' +
-                  (t.pdf_url ? '<a href="' + escapeHtml(t.pdf_url) + '" target="_blank" class="text-cyan-400 hover:underline text-[11px]">PDF ↗</a>' : '') +
-                '</div>' +
-                quoteBlocks +
-              '</div>';
-          });
-
-          testimoniesHtml = 
-            '<div class="mt-4 pt-4 border-t border-slate-800 space-y-3">' +
-              '<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Written Witness Statements & Policy Mining</div>' +
-              testBlocks +
-            '</div>';
-        }
-
-        card.innerHTML = 
-          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">' +
-            '<div class="flex items-center gap-2 flex-wrap">' +
-              badge +
-              '<span class="text-xs font-mono text-slate-400">' + escapeHtml(h.chamber || '') + ' &bull; ' + escapeHtml(h.date || '') + '</span>' +
-            '</div>' +
-            '<a href="' + escapeHtml(h.url) + '" target="_blank" class="text-xs text-cyan-400 hover:underline font-mono">Congress.gov Event #' + escapeHtml(h.event_id || '') + ' ↗</a>' +
-          '</div>' +
-          '<h3 class="text-sm font-semibold text-white leading-snug">' + escapeHtml(h.title) + '</h3>' +
-          '<div class="text-xs text-slate-400">' +
-            '<span class="text-slate-500">Committees:</span> ' + escapeHtml((h.committees || []).join(' | ')) +
-          '</div>' +
-          testimoniesHtml;
-
-        container.appendChild(card);
-      });
-    }
-
     function setFilter(type) {
       currentFilter = type;
       document.querySelectorAll('.filter-btn').forEach(function(b) {
         if (b.getAttribute('data-tab') === type) {
-          b.className = 'filter-btn px-3 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white';
+          b.className = 'filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-cyan-600 text-white whitespace-nowrap';
         } else {
-          b.className = 'filter-btn px-3 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700';
+          b.className = 'filter-btn px-2.5 py-1.5 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap';
         }
       });
       filterCards();
@@ -392,41 +340,33 @@
       const searchEl = document.getElementById('search-input');
       const query = (searchEl ? searchEl.value : '').toLowerCase().trim();
 
-      const solCards = document.querySelectorAll('.solicitation-card');
-      const contractCards = document.querySelectorAll('.contract-card');
-      const hearingCards = document.querySelectorAll('.hearing-card');
-
-      const secSols = document.getElementById('section-solicitations');
+      const secSpec = document.getElementById('section-spec');
+      const secSpaceWERX = document.getElementById('section-spacewerx');
+      const secICDIU = document.getElementById('section-ic-diu');
       const secContracts = document.getElementById('section-contracts');
-      const secHearings = document.getElementById('section-hearings');
+      const secSols = document.getElementById('section-solicitations');
 
-      if (secSols) secSols.classList.toggle('hidden', currentFilter === 'contracts' || currentFilter === 'hearings');
-      if (secContracts) secContracts.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'hearings');
-      if (secHearings) secHearings.classList.toggle('hidden', currentFilter === 'solicitations' || currentFilter === 'contracts');
+      if (secSpec) secSpec.classList.toggle('hidden', currentFilter !== 'all' && currentFilter !== 'spec' && currentFilter !== 'golden-dome');
+      if (secSpaceWERX) secSpaceWERX.classList.toggle('hidden', currentFilter !== 'all' && currentFilter !== 'spacewerx' && currentFilter !== 'golden-dome');
+      if (secICDIU) secICDIU.classList.toggle('hidden', currentFilter !== 'all' && currentFilter !== 'ic-diu' && currentFilter !== 'golden-dome');
+      if (secContracts) secContracts.classList.toggle('hidden', currentFilter !== 'all' && currentFilter !== 'contracts' && currentFilter !== 'golden-dome');
+      if (secSols) secSols.classList.toggle('hidden', currentFilter !== 'all' && currentFilter !== 'solicitations' && currentFilter !== 'golden-dome');
 
-      function evaluateVisibility(card) {
+      document.querySelectorAll('.intel-card').forEach(function(card) {
         const text = card.textContent.toLowerCase();
         const isGolden = card.getAttribute('data-golden') === 'true';
         const matchesQuery = query === '' || text.includes(query);
         let matchesFilter = true;
-
         if (currentFilter === 'golden-dome') matchesFilter = isGolden;
         card.classList.toggle('hidden', !(matchesQuery && matchesFilter));
-      }
-
-      solCards.forEach(evaluateVisibility);
-      contractCards.forEach(evaluateVisibility);
-      hearingCards.forEach(evaluateVisibility);
+      });
     }
 
-    // Bind event listeners
     document.addEventListener('DOMContentLoaded', function() {
       const btnRefresh = document.getElementById('btn-refresh');
       if (btnRefresh) btnRefresh.addEventListener('click', loadIntelData);
-
       const btnRetry = document.getElementById('btn-retry');
       if (btnRetry) btnRetry.addEventListener('click', loadIntelData);
-
       const searchInput = document.getElementById('search-input');
       if (searchInput) searchInput.addEventListener('keyup', filterCards);
 

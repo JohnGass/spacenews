@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Space Wire // Executive Media Briefing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Compact Google News accordion styling */
+    .story-drawer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out, opacity 0.2s ease-out;
+      opacity: 0;
+    }
+    .story-card.open .story-drawer {
+      max-height: 400px;
+      opacity: 1;
+    }
+    .story-card.open .chevron-icon {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Top Multi-Dashboard Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-3">
+        
+        <!-- Left: Brand & Dashboard Mode Switcher -->
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="text-sm font-bold tracking-tight text-white uppercase font-mono">Space Intel Portal</span>
+          </div>
+
+          <!-- View Switcher Tabs -->
+          <nav class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+            <a href="index.html" class="px-3 py-1 rounded text-slate-400 hover:text-white transition">
+              🏛 Procurement & OSINT
+            </a>
+            <a href="news.html" class="px-3 py-1 rounded bg-slate-800 text-white font-semibold border border-slate-700 shadow-sm">
+              📰 Global Space Wire
+            </a>
+          </nav>
+        </div>
+
+        <!-- Right: Status & Refresh -->
+        <div class="flex items-center gap-3">
+          <span id="report-date" class="text-xs font-mono bg-slate-950 text-slate-400 px-3 py-1 rounded border border-slate-800">
+            Syncing...
+          </span>
+          <button id="btn-refresh" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-3 py-1.5 rounded transition">
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills Bar (Google News Style) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto py-2.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
+        <button data-cat="all" class="cat-pill px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white whitespace-nowrap">Top Stories</button>
+        <button data-cat="China" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇨🇳 China</button>
+        <button data-cat="Russia" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇷🇺 Russia</button>
+        <button data-cat="Launch" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🚀 Launch</button>
+        <button data-cat="Policy & Hill" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🏛 Policy & Hill</button>
+        <button data-cat="Spacecraft" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛰 Spacecraft</button>
+        <button data-cat="Commercial" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">💼 Commercial</button>
+        <button data-cat="Technology" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">⚡ Technology</button>
+        <button data-cat="International" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🌍 International</button>
+        <button data-cat="Golden Dome" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap">★ Golden Dome</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Search Toolbar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
+      <div class="text-xs text-slate-400 font-mono flex items-center gap-2">
+        <span>CURRENT FEED:</span>
+        <span id="active-category-label" class="font-bold text-slate-200 uppercase">Top Stories</span>
+        <span id="story-count" class="text-slate-500">&bull; 0 stories loaded</span>
+      </div>
+
+      <div class="w-full sm:w-80">
+        <input type="text" id="search-input" placeholder="Search keywords, nations, leaders, launch vehicles..." 
+          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500 transition">
+      </div>
+    </div>
+
+    <!-- Loading and Error Indicators -->
+    <div id="loading" class="text-center py-24 text-slate-400 text-sm font-mono">
+      <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+      <div>Loading global space wire...</div>
+    </div>
+
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-5 rounded-lg text-rose-300 text-sm space-y-2">
+      <div class="font-bold flex items-center gap-2"><span>⚠</span> Failed to load news stream</div>
+      <div id="error-details" class="font-mono text-xs text-rose-400"></div>
+    </div>
+
+    <!-- Google News-Style Dense Headlines List -->
+    <div id="news-container" class="hidden space-y-2"></div>
+
+  </main>
+
+  <script>
+    let rawArticles = [];
+    let currentCategory = 'all';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .split('&').join('&amp;')
+        .split('<').join('&lt;')
+        .split('>').join('&gt;')
+        .split('"').join('&quot;')
+        .split("'").join('&#039;');
+    }
+
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function getPayloadUrl() {
+      let path = window.location.pathname;
+      if (path.endsWith('news.html') || path.endsWith('index.html')) {
+        path = path.slice(0, path.lastIndexOf('/') + 1);
+      }
+      if (!path.endsWith('/')) path += '/';
+      return window.location.origin + path + 'data/latest.json?t=' + Date.now();
+    }
+
+    async function loadNews() {
+      const loading = document.getElementById('loading');
+      const container = document.getElementById('news-container');
+      const errBox = document.getElementById('error-box');
+      const errDetails = document.getElementById('error-details');
+
+      loading.classList.remove('hidden');
+      container.classList.add('hidden');
+      errBox.classList.add('hidden');
+
+      const targetUrl = getPayloadUrl();
+      try {
+        const res = await fetch(targetUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
+        const data = await res.json();
+        
+        rawArticles = data.space_news || [];
+        setSafeText('report-date', 'REPORT DATE: ' + (data.report_date || 'N/A'));
+        
+        renderStories();
+        loading.classList.add('hidden');
+        container.classList.remove('hidden');
+      } catch (err) {
+        loading.classList.add('hidden');
+        if (errDetails) errDetails.textContent = err.message;
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    function renderStories() {
+      const container = document.getElementById('news-container');
+      const searchEl = document.getElementById('search-input');
+      const query = (searchEl ? searchEl.value : '').toLowerCase().trim();
+
+      container.innerHTML = '';
+
+      // Filter articles by category and search query
+      const filtered = rawArticles.filter(function(art) {
+        const matchesQuery = query === '' || 
+          art.title.toLowerCase().includes(query) || 
+          art.description.toLowerCase().includes(query) ||
+          art.source.toLowerCase().includes(query);
+
+        let matchesCat = true;
+        if (currentCategory === 'Golden Dome') {
+          matchesCat = !!art.is_golden_dome;
+        } else if (currentCategory !== 'all') {
+          matchesCat = (art.category === currentCategory);
+        }
+
+        return matchesQuery && matchesCat;
+      });
+
+      setSafeText('story-count', filtered.length + ' stories');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-8 text-center text-slate-500 font-mono text-xs border border-slate-800 rounded-lg bg-slate-900/50">No stories match the selected criteria.</div>';
+        return;
+      }
+
+      filtered.forEach(function(art, idx) {
+        const card = document.createElement('div');
+        card.className = 'story-card bg-slate-900/90 border border-slate-800 hover:border-slate-700 rounded-lg transition-colors';
+        card.setAttribute('data-index', idx);
+
+        // Category Badge Color
+        let catBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+        if (art.category === 'China') catBadge = 'bg-red-950/40 text-red-400 border-red-800/50';
+        if (art.category === 'Russia') catBadge = 'bg-orange-950/40 text-orange-400 border-orange-800/50';
+        if (art.category === 'Launch') catBadge = 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50';
+        if (art.category === 'Policy & Hill') catBadge = 'bg-blue-950/40 text-blue-400 border-blue-800/50';
+        if (art.category === 'Spacecraft') catBadge = 'bg-purple-950/40 text-purple-400 border-purple-800/50';
+        if (art.category === 'Technology') catBadge = 'bg-cyan-950/40 text-cyan-400 border-cyan-800/50';
+
+        // Related Reporting Sub-Block
+        let relatedHtml = '';
+        if (art.related_coverage && art.related_coverage.length > 0) {
+          relatedHtml = 
+            '<div class="mt-3 pt-3 border-t border-slate-800/80">' +
+              '<div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">' +
+                '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Other Reporting on this Story:' +
+              '</div>' +
+              '<div class="flex flex-wrap gap-2">' +
+                art.related_coverage.map(function(rel) {
+                  return '<a href="' + escapeHtml(rel.url) + '" target="_blank" class="text-xs bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-2.5 py-1 rounded text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">' +
+                    '<span class="font-bold text-slate-300">' + escapeHtml(rel.source) + ':</span> ' + escapeHtml(rel.title.slice(0, 50)) + '... ↗' +
+                  '</a>';
+                }).join('') +
+              '</div>' +
+            '</div>';
+        }
+
+        // Card HTML: Compact Single-Line Header + Expandable Dropdown Drawer
+        card.innerHTML = 
+          '<div class="story-header px-4 py-3 cursor-pointer flex items-center justify-between gap-3 select-none">' +
+            '<div class="flex items-center gap-3 min-w-0 flex-1">' +
+              '<span class="text-[11px] font-mono font-bold text-slate-400 shrink-0 w-28 truncate">' + escapeHtml(art.source) + '</span>' +
+              '<span class="text-[10px] font-medium border px-2 py-0.5 rounded shrink-0 ' + catBadge + '">' + escapeHtml(art.category) + '</span>' +
+              '<span class="text-sm font-medium text-slate-100 truncate hover:text-cyan-300 transition">' + escapeHtml(art.title) + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-3 shrink-0">' +
+              '<span class="text-xs font-mono text-slate-500 hidden sm:inline">' + escapeHtml(art.pub_date || '') + '</span>' +
+              '<span class="chevron-icon text-slate-400 text-xs transition-transform duration-200">▸</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="story-drawer px-4 pb-4">' +
+            '<div class="p-3.5 bg-slate-950/80 rounded-lg border border-slate-800/80 space-y-3">' +
+              '<div class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800/60">' +
+                '<div>' +
+                  '<span class="text-slate-500">Byline:</span> <span class="text-slate-300 font-medium">' + escapeHtml(art.author || art.source) + '</span>' +
+                  ' &bull; <span class="text-slate-500">Beat:</span> ' + escapeHtml(art.tier || art.category) +
+                '</div>' +
+                '<a href="' + escapeHtml(art.url) + '" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-3 py-1 rounded text-xs transition">' +
+                  'Read Full Article ↗' +
+                '</a>' +
+              '</div>' +
+              '<p class="text-xs text-slate-300 leading-relaxed font-sans">' +
+                escapeHtml(art.description || 'No excerpt available. Click above to view full article.') +
+              '</p>' +
+              relatedHtml +
+            '</div>' +
+          '</div>';
+
+        // Click row header to toggle open/close
+        const headerEl = card.querySelector('.story-header');
+        headerEl.addEventListener('click', function() {
+          card.classList.toggle('open');
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    // Pill Filtering Event Handlers
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.cat-pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          document.querySelectorAll('.cat-pill').forEach(function(p) {
+            p.className = 'cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+          });
+          this.className = 'cat-pill px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white whitespace-nowrap';
+          
+          currentCategory = this.getAttribute('data-cat');
+          setSafeText('active-category-label', this.textContent.trim());
+          renderStories();
+        });
+      });
+
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.addEventListener('keyup', renderStories);
+
+      const btnRefresh = document.getElementById('btn-refresh');
+      if (btnRefresh) btnRefresh.addEventListener('click', loadNews);
+
+      loadNews();
+    });
+  </script>
+</body>
+</html>

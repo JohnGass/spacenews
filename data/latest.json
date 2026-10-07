@@ -1,15 +1,15 @@
 {
   "report_date": "2026-10-07",
-  "generated_at": "2026-10-07T13:45:31.360816+00:00",
+  "generated_at": "2026-10-07T14:40:08.807668+00:00",
   "summary": {
     "total_contracts": 9,
     "total_solicitations": 18,
-    "total_spec_and_otas": 3,
+    "total_spec_and_otas": 1,
     "total_sbir_and_spacewerx": 0,
     "total_ic_and_diu": 3,
-    "total_space_news": 39,
+    "total_space_news": 33,
     "total_hearings": 0,
-    "golden_dome_priority_count": 8
+    "golden_dome_priority_count": 7
   },
   "defense_contracts": [
     {
@@ -23,7 +23,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Aegis Aerospace Inc., Webster, Texas, has been awarded a $9,359,118 modification (P00001) to a previously awarded contract (FA8809-26-F-B003) for transitioning missions from the Department of War human-rated payload support task order. The modification brings the total cumulative face value of the contract to $34,323,859 from $24,964,741. Work will be performed at Houston, Texas, and is expected to be completed by Sept. 30, 2034. Fiscal 2026 research and development funds in the amount of $654,507 are being obligated at time of award. The Space Systems Command, Kirtland, Air Force Base, Albuquerque, New Mexico, is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:19.228990+00:00"
+      "ingested_at": "2026-10-07T14:38:30.138017+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -36,7 +36,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "BAE Systems Inc., Rockville, Maryland, is awarded a $99,206,056 hybrid cost-plus-fixed-fee and cost-plus-incentive-fee contract (N0003026C3033) to provide systems engineering and integration support services for Portfolio Acquisition Executive (PAE) Strategic Systems Programs (SSP). This contract provides supporting systems engineering, integration, technical information, fleet-support, program-management, cybersecurity, documentation, and related support-service requirements. This award also benefits a Foreign Military Sale. Work will be performed in Rockville, Maryland (61%); Washington, D.C. (20%); Cape Canaveral, Florida (4%); Saint Mary's, Georgia (2%); Silverdale, Washington (1%); Groton, Connecticut (1%); Frederick, Maryland (1%); North Kingstown, Rhode Island (1%); York, Pennsylvania (1%); Huntsville, Alabama (1%); Barrow-in-Furness, United Kingdom (1%); and various other locations under 1% each (6%). Efforts are expected to be completed Sept. 30, 2027. Fiscal 2025 One Big Beautiful Bill Act (OBBBA) funds in the amount of $4,832,638 will be obligated upon award. No funds will expire at the end of the current fiscal year. This contract was awarded as a sole-source acquisition pursuant to 10 U.S. Code 2304(c)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. PAE SSP, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:23.806899+00:00"
+      "ingested_at": "2026-10-07T14:38:45.859048+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -49,7 +49,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "American Systems Corp., McLean, Virginia, has been awarded a $43,266,824 firm fixed price task order for Red LAN Sustainment. This contract provides for the continued operations and maintenance of the Red Local Area Network (Red LAN) System and Red LAN System Data Provider/Data Recipient additions. Work will be performed at Schriever Space Force Base, Colorado, and is expected to be completed by September 29, 2031. This award is the result of a competitive acquisition and 16 offers were received. Fiscal 2026 operations and maintenance funds in the amount of $2,001,232 are being obligated at the time of award. The Space Systems Command, Peterson Space Force Base, Colorado, is the contracting activity (FA8821-26-F-B015).",
-      "ingested_at": "2026-10-07T13:44:23.808476+00:00"
+      "ingested_at": "2026-10-07T14:38:45.860885+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -62,7 +62,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Vision Quest Solutions Inc., Rapid City, South Dakota, has been awarded a $25,274,553 firm-fixed-price, single award contract for Fire Protection and Emergency Services. This contract provides for the contractor to furnish all labor, tools, materials, equipment, supervision, personnel and all else necessary to manage and accomplish 24-hour 7 days a week fire protection and emergency services. Work will be performed at Cavalier Space Force Station, North Dakota, and is expected to be completed by Oct. 31, 2031. This contract was a competitive 100% small business set aside acquisition and seven offers were received. Fiscal 2027 operation and maintenance funds in the amount of $5,117,556 will be obligated for the base year. The 319th Contracting Squadron, Grand Forks Air Force Base, North Dakota, is the contracting activity (FA465926C0002).",
-      "ingested_at": "2026-10-07T13:44:23.808837+00:00"
+      "ingested_at": "2026-10-07T14:38:45.861250+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -75,7 +75,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "L3Harris Interstate Electronics Corp., Yorba Linda, California, is being awarded a $46,850,128 cost-plus-incentive-fee and cost-plus-fixed-fee contract (N0003027C2001) for services and support for flight test instrumentation systems for the Trident II Strategic Weapon System. This contract has optional line items which could increase the amount to $207,054,517, if exercised. Work will be performed in Yorba Linda, California (55%); Cape Canaveral, Florida (30%); Washington, D.C. (7%); Groton, Connecticut (3%); Bremerton, Washington (2%); Kings Bay, Georgia (2%); and Barrow-in-Furness, United Kingdom (1%). Work is expected to be completed on 30 September 2031. No funding will be obligated on this contract at time of award, and no funds will expire at the end of the current fiscal year, as it is being awarded subject to the availability of funds in fiscal 2027. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:27.224763+00:00"
+      "ingested_at": "2026-10-07T14:38:48.862414+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -88,7 +88,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Systems Planning and Analysis, Inc., Alexandria, Virginia, is being awarded a $37,651,082 cost-plus-fixed-fee term task order (N0003027F3023) for the Trident II Strategic Weapons System (SWS). This value includes optional line items, if exercised. Tasks to be performed include missile operations and maintenance support, missile production support, and missile development support. Work will be performed in Washington, D.C. (72%); Silverdale, Washington (9%); Cape Canaveral, Florida (8%); Denver, Colorado (4%); Sunnyvale, California (3%); Kings Bay, Georgia (2%); Charleston, South Carolina (1%); and Alexandria, Virginia (1%). Work is expected to be completed on Sept. 30, 2029. Fiscal 2026 Weapons Procurement, Navy funds in the amount of $443,105 and Fiscal 2025 Weapons Procurement, Navy funds in the amount of $5,098,327 will be obligated on this award. No funds will expire at the end of the fiscal year. This task order will be awarded as a sole source acquisition with the authority of 15 U.S. Code 638 Research and Development. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:27.225517+00:00"
+      "ingested_at": "2026-10-07T14:38:48.863326+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -101,7 +101,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Trident Research LLC, Austin, Texas, is being awarded a $9,263,815 cost-plus-fixed-fee contract (N0003027C2010) for engineering support of the Portable Impact Location System operated during Trident II Strategic Weapon System flight tests. This contract has optional line items which could increase the amount to $33,607,156, if exercised. Work will be performed in Austin, Texas (70%); and Cape Canaveral, Florida (30%). Work is expected to be completed by December 2030. No funding will be obligated on this award, and no funding will expire at the end of the fiscal year, as it will be subject to the availability of funds. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:27.228283+00:00"
+      "ingested_at": "2026-10-07T14:38:48.866746+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -114,7 +114,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $41,972,953 cost-plus-fixed-fee modification (P00033) to a previously awarded and announced contract (N0003024C0100) for Trident II (D5) missile production and deployed systems support. Work will be performed in Orlando, Florida (62%); Denver, Colorado (20%); Cape Canaveral, Florida (7%); Titusville, Florida (5%); Irvine, California (4%); and various locations less than 1% each (2%). Work is expected to be completed June 30, 2028. Fiscal 2026 research, development, test and evaluation (Navy) funds in the amount of $2,000,000 will be obligated on this award. No funds will expire at the end of the current fiscal year. This contract is being awarded to the contractor on a sole source basis under 10 U.S. Code 3204(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:35.148028+00:00"
+      "ingested_at": "2026-10-07T14:38:53.074739+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -127,14 +127,14 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $9,629,380 cost-plus-fixed-fee modification, P00019, to previously award and announced contract (N0003025C0100) for Sea-Launched Cruise Missile - Nuclear integration and facility design, warhead handling, engineering, integration support, and special studies efforts. Work will be performed in Cape Canaveral, Florida (45%); Bangor, Washington (21%); Titusville, Florida (17%); Kings Bay, Georgia (7%) Sunnyvale, California (4%); Bangor Base, Washington (3%); Valley Forge, Pennsylvania (1%); Denver, Colorado (1%); and locations less than 1.0% each (1%). Work is expected to be completed Sept. 30, 2027. Fiscal 2025 research, development, test and evaluation (Navy) funds in the amount of $9,371,936 will be obligated on this award and no funds will expire at the end of the current fiscal year. This contract is being awarded on a sole source basis under 10 U.S. Code 2304(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T13:44:35.151248+00:00"
+      "ingested_at": "2026-10-07T14:38:53.078488+00:00"
     }
   ],
   "space_news": [
     {
-      "source": "Ars Technica Space",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Investigative Technical",
+      "source": "Ars Technica",
+      "tier": "Technical & Launch",
+      "category": "Russia",
       "title": "So what's happening with Russia's new, long-delayed crewed spacecraft?",
       "author": "Eric Berger",
       "pub_date": "Wed, 30 Sep 2026",
@@ -143,12 +143,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.283154+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.177630+00:00"
     },
     {
-      "source": "Ars Technica Space",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Investigative Technical",
+      "source": "Ars Technica",
+      "tier": "Technical & Launch",
+      "category": "Launch",
       "title": "SpaceX's Starship goes orbital, deploying first next-gen Starlinks",
       "author": "Stephen Clark",
       "pub_date": "Mon, 28 Sep 2026",
@@ -157,12 +158,29 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.283324+00:00"
+      "related_coverage": [
+        {
+          "source": "Spaceflight Now",
+          "title": "Launch preview: NASA, SpaceX launch next crewed mission to the International Space Station",
+          "url": "https://spaceflightnow.com/2026/10/01/live-coverage-nasa-spacex-to-launch-next-crewed-mission-to-the-international-space-station/"
+        },
+        {
+          "source": "Spaceflight Now",
+          "title": "Launch preview: SpaceX to launch first Starlink V3 satellites to orbit on Starship",
+          "url": "https://spaceflightnow.com/2026/09/28/live-coverage-spacex-to-launch-first-starlink-v3-satellites-to-orbit-on-starship/"
+        },
+        {
+          "source": "SpacePolicyOnline",
+          "title": "Starship to Attempt First Orbital Flight Next Week",
+          "url": "https://spacepolicyonline.com/news/starship-to-attempt-first-orbital-flight-next-week/"
+        }
+      ],
+      "ingested_at": "2026-10-07T14:40:06.177849+00:00"
     },
     {
-      "source": "Ars Technica Space",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Investigative Technical",
+      "source": "Ars Technica",
+      "tier": "Technical & Launch",
+      "category": "Spacecraft",
       "title": "After seven years, a spacecraft company is releasing its Otters into the wild",
       "author": "Eric Berger",
       "pub_date": "Fri, 25 Sep 2026",
@@ -171,12 +189,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.283425+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.177998+00:00"
     },
     {
-      "source": "Ars Technica Space",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Investigative Technical",
+      "source": "Ars Technica",
+      "tier": "Technical & Launch",
+      "category": "International",
       "title": "A new report from Europe raises serious alarms about orbital collisions",
       "author": "Eric Berger",
       "pub_date": "Wed, 23 Sep 2026",
@@ -185,12 +204,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.283809+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.178486+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "SpaceX scrubs launch attempt for 21 data transport satellites for the Space Development Agency",
       "author": "Will Robinson-Smith",
       "pub_date": "Sun, 04 Oct 2026",
@@ -199,12 +219,13 @@
       "classification": "Golden Dome Priority",
       "is_golden_dome": true,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.407755+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.353072+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "Falcon Heavy flies its first mission for U.S. spy satellite agency",
       "author": "Spaceflight Now",
       "pub_date": "Thu, 01 Oct 2026",
@@ -213,12 +234,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.407856+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.353215+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Russia",
       "title": "Fresh crew takes off for six-month stay aboard space station",
       "author": "William Harwood",
       "pub_date": "Thu, 01 Oct 2026",
@@ -227,12 +249,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.407996+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.353386+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "Launch preview: More than 100 spacecraft hitch a ride to orbit on SpaceX\u2019s Transporter-18",
       "author": "Will Robinson-Smith",
       "pub_date": "Thu, 01 Oct 2026",
@@ -241,12 +264,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.408098+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.353536+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "Launch preview: NASA, SpaceX launch next crewed mission to the International Space Station",
       "author": "Will Robinson-Smith",
       "pub_date": "Thu, 01 Oct 2026",
@@ -255,12 +279,24 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.408229+00:00"
+      "related_coverage": [
+        {
+          "source": "Ars Technica",
+          "title": "SpaceX's Starship goes orbital, deploying first next-gen Starlinks",
+          "url": "https://arstechnica.com/space/2026/09/starships-first-orbital-launch-gives-lift-to-spacexs-next-gen-starlinks/"
+        },
+        {
+          "source": "SpacePolicyOnline",
+          "title": "Next Crewed Boeing Starliner Flight Not Until 2028",
+          "url": "https://spacepolicyonline.com/news/next-crewed-boeing-starliner-flight-not-until-2028/"
+        }
+      ],
+      "ingested_at": "2026-10-07T14:40:06.353711+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "Launch preview: SpaceX to launch first Starlink V3 satellites to orbit on Starship",
       "author": "Will Robinson-Smith",
       "pub_date": "Mon, 28 Sep 2026",
@@ -269,12 +305,19 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.408628+00:00"
+      "related_coverage": [
+        {
+          "source": "Ars Technica",
+          "title": "SpaceX's Starship goes orbital, deploying first next-gen Starlinks",
+          "url": "https://arstechnica.com/space/2026/09/starships-first-orbital-launch-gives-lift-to-spacexs-next-gen-starlinks/"
+        }
+      ],
+      "ingested_at": "2026-10-07T14:40:06.354211+00:00"
     },
     {
       "source": "Spaceflight Now",
-      "tier": "Launch & Hardware",
-      "outlet_category": "Mission Operations",
+      "tier": "Mission Ops",
+      "category": "Launch",
       "title": "SpaceX Falcon 9 launches classified mission for U.S. Space Force from West Coast",
       "author": "Steven Young",
       "pub_date": "Fri, 25 Sep 2026",
@@ -283,110 +326,28 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.408796+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "Can Golden Dome truly succeed without logistics and sustainment in space?",
-      "author": "Breaking Defense",
-      "pub_date": "Mon, 05 Oct 2026",
-      "description": "[Sponsored] Former MDA Director Lt. Gen. (ret.) Trey Obering says on-orbit servicing could enhance orbital resilience.",
-      "url": "https://breakingdefense.com/2026/10/can-golden-dome-truly-succeed-without-logistics-and-sustainment-in-space/",
-      "classification": "Golden Dome Priority",
-      "is_golden_dome": true,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.532765+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "DIU, Space Force team up to kick-start buys of commercial sats for monitoring GEO",
-      "author": "Theresa Hitchens",
-      "pub_date": "Tue, 29 Sep 2026",
-      "description": "Both firms are working under earlier Pentagon contracts to demonstrate rendezvous and proximity operators that could also support future orbital warfare.",
-      "url": "https://breakingdefense.com/2026/09/diu-space-force-team-up-to-kick-start-buys-of-commercial-sats-for-monitoring-geo/",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.533224+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "Air, Space Forces pick up research pace for orbital cargo delivery",
-      "author": "Theresa Hitchens",
-      "pub_date": "Wed, 23 Sep 2026",
-      "description": "The current focus is on low cost, high volume commercial cargo reentry pods, an Air Force Research Laboratory spokesperson told Breaking Defense.",
-      "url": "https://breakingdefense.com/2026/09/air-space-forces-pick-up-research-pace-for-orbital-cargo-delivery/",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.533460+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "Space Force to prototype new software to fuse commercial, military space tracking data",
-      "author": "Theresa Hitchens",
-      "pub_date": "Fri, 18 Sep 2026",
-      "description": "Our number one priority right now is: How do we improve support to space control operations?&#8221; Col. Barry Crocker, head of Space Force Mission Delta 2 responsible for keeping tabs on on-orbit threats, told Breaking Defense",
-      "url": "https://breakingdefense.com/2026/09/space-force-to-prototype-new-software-to-fuse-commercial-military-space-tracking-data/",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.533629+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "Chairman Caine talks cislunar ops, plus a window into next-gen airlift",
-      "author": "Breaking Defense Staff",
-      "pub_date": "Thu, 17 Sep 2026",
-      "description": "We discuss top news from the final day of AFA 2026.",
-      "url": "https://breakingdefense.com/2026/09/chairman-caine-talks-cislunar-ops-plus-a-window-into-next-gen-airlift/",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.533774+00:00"
-    },
-    {
-      "source": "Breaking Defense",
-      "tier": "National Security Space",
-      "outlet_category": "Defense Acquisition & Warfighting",
-      "title": "Space Force\u2019s GMTI program gets a name, with Northrop as prime: General",
-      "author": "Michael Marrow",
-      "pub_date": "Wed, 16 Sep 2026",
-      "description": "Separately, the Space Force plans to issue the first operational contracts for space domain awareness to commercial firms \u201cvery soon,\u201d according to Space Force Col. Timothy Tremailo.",
-      "url": "https://breakingdefense.com/2026/09/space-forces-gmti-program-gets-a-name-with-northrop-as-prime-general/",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.533844+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:06.354427+00:00"
     },
     {
       "source": "Air & Space Forces",
       "tier": "National Security Space",
-      "outlet_category": "USSF Force Design & Requirements",
+      "category": "National Security",
       "title": "Air Force and Space Force Shooting for Historic Recruiting Goals in 2027",
       "author": "Greg Hadley",
       "pub_date": "Fri, 02 Oct 2026",
-      "description": "The Air Force adjusted its fiscal 2026 recruiting goal down by a few hundred enlisted Airmen due to higher-than-expected retention and the number of available training slots\u2014but it is aiming high in fiscal 2027 with its biggest goal for the Active-Duty Air Force in nearly 25 year",
+      "description": "The Air Force adjusted its fiscal 2026 recruiting goal down by a few hundred enlisted Airmen due to higher-than-expected retention and the number of available training slots\u2014but it is aiming high in fiscal 2027 with its biggest goal for the Active-Duty Air Force in nearly 25 years, and the Space Force is shooting for i",
       "url": "https://www.airandspaceforces.com/air-force-space-force-historic-recruiting-goals-2027/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:29.913506+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:07.535689+00:00"
     },
     {
       "source": "SpacePolicyOnline",
       "tier": "Policy & Hill",
-      "outlet_category": "Congressional Budget & Civil Space",
+      "category": "National Security",
       "title": "LTG David Miller Nominated as Next Leader of U.S. Space Command",
       "author": "Marcia Smith",
       "pub_date": "Thu, 01 Oct 2026",
@@ -395,12 +356,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.277389+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:07.856730+00:00"
     },
     {
       "source": "SpacePolicyOnline",
       "tier": "Policy & Hill",
-      "outlet_category": "Congressional Budget & Civil Space",
+      "category": "Spacecraft",
       "title": "Next Crewed Boeing Starliner Flight Not Until 2028",
       "author": "Marcia Smith",
       "pub_date": "Tue, 29 Sep 2026",
@@ -409,12 +371,19 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.277486+00:00"
+      "related_coverage": [
+        {
+          "source": "Spaceflight Now",
+          "title": "Launch preview: NASA, SpaceX launch next crewed mission to the International Space Station",
+          "url": "https://spaceflightnow.com/2026/10/01/live-coverage-nasa-spacex-to-launch-next-crewed-mission-to-the-international-space-station/"
+        }
+      ],
+      "ingested_at": "2026-10-07T14:40:07.856910+00:00"
     },
     {
       "source": "SpacePolicyOnline",
       "tier": "Policy & Hill",
-      "outlet_category": "Congressional Budget & Civil Space",
+      "category": "Launch",
       "title": "Starship to Attempt First Orbital Flight Next Week",
       "author": "Marcia Smith",
       "pub_date": "Wed, 16 Sep 2026",
@@ -423,110 +392,124 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.278029+00:00"
+      "related_coverage": [
+        {
+          "source": "Ars Technica",
+          "title": "SpaceX's Starship goes orbital, deploying first next-gen Starlinks",
+          "url": "https://arstechnica.com/space/2026/09/starships-first-orbital-launch-gives-lift-to-spacexs-next-gen-starlinks/"
+        }
+      ],
+      "ingested_at": "2026-10-07T14:40:07.857514+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Spacecraft",
       "title": "Rethinking risk with electronics for space",
       "author": "SpaceNews Editor",
       "pub_date": "Thu, 01 Oct 2026",
-      "description": "In this episode, SpaceNews\u2019 Mike Gruss speaks with Ken Stoler, the space business development lead for Arrow. They discuss how spacecraft designers and operators have changed their attitudes toward risk, [&#8230;] The post Rethinking risk with electronics for space appeared first",
+      "description": "In this episode, SpaceNews\u2019 Mike Gruss speaks with Ken Stoler, the space business development lead for Arrow. They discuss how spacecraft designers and operators have changed their attitudes toward risk, [&#8230;] The post Rethinking risk with electronics for space appeared first on SpaceNews.",
       "url": "https://spacenews.com/rethinking-risk-with-electronics-for-space/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.342465+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.002412+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Spacecraft",
       "title": "LMT Group and Novaspace partner to develop strategy for 5G/6G satellite communications hub in Latvia",
       "author": "Novaspace",
       "pub_date": "Thu, 01 Oct 2026",
-      "description": "Noordwijk, the Netherlands &#124; September 22, 2026&#160;&#8211; During the international Industry Space Days 2026 event at the European Space Agency\u2019s ESTEC facility in Noordwijk, the Netherlands, the Latvian Mobile Telephone [&#8230;] The post LMT Group and Novaspace partner t",
+      "description": "Noordwijk, the Netherlands &#124; September 22, 2026&#160;&#8211; During the international Industry Space Days 2026 event at the European Space Agency\u2019s ESTEC facility in Noordwijk, the Netherlands, the Latvian Mobile Telephone [&#8230;] The post LMT Group and Novaspace partner to develop strategy for 5G/6G satellite c",
       "url": "https://spacenews.com/lmt-group-and-novaspace-partner-to-develop-strategy-for-5g-6g-satellite-communications-hub-in-latvia/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.342582+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.002660+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Launch",
       "title": "NaviGate successfully demonstrates onboard precise orbit determination aboard D-Orbit\u2019s ION Satellite Carrier",
       "author": "NaviGate",
       "pub_date": "Wed, 30 Sep 2026",
-      "description": "ROME, 30/09/2026 &#8211; NaviGate, an Italian space technology company spun out of Sapienza University of Rome, has successfully completed the in-orbit demonstration (IoD) of NaviCode Caravel, its autonomous onboard precise [&#8230;] The post NaviGate successfully demonstrates on",
+      "description": "ROME, 30/09/2026 &#8211; NaviGate, an Italian space technology company spun out of Sapienza University of Rome, has successfully completed the in-orbit demonstration (IoD) of NaviCode Caravel, its autonomous onboard precise [&#8230;] The post NaviGate successfully demonstrates onboard precise orbit determination aboard",
       "url": "https://spacenews.com/navigate-successfully-demonstrates-onboard-precise-orbit-determination-aboard-d-orbits-ion-satellite-carrier/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.342968+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.003179+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Launch",
       "title": "Quantum Space Executes Launch Processing Agreement with All Points Logistics for Prime Mission",
       "author": "Quantum Space",
       "pub_date": "Wed, 30 Sep 2026",
-      "description": "ROCKVILLE, Md. and MERRITT ISLAND, Fla. \u2014 September 30, 2026 \u2014 Quantum Space, LLC (the \u201cCompany\u201d or \u201cQuantum Space\u201d), a company developing the next generation of advanced maneuverable spacecraft for [&#8230;] The post Quantum Space Executes Launch Processing Agreement with All Po",
+      "description": "ROCKVILLE, Md. and MERRITT ISLAND, Fla. \u2014 September 30, 2026 \u2014 Quantum Space, LLC (the \u201cCompany\u201d or \u201cQuantum Space\u201d), a company developing the next generation of advanced maneuverable spacecraft for [&#8230;] The post Quantum Space Executes Launch Processing Agreement with All Points Logistics for Prime Mission appeare",
       "url": "https://spacenews.com/quantum-space-executes-launch-processing-agreement-with-all-points-logistics-for-prime-mission/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.343094+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.003380+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Spacecraft",
       "title": "Commercial Defense Satcom Service Revenues to Surpass $22.6B by 2035",
       "author": "Novaspace",
       "pub_date": "Tue, 29 Sep 2026",
-      "description": "Paris, France &#124; September 2026 \u2014 Novaspace\u2019s Satellite Communications for Defense and Security, 2nd Edition highlights a defense Satcom market poised for rapid growth. By 2035, commercial satellite service revenues [&#8230;] The post Commercial Defense Satcom Service Revenue",
+      "description": "Paris, France &#124; September 2026 \u2014 Novaspace\u2019s Satellite Communications for Defense and Security, 2nd Edition highlights a defense Satcom market poised for rapid growth. By 2035, commercial satellite service revenues [&#8230;] The post Commercial Defense Satcom Service Revenues to Surpass $22.6B by 2035 appeared fir",
       "url": "https://spacenews.com/commercial-defense-satcom-service-revenues-to-surpass-22-6b-by-2035/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.343193+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.003603+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Spacecraft",
       "title": "Terran Orbital Names Jamin Brown Chief Operating Officer",
       "author": "Terran Orbital",
       "pub_date": "Tue, 29 Sep 2026",
-      "description": "IRVINE, Calif. \u2013 Sept. 29, 2026 \u2013 Terran Orbital, a Lockheed Martin company and a global leader in satellite-based solutions primarily serving the aerospace and defense industries, today announced the [&#8230;] The post Terran Orbital Names Jamin Brown Chief Operating Officer app",
+      "description": "IRVINE, Calif. \u2013 Sept. 29, 2026 \u2013 Terran Orbital, a Lockheed Martin company and a global leader in satellite-based solutions primarily serving the aerospace and defense industries, today announced the [&#8230;] The post Terran Orbital Names Jamin Brown Chief Operating Officer appeared first on SpaceNews.",
       "url": "https://spacenews.com/terran-orbital-names-jamin-brown-chief-operating-officer/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.343276+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.003801+00:00"
     },
     {
       "source": "SpaceNews",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Global Space Industry",
+      "tier": "Global Industry",
+      "category": "Spacecraft",
       "title": "Space is everyone\u2019s business: Economist Enterprise\u2019s 4th annual Space Economy Summit returns to Orlando",
       "author": "Economist Enterprise",
       "pub_date": "Mon, 28 Sep 2026",
-      "description": "ORLANDO, FL \u2014 September 28th, 2026 \u2014 Space is rapidly becoming a practical business tool for industries far beyond aerospace, as satellite intelligence, resilient connectivity and other space-enabled technologies create [&#8230;] The post Space is everyone\u2019s business: Economist E",
+      "description": "ORLANDO, FL \u2014 September 28th, 2026 \u2014 Space is rapidly becoming a practical business tool for industries far beyond aerospace, as satellite intelligence, resilient connectivity and other space-enabled technologies create [&#8230;] The post Space is everyone\u2019s business: Economist Enterprise&#8217;s 4th annual Space Econo",
       "url": "https://spacenews.com/space-is-everyones-business-economist-enterprises-4th-annual-space-economy-summit-returns-to-orlando/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.343549+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.004243+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Launch",
       "title": "Exclusive: Xona Ramps Up Production Ahead of Pulsar Launch",
       "author": "Victoria Woodburn",
       "pub_date": "Wed, 07 Oct 2026",
@@ -535,40 +518,43 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.684501+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.224989+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Launch",
       "title": "ArbaLabs Launches AI Verification Demo On South Korea\u2019s Nuri Rocket",
       "author": "Douglas Gorman",
       "pub_date": "Wed, 07 Oct 2026",
-      "description": "\u201cIn short, tons of companies are looking at the latest and greatest physical AI deployments,\u201d ArbaLabs CEO Ashley Reeves told Payload. \u201cNobody is really thinking about putting some checks and balances on what these AI models are doing.\u201d The post ArbaLabs Launches AI Verification ",
+      "description": "\u201cIn short, tons of companies are looking at the latest and greatest physical AI deployments,\u201d ArbaLabs CEO Ashley Reeves told Payload. \u201cNobody is really thinking about putting some checks and balances on what these AI models are doing.\u201d The post ArbaLabs Launches AI Verification Demo On South Korea\u2019s Nuri Rocket appear",
       "url": "https://payloadspace.com/arbalabs-launches-ai-verification-demo-on-south-koreas-nuri-rocket/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.684642+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.225216+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Spacecraft",
       "title": "Colorado Springs, Huntsville Team Up on Golden Dome",
       "author": "Jacqueline Feldscher",
       "pub_date": "Tue, 06 Oct 2026",
-      "description": "\u201cIt\u2019s a transformed relationship between Colorado Springs and Huntsville,\u201d Rep. Jeff Crank (R-CO) told Payload. \u201cWhen I took office, I don\u2019t think it was a bad relationship, but it was one where both communities were kind of looking over their shoulder at the other. That wasn\u2019t g",
+      "description": "\u201cIt\u2019s a transformed relationship between Colorado Springs and Huntsville,\u201d Rep. Jeff Crank (R-CO) told Payload. \u201cWhen I took office, I don\u2019t think it was a bad relationship, but it was one where both communities were kind of looking over their shoulder at the other. That wasn\u2019t good for America, and I don\u2019t think it wa",
       "url": "https://payloadspace.com/colorado-springs-huntsville-team-up-on-golden-dome/",
       "classification": "Golden Dome Priority",
       "is_golden_dome": true,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.684740+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.225444+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Launch",
       "title": "HawkEye 360 Turns its RF-Sensors to Orbital Targets",
       "author": "Douglas Gorman",
       "pub_date": "Tue, 06 Oct 2026",
@@ -577,12 +563,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.684821+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.225574+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Spacecraft",
       "title": "Turkey Uses IAC Stage to Pitch Peace & Homegrown Hardware",
       "author": "Victoria Woodburn",
       "pub_date": "Tue, 06 Oct 2026",
@@ -591,12 +578,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.684952+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.225802+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Spacecraft",
       "title": "Nebex Partners with Thrusters Unlimited to Unlock $700M for Mexico\u2019s Space Ecosystem",
       "author": "Douglas Gorman",
       "pub_date": "Mon, 05 Oct 2026",
@@ -605,12 +593,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.685078+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.226061+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Spacecraft",
       "title": "US Army Welcomes First 600 Enlisted Space Soldiers",
       "author": "Victoria Woodburn",
       "pub_date": "Mon, 05 Oct 2026",
@@ -619,12 +608,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.685190+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.226266+00:00"
     },
     {
       "source": "Payload Space",
-      "tier": "Commercial & Defense",
-      "outlet_category": "Space Economy & Venture",
+      "tier": "Commercial & Venture",
+      "category": "Spacecraft",
       "title": "DOE Announces $400M for Frontier Science Research",
       "author": "Douglas Gorman",
       "pub_date": "Fri, 02 Oct 2026",
@@ -633,12 +623,13 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.685275+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.226416+00:00"
     },
     {
       "source": "NASA News",
-      "tier": "Civil & Agency",
-      "outlet_category": "NASA Exploration & Contracts",
+      "tier": "Civil Agency",
+      "category": "Spacecraft",
       "title": "Arctic Sea Ice Shrinks to Its 2026 Minimum",
       "author": "NASA News",
       "pub_date": "Wed, 07 Oct 2026",
@@ -647,26 +638,28 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.879451+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.388011+00:00"
     },
     {
       "source": "NASA News",
-      "tier": "Civil & Agency",
-      "outlet_category": "NASA Exploration & Contracts",
+      "tier": "Civil Agency",
+      "category": "Spacecraft",
       "title": "NASA to Cover Northrop Grumman CRS-24 Spacecraft Departure",
       "author": "Jessica Taveau",
       "pub_date": "Tue, 06 Oct 2026",
-      "description": "After delivering more than 11,000 pounds of supplies, science experiments, and other cargo to the International Space Station for NASA, Northrop Grumman\u2019s Cygnus XL spacecraft is scheduled to depart Friday, Oct. 9, as part of the company\u2019s Commercial Resupply Services-24 mission,",
+      "description": "After delivering more than 11,000 pounds of supplies, science experiments, and other cargo to the International Space Station for NASA, Northrop Grumman\u2019s Cygnus XL spacecraft is scheduled to depart Friday, Oct. 9, as part of the company\u2019s Commercial Resupply Services-24 mission, or Northrop Grumman CRS-24. Watch NASA\u2019",
       "url": "https://www.nasa.gov/news-release/nasa-to-cover-northrop-grumman-crs-24-spacecraft-departure/",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.879567+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.388242+00:00"
     },
     {
       "source": "NASA News",
-      "tier": "Civil & Agency",
-      "outlet_category": "NASA Exploration & Contracts",
+      "tier": "Civil Agency",
+      "category": "Spacecraft",
       "title": "October 2026 Satellite Puzzler",
       "author": "NASA News",
       "pub_date": "Tue, 06 Oct 2026",
@@ -675,7 +668,8 @@
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "ingested_at": "2026-10-07T13:45:30.879606+00:00"
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T14:40:08.388314+00:00"
     }
   ],
   "pre_award_solicitations": [
@@ -692,7 +686,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/ab68572d22544619b8345db7219b9bfd/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -707,7 +701,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/7ef056f2ec0d4fe7909220320293f532/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -722,7 +716,7 @@
       "is_space": false,
       "url": "https://sam.gov/opp/9181c80a242445db964086c4411c4ee5/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -737,7 +731,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/1a794955d12546b59698e15d84a87364/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -752,7 +746,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/bc2d5e5543974aab974e37ac591c78da/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -767,7 +761,7 @@
       "is_space": false,
       "url": "https://sam.gov/opp/fb9bb2d52b074a5eb4eded9b20932253/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -782,7 +776,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/852c9872aeff4331a4ece7d668c51186/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -797,7 +791,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/a110fae109384992b13b0829f8cace9a/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -812,7 +806,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/e7a7ab8e74f543cc822ae330d38ececd/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -827,7 +821,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/29c79bd2f819486e87642b65b278ec07/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -842,7 +836,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/bb9972f245da4db3b9861095f36058dc/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -857,7 +851,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/6294a5d633c64829a7dbdd36de161034/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -872,7 +866,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/0ed6ebb5ca1840e9b9f593e58b7a813b/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -887,7 +881,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/23f4a6bccab74856bfa774902fccd296/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -902,7 +896,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/421154e3ad474de79858929492d1926b/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -917,7 +911,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/b4015648b60246df8250cd1b6a3d4189/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -932,7 +926,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/ba10db148a584c7298898f30ed35e855/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     },
     {
       "source": "SAM.gov",
@@ -947,51 +941,23 @@
       "is_space": false,
       "url": "https://sam.gov/opp/795eac57c1c3441f868526012d90dd83/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T13:44:35.160602+00:00"
+      "ingested_at": "2026-10-07T14:38:53.089114+00:00"
     }
   ],
   "spec_and_otas": [
     {
       "source": "Space Enterprise Consortium (SpEC) / SAM.gov",
-      "title": "Commercial and Military Satellite Communications Operations Support (COSMOS)",
-      "solicitation_number": "FA251826RP002",
+      "title": "Rocket Systems Launch Program (RSLP) Innovative Delivery of Effects (RIDE) Supplemental Request for Information (RFI) \u2013 Industry Statements of Capability (SOCs)",
+      "solicitation_number": "RIDE2026",
       "notice_type": "Prototype OTA / Special Notice",
-      "agency_office": "DEPT OF DEFENSE.DEPT OF THE AIR FORCE.AIR FORCE SPACE COMMAND.FA2518 USSF SPOC/SAIO",
-      "response_deadline": "2026-05-01T11:00:00-06:00",
+      "agency_office": "DEPT OF DEFENSE.DEPT OF THE AIR FORCE.SPACE SYSTEMS COMMAND.PEO ASSURED ACCESS TO SPACE.FA8818  SSC/AAK-KT",
+      "response_deadline": "2026-10-09T17:00:00-06:00",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "url": "https://sam.gov/opp/c410925f38264bcd851d51aba51d7307/view",
+      "url": "https://sam.gov/opp/f00d704b47bf44feb24cfa2112c8101c/view",
       "point_of_contact": "Space Systems Command Contracting",
-      "ingested_at": "2026-10-07T13:44:39.623064+00:00"
-    },
-    {
-      "source": "Space Enterprise Consortium (SpEC) / SAM.gov",
-      "title": "Amendment 0002 - 1174459 - ARS - Electronic Security Systems at The Beltsville Agricultural Research Center Beltsville, Maryland 20705",
-      "solicitation_number": "1174459",
-      "notice_type": "Prototype OTA / Special Notice",
-      "agency_office": "AGRICULTURE, DEPARTMENT OF.FOREST SERVICE.USDA FOREST SERVICE-SPOC EAST",
-      "response_deadline": "2026-09-25T12:00:00-04:00",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "url": "https://sam.gov/opp/e42df3b681cd4a0eaa4a663f96bbeb48/view",
-      "point_of_contact": "Space Systems Command Contracting",
-      "ingested_at": "2026-10-07T13:44:39.623064+00:00"
-    },
-    {
-      "source": "Space Enterprise Consortium (SpEC) / SAM.gov",
-      "title": "P110 CAPE CANAVERAL RAILHEAD AND TRANSFER FACILITIES AT KENNEDY SPACE CENTER, FLORIDA",
-      "solicitation_number": "N6945026R0100 ",
-      "notice_type": "Prototype OTA / Special Notice",
-      "agency_office": "DEPT OF DEFENSE.DEPT OF THE NAVY.NAVFAC.NAVFAC ATLANTIC CMD.NAVFAC SOUTHEAST.NAVFACSYSCOM SOUTHEAST",
-      "response_deadline": "2026-09-25T14:00:00-04:00",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "url": "https://sam.gov/opp/d76abf3f124240e9bb9c708ee12f70ab/view",
-      "point_of_contact": "Space Systems Command Contracting",
-      "ingested_at": "2026-10-07T13:44:39.623064+00:00"
+      "ingested_at": "2026-10-07T14:38:57.195398+00:00"
     }
   ],
   "sbir_and_spacewerx": [],
@@ -1008,7 +974,7 @@
       "is_space": true,
       "url": "https://www.nro.gov/Acquisition/",
       "point_of_contact": "NRO Office of Contracts",
-      "ingested_at": "2026-10-07T13:45:28.524002+00:00"
+      "ingested_at": "2026-10-07T14:40:05.630342+00:00"
     },
     {
       "source": "NGA Industry Portal",
@@ -1022,7 +988,7 @@
       "is_space": true,
       "url": "https://www.nga.mil/industry.html",
       "point_of_contact": "NGA Commercial Operations",
-      "ingested_at": "2026-10-07T13:45:28.524002+00:00"
+      "ingested_at": "2026-10-07T14:40:05.630342+00:00"
     },
     {
       "source": "In-Q-Tel (IQT)",
@@ -1036,7 +1002,7 @@
       "is_space": true,
       "url": "https://www.iqt.org/portfolio/",
       "point_of_contact": "IQT Space & Hardware Practice",
-      "ingested_at": "2026-10-07T13:45:28.524002+00:00"
+      "ingested_at": "2026-10-07T14:40:05.630342+00:00"
     }
   ],
   "congressional_hearings": []

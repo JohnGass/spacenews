@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 class ICDIUScraper:
     """
     Ingests commercial innovation and intelligence community opportunities:
-    1. Live DIU Commercial Solutions Openings (CSOs)
+    1. Filtered DIU Commercial Solutions Openings (strictly space/tracking only)
     2. NRO & NGA unclassified solicitations via SAM.gov
     3. In-Q-Tel (IQT) technology problem sets
     """
@@ -27,7 +27,7 @@ class ICDIUScraper:
         self.session.headers.update({"User-Agent": "SpaceIntelPipeline/2.0"})
 
     def fetch_diu_csos(self) -> List[Dict[str, Any]]:
-        """Scrapes active Defense Innovation Unit (DIU) CSOs."""
+        """Scrapes DIU CSOs and enforces strict space relevance filtering."""
         logging.info("Scraping DIU Commercial Solutions Openings (CSOs)...")
         fetch_url = f"https://api.scraperapi.com?api_key={self.scraper_api_key}&url={quote(self.DIU_OPEN_URL)}" if self.scraper_api_key else self.DIU_OPEN_URL
 
@@ -42,23 +42,27 @@ class ICDIUScraper:
                     if len(txt) < 20 or "view all" in txt.lower():
                         continue
 
+                    # STRICT GUARD: Discard non-space DIU solicitations (valves, maritime, batteries, etc.)
+                    rel = evaluate_relevance(txt)
+                    if not rel["is_relevant"]:
+                        continue
+
                     a_tag = card if card.name == "a" else card.find("a", href=True)
                     href = a_tag["href"] if a_tag else ""
                     url = href if href.startswith("http") else f"https://www.diu.mil{href}"
 
-                    rel = evaluate_relevance(txt)
                     csos.append({
                         "source": "Defense Innovation Unit (DIU)",
                         "title": txt.splitlines()[0][:130].strip(),
                         "solicitation_number": "DIU-CSO",
                         "notice_type": "Commercial Solutions Opening (CSO)",
-                        "agency_office": "DIU / OSD",
+                        "agency_office": "DIU / OSD Space Portfolio",
                         "response_deadline": "Check Challenge Window",
                         "classification": rel["classification"],
                         "is_golden_dome": rel["is_golden_dome"],
                         "is_space": rel["is_space"],
                         "url": url if url.startswith("http") else "https://www.diu.mil/work-with-us/open-solicitations",
-                        "point_of_contact": "DIU Commercial Team",
+                        "point_of_contact": "DIU Space Portfolio Lead",
                         "ingested_at": datetime.now(timezone.utc).isoformat()
                     })
         except Exception as e:
@@ -72,7 +76,7 @@ class ICDIUScraper:
                 seen.add(c["title"])
                 deduped.append(c)
 
-        logging.info(f"Captured {len(deduped)} DIU CSOs.")
+        logging.info(f"Captured {len(deduped)} strictly space-relevant DIU CSOs.")
         return deduped
 
     def fetch_nro_and_nga_sam(self) -> List[Dict[str, Any]]:
@@ -113,12 +117,14 @@ class ICDIUScraper:
                     nid = item.get("noticeId")
                     if not nid or nid in seen_ids:
                         continue
-                    seen_ids.add(nid)
 
                     title = item.get("title", "")
                     office = item.get("fullParentPathName", "Intelligence Community")
                     rel = evaluate_relevance(f"{title} {office}")
+                    if not rel["is_relevant"]:
+                        continue
 
+                    seen_ids.add(nid)
                     is_nro = "reconnaissance" in office.lower() or "nro" in title.lower()
                     source_label = "NRO (SAM.gov)" if is_nro else "NGA (SAM.gov)"
 

@@ -11,38 +11,69 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 class SpaceNewsScraper:
     """
-    Ingests editorial reporting, policy analysis, and breaking defense space news from:
-    1. SpaceNews (spacenews.com)
-    2. Breaking Defense - Space (breakingdefense.com)
-    3. Air & Space Forces Magazine - Space (airandspaceforces.com)
-    4. SpacePolicyOnline (spacepolicyonline.com)
-    5. Payload Space (payloadspace.com)
+    Multi-tier Space Intelligence Ingestion Engine.
+    Aggregates analytical essays, launch operations, defense policy,
+    and commercial space venture reporting.
     """
     FEEDS = [
+        # --- TIER 1: Analytical Deep Dives & Doctrine ---
         {
-            "name": "SpaceNews",
-            "url": "https://spacenews.com/feed/",
-            "category": "Commercial & Defense Space"
+            "name": "The Space Review",
+            "url": "https://www.thespacereview.com/feed.xml",
+            "tier": "Strategic Analysis",
+            "category": "Doctrine & Long-form"
         },
+        # --- TIER 2: Launch Operations & Technical Investigative ---
+        {
+            "name": "Ars Technica Space",
+            "url": "https://arstechnica.com/space/feed/",
+            "tier": "Launch & Hardware",
+            "category": "Investigative Technical"
+        },
+        {
+            "name": "Spaceflight Now",
+            "url": "https://spaceflightnow.com/feed/",
+            "tier": "Launch & Hardware",
+            "category": "Mission Operations"
+        },
+        # --- TIER 3: National Security, Pentagon & Policy ---
         {
             "name": "Breaking Defense",
             "url": "https://breakingdefense.com/category/space/feed/",
-            "category": "National Security Space"
+            "tier": "National Security Space",
+            "category": "Defense Acquisition & Warfighting"
         },
         {
             "name": "Air & Space Forces",
             "url": "https://www.airandspaceforces.com/category/space/feed/",
-            "category": "USSF & Airpower"
+            "tier": "National Security Space",
+            "category": "USSF Force Design & Requirements"
         },
         {
             "name": "SpacePolicyOnline",
             "url": "https://spacepolicyonline.com/feed/",
-            "category": "Civil, Defense & Budget Policy"
+            "tier": "Policy & Hill",
+            "category": "Congressional Budget & Civil Space"
+        },
+        # --- TIER 4: Commercial Space & Dual-Use Ventures ---
+        {
+            "name": "SpaceNews",
+            "url": "https://spacenews.com/feed/",
+            "tier": "Commercial & Defense",
+            "category": "Global Space Industry"
         },
         {
             "name": "Payload Space",
             "url": "https://payloadspace.com/feed/",
-            "category": "Commercial Space & Defense"
+            "tier": "Commercial & Defense",
+            "category": "Space Economy & Venture"
+        },
+        # --- TIER 5: Agency & Exploration Direct ---
+        {
+            "name": "NASA News",
+            "url": "https://www.nasa.gov/news-release/feed/",
+            "tier": "Civil & Agency",
+            "category": "NASA Exploration & Contracts"
         }
     ]
 
@@ -60,7 +91,7 @@ class SpaceNewsScraper:
         clean = clean.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"').replace("&#039;", "'")
         return re.sub(r"\s+", " ", clean).strip()
 
-    def _parse_xml_items(self, content: str) -> List[dict]:
+    def _parse_items(self, content: str) -> List[dict]:
         items = []
         try:
             root = ET.fromstring(content)
@@ -80,7 +111,7 @@ class SpaceNewsScraper:
                         "description": self._clean_text(desc)[:280]
                     })
         except Exception:
-            # Fallback regex parser for feeds with XML namespace or encoding quirks
+            # Fallback regex extraction for feeds with XML namespace discrepancies
             for block in re.findall(r"<item>(.*?)</item>", content, re.DOTALL | re.IGNORECASE):
                 t_m = re.search(r"<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", block, re.DOTALL | re.IGNORECASE)
                 l_m = re.search(r"<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</link>", block, re.DOTALL | re.IGNORECASE)
@@ -104,20 +135,20 @@ class SpaceNewsScraper:
                     })
         return items
 
-    def scrape_all_feeds(self, limit_per_feed: int = 8) -> List[Dict[str, Any]]:
-        logging.info("Ingesting top space and defense trade publications...")
+    def scrape_all_feeds(self, limit_per_feed: int = 6) -> List[Dict[str, Any]]:
+        logging.info(f"Ingesting space intelligence across {len(self.FEEDS)} premier industry publications...")
         all_articles = []
         seen_links: Set[str] = set()
 
         for feed in self.FEEDS:
-            logging.info(f"Polling {feed['name']} ({feed['url']})...")
+            logging.info(f"Polling {feed['name']} ({feed['tier']})...")
             try:
-                resp = self.session.get(feed['url'], timeout=15)
+                resp = self.session.get(feed['url'], timeout=18)
                 if resp.status_code != 200:
                     logging.warning(f"{feed['name']} returned HTTP {resp.status_code}")
                     continue
 
-                raw_items = self._parse_xml_items(resp.text)
+                raw_items = self._parse_items(resp.text)
                 feed_matches = 0
 
                 for item in raw_items:
@@ -125,7 +156,6 @@ class SpaceNewsScraper:
                     if clean_link in seen_links:
                         continue
 
-                    # Filter for space/defense relevance
                     corpus = f"{item['title']} {item['description']}"
                     rel = evaluate_relevance(corpus)
                     if not rel["is_relevant"]:
@@ -136,6 +166,7 @@ class SpaceNewsScraper:
 
                     all_articles.append({
                         "source": feed['name'],
+                        "tier": feed['tier'],
                         "outlet_category": feed['category'],
                         "title": item['title'],
                         "author": item['author'] or feed['name'],
@@ -155,5 +186,5 @@ class SpaceNewsScraper:
             except Exception as e:
                 logging.error(f"Error fetching {feed['name']}: {e}")
 
-        logging.info(f"Total space industry articles ingested: {len(all_articles)}")
+        logging.info(f"Total verified space industry articles ingested: {len(all_articles)}")
         return all_articles

@@ -6,15 +6,15 @@
   <title>Global Space Wire // Executive Media Briefing</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Ultra-tight accordion drawer */
+    /* Ultra-compact Google News wire styling */
     .story-drawer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.2s ease-out, opacity 0.15s ease-out;
+      transition: max-height 0.18s ease-out, opacity 0.15s ease-out;
       opacity: 0;
     }
     .story-row.open .story-drawer {
-      max-height: 350px;
+      max-height: 380px;
       opacity: 1;
     }
     .story-row.open .chevron-icon {
@@ -26,7 +26,7 @@
 
   <!-- Compact Top Navigation -->
   <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2">
       <div class="flex items-center justify-between">
         
         <!-- Left: Portal Switcher -->
@@ -37,10 +37,10 @@
           </div>
 
           <nav class="flex items-center bg-slate-950 p-0.5 rounded border border-slate-800 text-[11px]">
-            <a href="index.html" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition">
+            <a href="index.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
               🏛 Procurement & OSINT
             </a>
-            <a href="news.html" class="px-2.5 py-1 rounded bg-slate-800 text-white font-semibold border border-slate-700">
+            <a href="news.html" class="px-2.5 py-0.5 rounded bg-slate-800 text-white font-semibold border border-slate-700">
               📰 Global Space Wire
             </a>
           </nav>
@@ -48,61 +48,61 @@
 
         <!-- Right: Status -->
         <div class="flex items-center gap-2.5">
-          <span id="report-date" class="text-[11px] font-mono bg-slate-950 text-slate-400 px-2.5 py-1 rounded border border-slate-800">
+          <span id="report-date" class="text-[10px] font-mono bg-slate-950 text-slate-400 px-2 py-0.5 rounded border border-slate-800">
             Syncing...
           </span>
-          <button id="btn-refresh" class="text-[11px] bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2.5 py-1 rounded transition">
+          <button id="btn-refresh" class="text-[11px] bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2.5 py-0.5 rounded transition">
             Refresh
           </button>
         </div>
       </div>
 
       <!-- Tight Category Filter Pills -->
-      <div class="flex items-center gap-1 overflow-x-auto pt-2 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
-        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-semibold bg-cyan-600 text-white whitespace-nowrap">All Stories</button>
-        <button data-cat="China" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇨🇳 China</button>
-        <button data-cat="Russia" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇷🇺 Russia</button>
-        <button data-cat="Launch" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🚀 Launch</button>
-        <button data-cat="Spacecraft & Ops" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛰 Spacecraft & Ops</button>
-        <button data-cat="Commercial" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">💼 Commercial</button>
-        <button data-cat="Policy & Hill" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🏛 Policy & Hill</button>
-        <button data-cat="Technology" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">⚡ Technology</button>
-        <button data-cat="National Security" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛡 National Security</button>
-        <button data-cat="International" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🌍 International</button>
-        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap">★ Golden Dome</button>
+      <div class="flex items-center gap-1 overflow-x-auto pt-1.5 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
+        <button data-cat="all" class="cat-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-600 text-white whitespace-nowrap">All Stories</button>
+        <button data-cat="China" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇨🇳 China</button>
+        <button data-cat="Russia" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇷🇺 Russia</button>
+        <button data-cat="Launch" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🚀 Launch</button>
+        <button data-cat="Spacecraft & Ops" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛰 Spacecraft & Ops</button>
+        <button data-cat="Commercial" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">💼 Commercial</button>
+        <button data-cat="Policy & Hill" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🏛 Policy & Hill</button>
+        <button data-cat="Technology" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">⚡ Technology</button>
+        <button data-cat="National Security" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛡 National Security</button>
+        <button data-cat="International" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🌍 International</button>
+        <button data-cat="Golden Dome" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap">★ Golden Dome</button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-3">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-3 space-y-2">
 
-    <!-- Dense Toolbar -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
+    <!-- Dense Search Toolbar -->
+    <div class="flex items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
       <div class="text-[11px] text-slate-400 font-mono flex items-center gap-2">
-        <span>FEED:</span>
+        <span class="text-slate-500">WIRE:</span>
         <span id="active-category-label" class="font-bold text-slate-200 uppercase">All Stories</span>
         <span id="story-count" class="text-slate-500">&bull; 0 stories</span>
       </div>
 
-      <div class="w-full sm:w-72">
-        <input type="text" id="search-input" placeholder="Quick search wire..." 
-          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-cyan-500 transition">
+      <div class="w-72">
+        <input type="text" id="search-input" placeholder="Filter wire..." 
+          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded px-2.5 py-1 focus:outline-none focus:border-cyan-500 transition">
       </div>
     </div>
 
     <!-- Status States -->
-    <div id="loading" class="text-center py-20 text-slate-400 text-xs font-mono">
-      <div class="inline-block w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-2"></div>
-      <div>Loading space wire...</div>
+    <div id="loading" class="text-center py-16 text-slate-400 text-xs font-mono">
+      <div class="inline-block w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-1.5"></div>
+      <div>Loading global wire...</div>
     </div>
 
-    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-4 rounded text-rose-300 text-xs space-y-1">
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-3 rounded text-rose-300 text-xs space-y-1">
       <div class="font-bold">Failed to load news payload</div>
       <div id="error-details" class="font-mono text-rose-400"></div>
     </div>
 
-    <!-- Dense Google News Terminal Wire -->
-    <div id="news-container" class="hidden bg-slate-900 border border-slate-800 rounded-lg divide-y divide-slate-800/70 overflow-hidden shadow-sm"></div>
+    <!-- Ultra-Dense News Wire Terminal (Source is hidden until row expansion) -->
+    <div id="news-container" class="hidden bg-slate-900 border border-slate-800 rounded divide-y divide-slate-800/60 overflow-hidden shadow-sm"></div>
 
   </main>
 
@@ -193,9 +193,9 @@
         return;
       }
 
-      filtered.forEach(function(art, idx) {
+      filtered.forEach(function(art) {
         const row = document.createElement('div');
-        row.className = 'story-row hover:bg-slate-800/40 transition-colors';
+        row.className = 'story-row hover:bg-slate-850/60 transition-colors';
 
         // Compact category styling
         let catBadge = 'bg-slate-800 text-slate-300 border-slate-700';
@@ -214,34 +214,37 @@
             '<div class="pt-2 border-t border-slate-800/80 flex items-center gap-2 flex-wrap">' +
               '<span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Other Reporting:</span>' +
               art.related_coverage.map(function(rel) {
-                return '<a href="' + escapeHtml(rel.url) + '" target="_blank" class="text-[11px] bg-slate-900 hover:bg-slate-800 border border-slate-800 px-2 py-0.5 rounded text-cyan-400 hover:text-cyan-300 transition">' +
-                  '<span class="font-bold text-slate-300">' + escapeHtml(rel.source) + ':</span> ' + escapeHtml(rel.title.slice(0, 45)) + '... ↗' +
+                return '<a href="' + escapeHtml(rel.url) + '" target="_blank" class="text-[10px] bg-slate-900 hover:bg-slate-850 border border-slate-800 px-2 py-0.5 rounded text-cyan-400 hover:text-cyan-300 transition">' +
+                  '<span class="font-bold text-slate-300">' + escapeHtml(rel.source) + ':</span> ' + escapeHtml(rel.title.slice(0, 48)) + '... ↗' +
                 '</a>';
               }).join('') +
             '</div>';
         }
 
+        // UNEXPANDED ROW: Only Category + Title + Timestamp + Chevron (Source is hidden)
         row.innerHTML = 
-          '<div class="story-header px-3.5 py-2 cursor-pointer flex items-center justify-between gap-3 select-none">' +
-            '<div class="flex items-center gap-2.5 min-w-0 flex-1">' +
-              '<span class="text-[11px] font-mono font-semibold text-slate-400 shrink-0 w-28 truncate">' + escapeHtml(art.source) + '</span>' +
-              '<span class="text-[9px] font-medium border px-1.5 py-0.2 rounded shrink-0 ' + catBadge + '">' + escapeHtml(art.category) + '</span>' +
-              '<span class="text-xs font-medium text-slate-100 truncate hover:text-cyan-300 transition">' + escapeHtml(art.title) + '</span>' +
+          '<div class="story-header px-3 py-1.5 cursor-pointer flex items-center justify-between gap-3 select-none hover:bg-slate-800/40">' +
+            '<div class="flex items-center gap-2 min-w-0 flex-1">' +
+              '<span class="text-[9px] font-mono font-medium border px-1.5 py-0.2 rounded shrink-0 ' + catBadge + '">' + escapeHtml(art.category) + '</span>' +
+              '<span class="text-xs text-slate-200 truncate hover:text-cyan-300 transition font-normal">' + escapeHtml(art.title) + '</span>' +
             '</div>' +
             '<div class="flex items-center gap-2.5 shrink-0">' +
-              '<span class="text-[11px] font-mono text-slate-500 hidden sm:inline">' + escapeHtml(art.pub_date || '') + '</span>' +
-              '<span class="chevron-icon text-slate-400 text-[10px] transition-transform duration-150">▸</span>' +
+              '<span class="text-[10px] font-mono text-slate-500 hidden sm:inline">' + escapeHtml(art.pub_date || '') + '</span>' +
+              '<span class="chevron-icon text-slate-500 text-[10px] transition-transform duration-150">▸</span>' +
             '</div>' +
           '</div>' +
 
-          '<div class="story-drawer px-3.5 pb-2.5">' +
-            '<div class="p-3 bg-slate-950/80 rounded border border-slate-800/80 space-y-2">' +
-              '<div class="flex items-center justify-between text-[11px] text-slate-400 pb-1.5 border-b border-slate-800/60">' +
-                '<div>' +
-                  '<span class="text-slate-500">Byline:</span> <span class="text-slate-300 font-medium">' + escapeHtml(art.author || art.source) + '</span>' +
-                  ' &bull; <span class="text-slate-500">Beat:</span> ' + escapeHtml(art.tier || art.category) +
+          // EXPANDED DRAWER: Source outlet displayed here prominently
+          '<div class="story-drawer px-3 pb-2">' +
+            '<div class="p-2.5 bg-slate-950 rounded border border-slate-800/80 space-y-2">' +
+              '<div class="flex items-center justify-between text-[11px] pb-1.5 border-b border-slate-800/60">' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<span class="font-mono font-bold text-cyan-400 uppercase tracking-wide">' + escapeHtml(art.source) + '</span>' +
+                  '<span class="text-slate-600">&bull;</span>' +
+                  (art.author && art.author !== art.source ? '<span class="text-slate-400">Byline: <span class="text-slate-200 font-medium">' + escapeHtml(art.author) + '</span></span><span class="text-slate-600">&bull;</span>' : '') +
+                  '<span class="text-slate-500">Beat: ' + escapeHtml(art.tier || art.category) + '</span>' +
                 '</div>' +
-                '<a href="' + escapeHtml(art.url) + '" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2 py-0.5 rounded text-[10px] transition">' +
+                '<a href="' + escapeHtml(art.url) + '" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2 py-0.5 rounded text-[10px] transition shrink-0">' +
                   'Full Article ↗' +
                 '</a>' +
               '</div>' +
@@ -264,9 +267,9 @@
       document.querySelectorAll('.cat-pill').forEach(function(pill) {
         pill.addEventListener('click', function() {
           document.querySelectorAll('.cat-pill').forEach(function(p) {
-            p.className = 'cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+            p.className = 'cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
           });
-          this.className = 'cat-pill px-2.5 py-0.5 rounded text-[11px] font-semibold bg-cyan-600 text-white whitespace-nowrap';
+          this.className = 'cat-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-600 text-white whitespace-nowrap';
           
           currentCategory = this.getAttribute('data-cat');
           setSafeText('active-category-label', this.textContent.trim());

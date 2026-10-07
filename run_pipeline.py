@@ -10,6 +10,7 @@ from scrapers.sam_scraper import PreAwardScraper
 from scrapers.dsip_sbir_scraper import DSIPSbirScraper
 from scrapers.ic_diu_scraper import ICDIUScraper
 from scrapers.space_news_scraper import SpaceNewsScraper
+from scrapers.client_intel_scraper import ClientIntelScraper
 from scrapers.congress_scraper import CongressGovSpaceClient, CongressionalHearingPipeline
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -43,12 +44,17 @@ def main():
     ic_and_diu = ic_diu_scraper.get_all_ic_and_diu()
     logging.info(f"Captured {len(ic_and_diu)} DIU, In-Q-Tel, and IC opportunities.")
 
-    # 5. Space Industry & Defense Media (SpaceNews, Breaking Defense, etc.)
+    # 5. Global Space Wire (75+ Outlets)
     news_scraper = SpaceNewsScraper()
-    space_news = news_scraper.scrape_all_feeds(limit_per_feed=8)
-    logging.info(f"Captured {len(space_news)} space news articles.")
+    space_news = news_scraper.scrape_all_feeds(limit_per_feed=15)
+    logging.info(f"Captured {len(space_news)} global space news articles.")
 
-    # 6. Congressional Hearings (Congress.gov)
+    # 6. Tanagra Client Intelligence Wire (29 Clients)
+    client_scraper = ClientIntelScraper()
+    client_intel = client_scraper.scrape_all_clients(contracts=contracts, solicitations=solicitations)
+    logging.info(f"Captured {len(client_intel)} Tanagra client reports.")
+
+    # 7. Congressional Hearings (Congress.gov)
     congress_key = os.getenv("CONGRESS_GOV_API_KEY")
     enriched_hearings = []
     if congress_key:
@@ -73,6 +79,7 @@ def main():
             "total_sbir_and_spacewerx": len(sbir_spacewerx),
             "total_ic_and_diu": len(ic_and_diu),
             "total_space_news": len(space_news),
+            "total_client_intel": len(client_intel),
             "total_hearings": len(enriched_hearings),
             "golden_dome_priority_count": (
                 sum(1 for c in contracts if c.get("is_golden_dome")) +
@@ -83,8 +90,9 @@ def main():
                 sum(1 for n in space_news if n.get("is_golden_dome"))
             )
         },
-        "defense_contracts": contracts,
+        "client_intel": client_intel,
         "space_news": space_news,
+        "defense_contracts": contracts,
         "pre_award_solicitations": solicitations,
         "spec_and_otas": spec_otas,
         "sbir_and_spacewerx": sbir_spacewerx,

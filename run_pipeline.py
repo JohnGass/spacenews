@@ -9,6 +9,7 @@ from scrapers.defense_scraper import DefenseGovScraper
 from scrapers.sam_scraper import PreAwardScraper
 from scrapers.dsip_sbir_scraper import DSIPSbirScraper
 from scrapers.ic_diu_scraper import ICDIUScraper
+from scrapers.space_news_scraper import SpaceNewsScraper
 from scrapers.congress_scraper import CongressGovSpaceClient, CongressionalHearingPipeline
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -42,7 +43,12 @@ def main():
     ic_and_diu = ic_diu_scraper.get_all_ic_and_diu()
     logging.info(f"Captured {len(ic_and_diu)} DIU, In-Q-Tel, and IC opportunities.")
 
-    # 5. Congressional Hearings (Congress.gov)
+    # 5. Space Industry & Defense Media (SpaceNews, Breaking Defense, etc.)
+    news_scraper = SpaceNewsScraper()
+    space_news = news_scraper.scrape_all_feeds(limit_per_feed=8)
+    logging.info(f"Captured {len(space_news)} space news articles.")
+
+    # 6. Congressional Hearings (Congress.gov)
     congress_key = os.getenv("CONGRESS_GOV_API_KEY")
     enriched_hearings = []
     if congress_key:
@@ -56,7 +62,7 @@ def main():
         except Exception as e:
             logging.error(f"Error ingesting Congressional hearings: {e}")
 
-    # Compile Comprehensive Multi-Domain Payload
+    # Compile Multi-Vector Intelligence Report
     daily_report = {
         "report_date": today_str,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -66,16 +72,19 @@ def main():
             "total_spec_and_otas": len(spec_otas),
             "total_sbir_and_spacewerx": len(sbir_spacewerx),
             "total_ic_and_diu": len(ic_and_diu),
+            "total_space_news": len(space_news),
             "total_hearings": len(enriched_hearings),
             "golden_dome_priority_count": (
                 sum(1 for c in contracts if c.get("is_golden_dome")) +
                 sum(1 for s in solicitations if s.get("is_golden_dome")) +
                 sum(1 for o in spec_otas if o.get("is_golden_dome")) +
                 sum(1 for sb in sbir_spacewerx if sb.get("is_golden_dome")) +
-                sum(1 for ic in ic_and_diu if ic.get("is_golden_dome"))
+                sum(1 for ic in ic_and_diu if ic.get("is_golden_dome")) +
+                sum(1 for n in space_news if n.get("is_golden_dome"))
             )
         },
         "defense_contracts": contracts,
+        "space_news": space_news,
         "pre_award_solicitations": solicitations,
         "spec_and_otas": spec_otas,
         "sbir_and_spacewerx": sbir_spacewerx,

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tanagra Client Intelligence Wire</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .story-drawer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.15s ease-out, opacity 0.12s ease-out;
+      opacity: 0;
+    }
+    .story-row.open .story-drawer {
+      max-height: 340px;
+      opacity: 1;
+    }
+    .story-row.open .chevron-icon {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Compact Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5">
+      <div class="flex items-center justify-between">
+        
+        <!-- Left: Portal Switcher -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-[11px] font-bold uppercase font-mono tracking-wider text-slate-200">Tanagra Intel</span>
+          </div>
+
+          <nav class="flex items-center bg-slate-950 p-0.5 rounded border border-slate-800 text-[10px]">
+            <a href="index.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
+              🏛 Procurement & OSINT
+            </a>
+            <a href="news.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
+              📰 Global Wire
+            </a>
+            <a href="clients.html" class="px-2.5 py-0.5 rounded bg-emerald-950/60 text-emerald-300 font-semibold border border-emerald-700/60">
+              🎯 Client Wire
+            </a>
+          </nav>
+        </div>
+
+        <!-- Right: Status & Refresh -->
+        <div class="flex items-center gap-2">
+          <span id="report-date" class="text-[10px] font-mono bg-slate-950 text-slate-400 px-2 py-0.5 rounded border border-slate-800">
+            Syncing...
+          </span>
+          <button id="btn-refresh" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-2.5 py-0.5 rounded transition">
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Client Selection Pills Bar -->
+      <div class="flex items-center gap-1 overflow-x-auto pt-1 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="client-pills">
+        <button data-client="all" class="client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap">All Clients</button>
+        <!-- Populated dynamically via JS -->
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 py-2 space-y-1.5">
+
+    <!-- Dense Toolbar -->
+    <div class="flex items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
+      <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+        <span class="text-slate-500">CLIENT:</span>
+        <span id="active-client-label" class="font-bold text-emerald-400 uppercase">All Clients</span>
+        <span id="story-count" class="text-slate-500">&bull; 0 records</span>
+      </div>
+
+      <div class="w-64">
+        <input type="text" id="search-input" placeholder="Search client news, awards, RFPs..." 
+          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-emerald-500 transition">
+      </div>
+    </div>
+
+    <!-- Status States -->
+    <div id="loading" class="text-center py-16 text-slate-400 text-xs font-mono">
+      <div class="inline-block w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mb-1.5"></div>
+      <div>Monitoring 29 Tanagra client feeds...</div>
+    </div>
+
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-3 rounded text-rose-300 text-xs space-y-1">
+      <div class="font-bold">Failed to load client payload</div>
+      <div id="error-details" class="font-mono text-rose-400"></div>
+    </div>
+
+    <!-- Ultra-Dense Client Wire Terminal Container -->
+    <div id="client-news-container" class="hidden bg-slate-900/90 border border-slate-800 rounded divide-y divide-slate-800/60 overflow-hidden shadow-sm"></div>
+
+  </main>
+
+  <script>
+    let rawClientItems = [];
+    let currentClient = 'all';
+
+    const CLIENT_LIST = [
+      "Aalyria", "American TeraWatt", "AnySignal", "Apex Space", "Asymm Labs",
+      "BAE Systems", "Earthly Dynamics", "Ephemeris", "HawkEye 360", "Inversion Space",
+      "Kaizen Labs", "Kepler Space", "LeoLabs", "LodeStar Space", "Northwood Space",
+      "Orbital Ops", "Quindar", "Radiant Nuclear", "Rocket Lab", "Selene Industries",
+      "Sierra Space", "Space Kinetic", "Star Catcher", "Starcloud", "Starfish Space",
+      "Swoop Tech", "TransAstra", "True Anomaly", "Vantor (Maxar)"
+    ];
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .split('&').join('&amp;')
+        .split('<').join('&lt;')
+        .split('>').join('&gt;')
+        .split('"').join('&quot;')
+        .split("'").join('&#039;');
+    }
+
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function getPayloadUrl() {
+      let path = window.location.pathname;
+      if (path.endsWith('.html')) {
+        path = path.slice(0, path.lastIndexOf('/') + 1);
+      }
+      if (!path.endsWith('/')) path += '/';
+      return window.location.origin + path + 'data/latest.json?t=' + Date.now();
+    }
+
+    function buildPills() {
+      const container = document.getElementById('client-pills');
+      CLIENT_LIST.forEach(function(c) {
+        const btn = document.createElement('button');
+        btn.setAttribute('data-client', c);
+        btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+        btn.textContent = c;
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.client-pill').forEach(function(p) {
+            p.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+          });
+          btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap';
+          currentClient = c;
+          setSafeText('active-client-label', c);
+          renderClientStories();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    async function loadClientData() {
+      const loading = document.getElementById('loading');
+      const container = document.getElementById('client-news-container');
+      const errBox = document.getElementById('error-box');
+      const errDetails = document.getElementById('error-details');
+
+      loading.classList.remove('hidden');
+      container.classList.add('hidden');
+      errBox.classList.add('hidden');
+
+      const targetUrl = getPayloadUrl();
+      try {
+        const res = await fetch(targetUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
+        const data = await res.json();
+        
+        rawClientItems = data.client_intel || [];
+        setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A'));
+        
+        renderClientStories();
+        loading.classList.add('hidden');
+        container.classList.remove('hidden');
+      } catch (err) {
+        loading.classList.add('hidden');
+        if (errDetails) errDetails.textContent = err.message;
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    function renderClientStories() {
+      const container = document.getElementById('client-news-container');
+      const searchEl = document.getElementById('search-input');
+      const query = (searchEl ? searchEl.value : '').toLowerCase().trim();
+
+      container.innerHTML = '';
+
+      const filtered = rawClientItems.filter(function(item) {
+        const matchesQuery = query === '' || 
+          item.title.toLowerCase().includes(query) || 
+          item.description.toLowerCase().includes(query) ||
+          item.client.toLowerCase().includes(query) ||
+          item.source.toLowerCase().includes(query);
+
+        let matchesClient = (currentClient === 'all' || item.client === currentClient);
+        return matchesQuery && matchesClient;
+      });
+
+      setSafeText('story-count', filtered.length + ' records');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-slate-500 font-mono text-xs">No intelligence records match this client in the current ingestion cycle.</div>';
+        return;
+      }
+
+      filtered.forEach(function(item) {
+        const row = document.createElement('div');
+        row.className = 'story-row hover:bg-slate-850/60 transition-colors';
+
+        const isAward = item.type && item.type.includes('Contract Award');
+        const badgeColor = isAward 
+          ? 'bg-amber-950/40 text-amber-300 border-amber-800/50' 
+          : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50';
+
+        row.innerHTML = 
+          '<div class="story-header px-3 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
+            '<div class="flex items-center gap-2 min-w-0 flex-1">' +
+              '<span class="text-[9px] font-mono font-medium border px-1.5 py-0.2 rounded shrink-0 ' + badgeColor + '">' + escapeHtml(item.client) + '</span>' +
+              '<span class="text-xs text-slate-200 truncate hover:text-emerald-300 transition font-normal">' + escapeHtml(item.title) + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-2.5 shrink-0">' +
+              '<span class="text-[10px] font-mono text-slate-500 hidden sm:inline">' + escapeHtml(item.pub_date || '') + '</span>' +
+              '<span class="chevron-icon text-slate-500 text-[10px] transition-transform duration-120">▸</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="story-drawer px-3 pb-2">' +
+            '<div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1.5">' +
+              '<div class="flex items-center justify-between text-[11px] pb-1 border-b border-slate-800/60">' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<span class="font-mono font-bold text-emerald-400 uppercase tracking-wide">' + escapeHtml(item.source) + '</span>' +
+                  '<span class="text-slate-600">&bull;</span>' +
+                  '<span class="text-slate-400">Target Client: <span class="text-slate-200 font-medium">' + escapeHtml(item.client) + '</span></span>' +
+                  '<span class="text-slate-600">&bull;</span>' +
+                  '<span class="text-slate-500">Domain: ' + escapeHtml(item.domain || '') + '</span>' +
+                '</div>' +
+                '<a href="' + escapeHtml(item.url) + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-2 py-0.5 rounded text-[10px] transition shrink-0">' +
+                  'View Source ↗' +
+                '</a>' +
+              '</div>' +
+              '<p class="text-[11px] text-slate-300 leading-relaxed font-sans">' +
+                escapeHtml(item.description || 'No excerpt available. Click source link above.') +
+              '</p>' +
+            '</div>' +
+          '</div>';
+
+        row.querySelector('.story-header').addEventListener('click', function() {
+          row.classList.toggle('open');
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      buildPills();
+
+      const allPill = document.querySelector('.client-pill[data-client="all"]');
+      if (allPill) {
+        allPill.addEventListener('click', function() {
+          document.querySelectorAll('.client-pill').forEach(function(p) {
+            p.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+          });
+          this.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap';
+          currentClient = 'all';
+          setSafeText('active-client-label', 'All Clients');
+          renderClientStories();
+        });
+      }
+
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.addEventListener('keyup', renderClientStories);
+
+      const btnRefresh = document.getElementById('btn-refresh');
+      if (btnRefresh) btnRefresh.addEventListener('click', loadClientData);
+
+      loadClientData();
+    });
+  </script>
+</body>
+</html>

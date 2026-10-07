@@ -12,35 +12,19 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 class SpaceNewsScraper:
     """
     Ingests global space industry reporting, classifies articles into
-    curated Google News-style beats (China, Russia, Launch, Policy, Commercial, etc.),
-    and clusters related coverage across multiple outlets.
+    tightly bounded beats (China, Russia, Launch, Spacecraft & Ops, Commercial, etc.),
+    and clusters related coverage across outlets.
     """
     FEEDS = [
-        # Analysis & Doctrine
         {"name": "The Space Review", "url": "https://www.thespacereview.com/feed.xml", "tier": "Strategic Analysis"},
-        # Launch & Hardware Investigative
         {"name": "Ars Technica", "url": "https://arstechnica.com/space/feed/", "tier": "Technical & Launch"},
         {"name": "Spaceflight Now", "url": "https://spaceflightnow.com/feed/", "tier": "Mission Ops"},
-        # Defense & Pentagon Space
         {"name": "Breaking Defense", "url": "https://breakingdefense.com/category/space/feed/", "tier": "National Security Space"},
         {"name": "Air & Space Forces", "url": "https://www.airandspaceforces.com/category/space/feed/", "tier": "National Security Space"},
         {"name": "SpacePolicyOnline", "url": "https://spacepolicyonline.com/feed/", "tier": "Policy & Hill"},
-        # Commercial & Frontier
         {"name": "SpaceNews", "url": "https://spacenews.com/feed/", "tier": "Global Industry"},
         {"name": "Payload Space", "url": "https://payloadspace.com/feed/", "tier": "Commercial & Venture"},
         {"name": "NASA News", "url": "https://www.nasa.gov/news-release/feed/", "tier": "Civil Agency"}
-    ]
-
-    # Category classification patterns
-    CATEGORY_RULES = [
-        ("China", re.compile(r"\b(china|chinese|cnsa|beijing|tiangong|chang'e|long\s*march|landspace|casc|casic|deep\s*blue|yuanwang)\b", re.I)),
-        ("Russia", re.compile(r"\b(russia|russian|roscosmos|moscow|angara|soyuz|vostochny|plesetsk|antisatellite|asat)\b", re.I)),
-        ("Launch", re.compile(r"\b(launch|rocket|starship|falcon|vulcan|new\s*glenn|sls|booster|liftoff|orbit|pad|cape\s*canaveral|vandenberg)\b", re.I)),
-        ("Policy & Hill", re.compile(r"\b(congress|hasc|sasc|appropriations|ndaa|legislation|white\s*house|space\s*council|faa|fcc|treaty|budget)\b", re.I)),
-        ("Spacecraft", re.compile(r"\b(spacecraft|satellite|constellation|capsule|starliner|crew\s*dragon|orion|bus|payload|docking)\b", re.I)),
-        ("Technology", re.compile(r"\b(optical|laser|propulsion|quantum|nuclear|sensor|radar|cislunar|isam|servicing|reusable|ai)\b", re.I)),
-        ("Commercial", re.compile(r"\b(venture|startup|funding|commercial|spacex|blue\s*origin|rocket\s*lab|astrobotic|axiom|investment)\b", re.I)),
-        ("International", re.compile(r"\b(esa|europe|jaxa|isro|india|japan|uk\s*space|artemis\s*accords|uae|australia)\b", re.I)),
     ]
 
     def __init__(self):
@@ -57,10 +41,54 @@ class SpaceNewsScraper:
         clean = clean.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"').replace("&#039;", "'")
         return re.sub(r"\s+", " ", clean).strip()
 
-    def _classify_topic(self, text: str) -> str:
-        for cat_name, regex in self.CATEGORY_RULES:
-            if regex.search(text):
-                return cat_name
+    def _classify_topic(self, title: str, description: str) -> str:
+        """
+        Prioritized classification engine:
+        Evaluates title first to avoid company name collisions (e.g. 'Terran Orbital').
+        """
+        corpus = f"{title} {description}"
+
+        # 1. Executive / Corporate / Financial moves ALWAYS go to Commercial
+        exec_pattern = re.compile(
+            r"\b(names|appoints|taps|hires|named|executive|c-suite|ceo|coo|cfo|cto|president|"
+            r"board\s+of\s+directors|merger|merges|acquires|acquisition|earnings|quarterly|"
+            r"revenue|profit|loss|shares|nasdaq|nyse|valuation|spac|funding\s+round|series\s+[a-d])\b",
+            re.IGNORECASE
+        )
+        if exec_pattern.search(title):
+            return "Commercial"
+
+        # 2. Strategic Geopolitical Competitors
+        if re.search(r"\b(china|chinese|cnsa|beijing|tiangong|chang'e|long\s*march|casc|casic|landspace|deep\s*blue|yuanwang|tianwen)\b", corpus, re.I):
+            return "China"
+        if re.search(r"\b(russia|russian|roscosmos|moscow|angara|soyuz|vostochny|plesetsk|glonass)\b", corpus, re.I):
+            return "Russia"
+
+        # 3. Policy, Legislative & Hill
+        if re.search(r"\b(congress|senate|house|hasc|sasc|appropriations|ndaa|lawmaker|capitol\s*hill|legislation|white\s*house|space\s*council|faa|fcc|treaty|budget|regulatory)\b", corpus, re.I):
+            return "Policy & Hill"
+
+        # 4. Launch & Propulsion (Rockets, Boosters, Launch Events - explicitly excludes loose 'orbit')
+        if re.search(r"\b(launch|launches|launched|launching|rocket|booster|liftoff|starship|falcon\s*9|falcon\s*heavy|new\s*glenn|vulcan|sls|super\s*heavy|electron|static\s*fire|engine\s*test|hot\s*fire|pad\s*[0-9a-zA-Z]+|spaceport|cape\s*canaveral|vandenberg|kourou)\b", corpus, re.I):
+            return "Launch"
+
+        # 5. Spacecraft & In-Orbit Operations (Sensors, Satellites, Tracking, Rendezvous)
+        if re.search(r"\b(spacecraft|satellite|satellites|constellation|bus|rf-sensor|sensor|sensors|payload|on-orbit|in-orbit|orbital\s*target|orbital\s*debris|rendezvous|docking|proximity|rpo|space\s*domain\s*awareness|sda|ssa|space\s*tracking|maneuver|deorbit|flight\s*operations)\b", corpus, re.I):
+            return "Spacecraft & Ops"
+
+        # 6. Novel Technology & Research
+        if re.search(r"\b(optical\s*comm|laser|quantum|nuclear|solar\s*array|ai|edge\s*compute|isam|in-space\s*servicing|refueling|materials|additive)\b", corpus, re.I):
+            return "Technology"
+
+        # 7. Broader Commercial Industry
+        if re.search(r"\b(commercial|venture|startup|investment|spacex|blue\s*origin|rocket\s*lab|astrobotic|axiom|planet\s*labs|spire|capella|hawkeye)\b", corpus, re.I):
+            return "Commercial"
+
+        # 8. International Civil Alliances
+        if re.search(r"\b(esa|europe|european|jaxa|japan|isro|india|uae|australia|uk\s*space|artemis\s*accords)\b", corpus, re.I):
+            return "International"
+
+        # 9. Fallback: National Security / USSF
         return "National Security"
 
     def _parse_items(self, content: str) -> List[dict]:
@@ -107,10 +135,8 @@ class SpaceNewsScraper:
         return items
 
     def _cluster_related_reporting(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Finds parallel coverage of the same subject across different news outlets."""
-        # Extract prominent keywords (4+ chars) from each title
         def get_keywords(t: str) -> Set[str]:
-            stopwords = {"space", "force", "launch", "first", "plans", "tests", "after", "about", "could", "would", "about"}
+            stopwords = {"space", "force", "launch", "first", "plans", "tests", "after", "about", "could", "would", "names", "taps"}
             words = set(re.findall(r"\b[a-zA-Z]{4,}\b", t.lower()))
             return words - stopwords
 
@@ -122,14 +148,13 @@ class SpaceNewsScraper:
                     continue
                 kw_j = get_keywords(other["title"])
                 shared = kw_i & kw_j
-                # If titles share 2 or more distinct keywords, cluster them
                 if len(shared) >= 2:
                     related.append({
                         "source": other["source"],
                         "title": other["title"],
                         "url": other["url"]
                     })
-            art["related_coverage"] = related[:3]  # Keep top 3 alternative reports
+            art["related_coverage"] = related[:3]
 
         return articles
 
@@ -160,7 +185,7 @@ class SpaceNewsScraper:
                     seen_links.add(clean_link)
                     matches += 1
 
-                    category = self._classify_topic(corpus)
+                    category = self._classify_topic(item['title'], item['description'])
 
                     all_articles.append({
                         "source": feed['name'],
@@ -184,7 +209,6 @@ class SpaceNewsScraper:
             except Exception as e:
                 logging.error(f"Error reading {feed['name']}: {e}")
 
-        # Link matching reporting across outlets
         clustered_articles = self._cluster_related_reporting(all_articles)
         logging.info(f"Captured {len(clustered_articles)} categorized & clustered news stories.")
         return clustered_articles

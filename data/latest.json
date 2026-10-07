@@ -1,12 +1,160 @@
 {
   "report_date": "2026-10-07",
-  "generated_at": "2026-10-07T01:02:05.737791+00:00",
+  "generated_at": "2026-10-07T12:33:54.845269+00:00",
   "summary": {
     "total_contracts": 11,
-    "total_solicitations": 48,
+    "total_solicitations": 47,
+    "total_spec_and_otas": 2,
+    "total_sbir_and_spacewerx": 4,
+    "total_ic_and_diu": 2,
     "total_hearings": 0,
     "golden_dome_priority_count": 7
   },
+  "defense_contracts": [
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4620231/contracts-for-oct-6-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Aegis Aerospace Inc.",
+      "award_amount": "$9,359,118",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Aegis Aerospace Inc., Webster, Texas, has been awarded a $9,359,118 modification (P00001) to a previously awarded contract (FA8809-26-F-B003) for transitioning missions from the Department of War human-rated payload support task order. The modification brings the total cumulative face value of the contract to $34,323,859 from $24,964,741. Work will be performed at Houston, Texas, and is expected to be completed by Sept. 30, 2034. Fiscal 2026 research and development funds in the amount of $654,507 are being obligated at time of award. The Space Systems Command, Kirtland, Air Force Base, Albuquerque, New Mexico, is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:20.647437+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "BAE Systems Inc.",
+      "award_amount": "$99,206,056",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "BAE Systems Inc., Rockville, Maryland, is awarded a $99,206,056 hybrid cost-plus-fixed-fee and cost-plus-incentive-fee contract (N0003026C3033) to provide systems engineering and integration support services for Portfolio Acquisition Executive (PAE) Strategic Systems Programs (SSP). This contract provides supporting systems engineering, integration, technical information, fleet-support, program-management, cybersecurity, documentation, and related support-service requirements. This award also benefits a Foreign Military Sale. Work will be performed in Rockville, Maryland (61%); Washington, D.C. (20%); Cape Canaveral, Florida (4%); Saint Mary's, Georgia (2%); Silverdale, Washington (1%); Groton, Connecticut (1%); Frederick, Maryland (1%); North Kingstown, Rhode Island (1%); York, Pennsylvania (1%); Huntsville, Alabama (1%); Barrow-in-Furness, United Kingdom (1%); and various other locations under 1% each (6%). Efforts are expected to be completed Sept. 30, 2027. Fiscal 2025 One Big Beautiful Bill Act (OBBBA) funds in the amount of $4,832,638 will be obligated upon award. No funds will expire at the end of the current fiscal year. This contract was awarded as a sole-source acquisition pursuant to 10 U.S. Code 2304(c)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. PAE SSP, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:25.022325+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "American Systems Corp.",
+      "award_amount": "$43,266,824",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "American Systems Corp., McLean, Virginia, has been awarded a $43,266,824 firm fixed price task order for Red LAN Sustainment. This contract provides for the continued operations and maintenance of the Red Local Area Network (Red LAN) System and Red LAN System Data Provider/Data Recipient additions. Work will be performed at Schriever Space Force Base, Colorado, and is expected to be completed by September 29, 2031. This award is the result of a competitive acquisition and 16 offers were received. Fiscal 2026 operations and maintenance funds in the amount of $2,001,232 are being obligated at the time of award. The Space Systems Command, Peterson Space Force Base, Colorado, is the contracting activity (FA8821-26-F-B015).",
+      "ingested_at": "2026-10-07T12:33:25.023755+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Vision Quest Solutions Inc.",
+      "award_amount": "$25,274,553",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Vision Quest Solutions Inc., Rapid City, South Dakota, has been awarded a $25,274,553 firm-fixed-price, single award contract for Fire Protection and Emergency Services. This contract provides for the contractor to furnish all labor, tools, materials, equipment, supervision, personnel and all else necessary to manage and accomplish 24-hour 7 days a week fire protection and emergency services. Work will be performed at Cavalier Space Force Station, North Dakota, and is expected to be completed by Oct. 31, 2031. This contract was a competitive 100% small business set aside acquisition and seven offers were received. Fiscal 2027 operation and maintenance funds in the amount of $5,117,556 will be obligated for the base year. The 319th Contracting Squadron, Grand Forks Air Force Base, North Dakota, is the contracting activity (FA465926C0002).",
+      "ingested_at": "2026-10-07T12:33:25.024082+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "L3Harris Interstate Electronics Corp.",
+      "award_amount": "$46,850,128",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "L3Harris Interstate Electronics Corp., Yorba Linda, California, is being awarded a $46,850,128 cost-plus-incentive-fee and cost-plus-fixed-fee contract (N0003027C2001) for services and support for flight test instrumentation systems for the Trident II Strategic Weapon System. This contract has optional line items which could increase the amount to $207,054,517, if exercised. Work will be performed in Yorba Linda, California (55%); Cape Canaveral, Florida (30%); Washington, D.C. (7%); Groton, Connecticut (3%); Bremerton, Washington (2%); Kings Bay, Georgia (2%); and Barrow-in-Furness, United Kingdom (1%). Work is expected to be completed on 30 September 2031. No funding will be obligated on this contract at time of award, and no funds will expire at the end of the current fiscal year, as it is being awarded subject to the availability of funds in fiscal 2027. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:27.177618+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Systems Planning and Analysis",
+      "award_amount": "$37,651,082",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Systems Planning and Analysis, Inc., Alexandria, Virginia, is being awarded a $37,651,082 cost-plus-fixed-fee term task order (N0003027F3023) for the Trident II Strategic Weapons System (SWS). This value includes optional line items, if exercised. Tasks to be performed include missile operations and maintenance support, missile production support, and missile development support. Work will be performed in Washington, D.C. (72%); Silverdale, Washington (9%); Cape Canaveral, Florida (8%); Denver, Colorado (4%); Sunnyvale, California (3%); Kings Bay, Georgia (2%); Charleston, South Carolina (1%); and Alexandria, Virginia (1%). Work is expected to be completed on Sept. 30, 2029. Fiscal 2026 Weapons Procurement, Navy funds in the amount of $443,105 and Fiscal 2025 Weapons Procurement, Navy funds in the amount of $5,098,327 will be obligated on this award. No funds will expire at the end of the fiscal year. This task order will be awarded as a sole source acquisition with the authority of 15 U.S. Code 638 Research and Development. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:27.178227+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Trident Research LLC",
+      "award_amount": "$9,263,815",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Trident Research LLC, Austin, Texas, is being awarded a $9,263,815 cost-plus-fixed-fee contract (N0003027C2010) for engineering support of the Portable Impact Location System operated during Trident II Strategic Weapon System flight tests. This contract has optional line items which could increase the amount to $33,607,156, if exercised. Work will be performed in Austin, Texas (70%); and Cape Canaveral, Florida (30%). Work is expected to be completed by December 2030. No funding will be obligated on this award, and no funding will expire at the end of the fiscal year, as it will be subject to the availability of funds. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:27.180554+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Lockheed Martin Space",
+      "award_amount": "$41,972,953",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $41,972,953 cost-plus-fixed-fee modification (P00033) to a previously awarded and announced contract (N0003024C0100) for Trident II (D5) missile production and deployed systems support. Work will be performed in Orlando, Florida (62%); Denver, Colorado (20%); Cape Canaveral, Florida (7%); Titusville, Florida (5%); Irvine, California (4%); and various locations less than 1% each (2%). Work is expected to be completed June 30, 2028. Fiscal 2026 research, development, test and evaluation (Navy) funds in the amount of $2,000,000 will be obligated on this award. No funds will expire at the end of the current fiscal year. This contract is being awarded to the contractor on a sole source basis under 10 U.S. Code 3204(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:30.198225+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Lockheed Martin Space",
+      "award_amount": "$9,629,380",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $9,629,380 cost-plus-fixed-fee modification, P00019, to previously award and announced contract (N0003025C0100) for Sea-Launched Cruise Missile - Nuclear integration and facility design, warhead handling, engineering, integration support, and special studies efforts. Work will be performed in Cape Canaveral, Florida (45%); Bangor, Washington (21%); Titusville, Florida (17%); Kings Bay, Georgia (7%) Sunnyvale, California (4%); Bangor Base, Washington (3%); Valley Forge, Pennsylvania (1%); Denver, Colorado (1%); and locations less than 1.0% each (1%). Work is expected to be completed Sept. 30, 2027. Fiscal 2025 research, development, test and evaluation (Navy) funds in the amount of $9,371,936 will be obligated on this award and no funds will expire at the end of the current fiscal year. This contract is being awarded on a sole source basis under 10 U.S. Code 2304(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
+      "ingested_at": "2026-10-07T12:33:30.200766+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "ACMT Inc.",
+      "award_amount": "$2,400,000,000",
+      "contracting_activity": "UNKNOWN",
+      "classification": "Golden Dome Priority",
+      "is_golden_dome": true,
+      "is_space": true,
+      "raw_text": "ACMT Inc., Manchester, Connecticut (FA8121-26-D-B005); Bedek Aviation Group Israel Aerospace Industries Ltd., Ben Gurion International Airport, Israel (FA81212-26-D-B006); Chromalloy Component Services Inc., San Antonio, Texas (FA8121-26-D-B007); Chromalloy Gas Turbine LLC, Newnan, Georgia (FA8121-26-D-B008); Chromalloy San Diego Corp, San Diego, California (FA8121-26-D-B009); Jedco Inc., Grand Rapids, Michigan (FA8121-26-D-B010); Paramount Machine Co. Inc., Manchester, Connecticut (FA8121-26-D-B011); Bet Shemesh Engines Ltd., Shemesh, Israel (FA8121-26-D-B012); Schaeffler Aerospace Canada Inc., Ontario, Canada (FA8121-26-D-B013); Turbochrome Ltd., Kiryat Gat, Israel (FA8121-26-D-B014); PAS Technologies Inc., Kansas City, Missouri (FA8121-26-D-B015); Ferrotherm LLC, Cleveland, Ohio (FA8121-26-D-B016); Patria Belgium Engine Center, Herstal, Belgium (FA8121-26-D-B017); Barnes Group Inc., East Granby, Connecticut (FA8121-26-D-B018); C.F. Roark Welding & Engineering Co., Inc., Brownsburg, Indiana (FA8121-26-D-B019); RTX Corp., East Hartford, Connecticut (FA8121-26-D-B020); Southern Aero Partners Inc., Tulsa, Oklahoma (FA8121-26-D-B021); Transaero Inc., Melville, New York (FA8121-26-D-B022); Union Machine Co. of Lynn Inc., Groveland, Massachusetts (FA8121-26-D-B023); Wall Colmonoy Corp., Cincinnati, Ohio (FA8121-26-D-B024); Numet Acquisition Inc., Orange, Connecticut (FA8121-26-D-B025) have been awarded a maximum $2,400,000,000 indefinite-delivery/indefinite-quantity, firm-fixed-price contract for F-15 and F-16 engine work. This contract provides the repair, overhaul, remanufacture, and new manufacture of aircraft parts for the F100-PW-220/229 engine. Work will be performed at each awardees location as listed above and is expected to be completed by Sept. 30, 2036. This contract involves foreign military sales to Argentina, Austria, Brazil, Chile, Colombia, Ecuador, Egypt, France, Greece, Indonesia, Israel, Japan, Jordan, Korea, Malaysia, Mexico, Netherlands, Pakistan, Philippines, Poland, Portugal, Romania, Saudi Arabia, Singapore, South Africa, Taiwan, Thailand, Tunisia, and T\u00fcrkiye. These contracts were competitive acquisitions, and 27 offers were received. Fiscal 2026 working capital funds in the amount of $10,500\u202f($500 per awardee) are being obligated at time of award. The Air Force Sustainment Center, Tinker Air Force Base, Oklahoma, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nL3Harris, Greenville, Texas, was awarded a $461,908,308 firm-fixed-price definitization contracting action to provide commercial satellite communications connectivity for designated executive airlift aircraft. The contract supports authorized government personnel and is expected to be completed by Oct. 31, 2028. This contract was a sole-source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $62,305,059 are obligated at the time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA254126CB014PZ004). \u00a0\r\n\u00a0\r\nThe Johns Hopkins University Applied Physics Laboratory LLC, Laurel, Maryland, has been awarded a $300,000,000 indefinite delivery/indefinite quantity contract for Mission-related Research and Development, Simulation, Modeling and Operations analysis, Information Technology and Space Science Engineering in relation to human performance. This contract provides for the design, development and rapid prototyping of models and technology relating to human performance, warfighter bioengineering, combat and disaster threat modeling, analysis of health impacts of operational environments, warfighter optimization, and health and data management. Work will be performed at Laurel, Maryland, and is expected to be completed by Sept. 30, 2031. This contract was a sole source acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $20,298 for its first task order (FA238426FB003) are being obligated at time of award. The Air Force Reperch Laboratory, Wright-Patterson Air Force Base, Ohio, is the contracting activity (FA238426DB003).\u00a0\r\n\u00a0\u00a0\r\nBAE Systems Information and Electronic Systems Integration Inc., Nashua, New Hampshire, was awarded a $146,685,279 contract for the F-15EX Lot 7/8 Eagle Passive Active Warning Survivability System (EPAWSS) production hardware procurement. This contract provides for procurement of 40 F-15EX Lot 7/8 EPAWSS production hardware sets, magazines and retainers. \u00a0Work will be performed at Nashua, New Hampshire, and is expected to be completed by Aug. 31, 2030. This contract was a sole source acquisition. Fiscal 2025 and 2026 procurement funds in the amount of $58,827,876 are being obligated at time of award. The Air Force Life Cycle Management Center, Wright-Patterson Air Force Base, Ohio, is the contracting activity (FA8634-26-C-B004).\u00a0\r\n\u00a0\u00a0\r\nAspen Construction Co., Hackensack, Minnesota, was awarded a ceiling $132,667,510 firm-fixed-price indefinite delivery/indefinite quantity contract for paving services. This contract provides for the complete maintenance of all paved surfaces at Joint Base Langley-Eustis. Work will be performed at Joint Base Langley-Eustis, Virginia, and is expected to be completed by Oct. 13, 2033. This contract was a sole source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $2,000 are being obligated via a task order for the minimum guarantee amount at time of award. The 633d Contracting Squadron, Langley Air Force Base, Virginia, is the contracting activity (FA480026D0008).\u00a0\r\n\u00a0\u00a0\r\nThe Boeing Co., Oklahoma City, Oklahoma, has been awarded a $95,525,413 firm-fixed-price contract to provide commercial satellite communications services in support of authorized government requirements. Work is expected to be completed by Sept. 30, 2029. This was a sole-source acquisition. No Funds are being obligated at time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA254126CB014PZ004).\u00a0\r\n\u00a0\u00a0\r\nNorthrop Grumman Systems Corp., Warner Robins, Georgia, has been awarded a $71,653,554 firm-fixed-price requirements contract for repair of the AN/APN-241 Low Power Color Radar. This contract provides for depot-level maintenance, repair, testing, packaging, handling, storage, transportation, and associated data support for AN/APN-241 radar components. Work will be performed at Robins Air Force Base, Georgia, and is expected to be completed by Sept. 29, 2031. This contract was a sole-source acquisition. No funds are being obligated at the time of award; funds will be obligated through subsequent delivery orders. The Air Force Sustainment Center, Robins Air Force Base, Georgia, is the contracting activity (FA8538-26-D-0002). \u00a0\r\n\u00a0\u00a0\r\nVTS JV. LLC, Anchorage, Alaska, has been awarded a $ 49,978,879 firm-fixed-price contract for Modular Equipment Lease. This contract provides for a commercial non-personal service contract to furnish design, manufacture, furnishing, transportation, installation, and preventive and corrective maintenance for modular equipment units supporting temporary barracks. Work will be performed at Joint Base Elmendorf-Richardson, Alaska, and is expected to be completed by Sept. 29, 2031. This contract was a sole source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $10,438,888 are being obligated at time of award. The 673rd Contracting Squadron, Joint Base Elmendorf-Richardson, Alaska, is the contracting activity (FA500-26-C-0018). (Awarded on Sept. 29, 2026).\r\n\u00a0\u00a0\r\nSierra Nevada Corp., Fort Walton Beach, Florida, has been awarded a $41,831,912 firm-fixed-price, cost-plus-fixed-fee, and cost-reimbursement contract for A-29 sustainment. This contract provides for training devices, mission planning and debrief systems, line replaceable Units, alternate mission equipment, ground support equipment, test equipment, commercial technical publications, field service representatives, and spares. Work will be performed in Fort Walton Beach, Florida, and is expected to be completed by Sept. 30, 2031. This contract involves Foreign Military Sales (FMS) to Lebanon. This contract was a sole source acquisition. FMS funds in the amount of $ 9,371,563 are being obligated at the time of award. The Air Force Life Cycle Management Center, Wright Patterson Air Force Base, Ohio, is the contracting activity (FA8637-26-C-B001).\u00a0\r\n\u00a0\u00a0\r\nSouza Construction, Inc., Farmersville, California (FA8501-26-D-0006); Top Gun Contracting Inc., Warner Robins, Georgia (FA8501-26-D-0007); and Vet Con LLC, Farmersville, California (FA8501-26-D-0004), were awarded a maximum $40,000,000 multi-award, indefinite-delivery/indefinite-quantity contract for paving services. This contract provides for all plant, labor, materials, equipment, transportation, supervision, administration, management and software necessary to perform base-wide paving projects. Work will be performed at Robins Air Force Base, Georgia and is expected to be completed by Oct. 1, 2031. These contracts were competitive acquisitions and five offers were received. No funds are being obligated at the time of award. The Air Force Material Command Operational Contracting, Warner Robins, Georgia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nDefense Engineering Corp., Beavercreek, Ohio, was awarded a $37,592,905 cost-plus-fixed-fee contract for Spectrum Technologies for Rapid Innovation, Dominance, and Execution. This contract provides for the final report, software, and hardware. Work will be performed at Beavercreek, Ohio, and is expected to be completed by December 2031. This contract was a competitive acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $398,025 are being obligated at time of award. The Air Force Research Laboratory, Wright-Patterson Air Force Base, Ohio. is the contracting activity (FA2377-26-C-B012). (Awarded on Sept. 29, 2026).\r\n\u00a0\u00a0\r\nGoodrich Corp., Westford, Massachusetts, has been awarded a $35,994,377 firm-fixed-price and cost reimbursement definitization modification (PZ0003) to a previously awarded contract (FA8527-26-C-B003) for Optical Sensors Interface ground support. The modification brings the total cumulative face value of the contract to $68,167,792 from $32,173,415. Work will be performed at multiple locations within the continental U.S., outside of the continental U.S. and is expected to be completed by Sept. 21, 2028. Fiscal 2026 operations and maintenance funds in the amount of $9,858,815 are being obligated at time of award. The Air Force Life Cycle Management Center, Robins Air Force Base, Georgia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nLeidos Inc., Reston, Virginia, has been awarded a maximum ceiling $34,390,948 cost-plus-fixed-fee contract for Future Integration and Research Enhancements. This contract provides onsite research and development support and addresses the immediate needs of The Air Force Research Laboratory Information and Spectrum Warfare programs at Kirtland Air Force Base, New Mexico, in the areas of Laser Sources and Effects, Beam Control Technologies, Laser Weapon Systems Engineering, and Directed Energy Systems Test Planning and Execution. Work will be performed at Kirtland AFB, New Mexico, and is expected to be completed by Sept. 30, 2031. This contract was a competitive acquisition and 12 offers were received. Fiscal 2026 for research, development, test and evaluation funds in the amount of $939,533 are obligated at time of award. The AFRL, Kirtland Air Force Base, New Mexico, is the contracting activity (FA9451-26-C-X015).\u00a0\r\n\u00a0\u00a0\r\nLiberty Dynamic LLC, Sheridan, Colorado, has been awarded a $25,000,000 indefinite-delivery/indefinite-quantity, firm-fixed-price, Small Business Innovation Research (SBIR) Phase III contract for the Remote Activated Integrated Deterrent System (RAIDS). This contract provides for a remotely activated architecture system to counter small, unmanned aircraft systems. Work will be performed in various locations across the contiguous U.S. and is expected to be completed by Sept. 25, 2031. This contract was a sole source acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $104,000 are being obligated at time of award. The 10th Contracting Squadron, U.S. Air Force Academy, Colorado, is the contracting activity (FA7000-26-D-0013). \u00a0\r\n\u00a0\u00a0\r\nThe Boeing Co., El Segundo, California, has been awarded a cost-plus-incentive-fee undefinitized contract action with a not-to-exceed price ceiling of $22,000,000 modification (P00162) to previously awarded (FA8808-19-C-0001) for Joint Hub Spares and Spares Management. The modification brings the total cumulative face value of the contract to $638,392,556 from $616,392,556. Work will be performed in El Segundo, California; and Colorado Springs, Colorado, and is expected to be completed by June 6, 2028. Fiscal 2026 procurement funds in the amount of $10,766,000; and fiscal 2025 procurement funds in the amount of $27,100, are being obligated at time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA8808-19-C-0001).\u00a0\r\n\u00a0\u00a0\r\nBAE Systems Space & Mission Systems Inc., Broomfield, Colorado, has been awarded a maximum ceiling $19,679,844, cost-plus-fixed-fee contract for Laser Utilization for Military Innovation and Novel Applications. This contract provides for activities to exploit the advantages of pulsed lasers and integrate Solid State Laser technology with existing beam control systems. Work will be performed at Kirtland Air Force Base, New Mexico, and is expected to be completed by Sept. 29, 2031. This contract was a competitive acquisition and six offers were received. Fiscal 2026 research, development, test and evaluation funds in the amount of $1,000,000 are being obligated at time of award. The Air Force Research Laboratory, Kirtland Air Force Base, New Mexico, is the contracting activity (FA9451-26-C-X020).\u00a0\r\n\u00a0\u00a0\r\nLockheed Martin Space, Sunnyvale, California, has been awarded a $15,721,117 cost-plus-incentive-fee modification (P00205) to a previously awarded contract (FA8810-18-C-0005) for the Next Generation Overhead Persistent Infrared Geosynchronous. The modification brings the total cumulative face value of the contract to $8,262,513,789. Work will be performed at Boulder, Colorado and is expected to be completed by\u202fJuly 31, 2029. The contract is incrementally funded, and no funds will be obligated at contract award. Space Systems Command, Los Angeles Air Force Base, California, is the contracting activity.\u00a0\r\n\u00a0\u00a0\r\nTrace Systems Inc., Tampa, Florida, has been awarded a $13,769,392 modification (P00011) to previously awarded (FA4890-25-F-0002) to exercise option year two for the Air Forces Central (AFCENT) Communications Engineering and Installation Support Program II.\u202fThis modification brings the total cumulative face value of the contract to $38,505,598.\u202fWork will be performed in Shaw Air Force Base, South Carolina, and the AFCENT area of responsibility, and is expected to be completed March 31, 2030.\u202f\u00a0Fiscal 2027 operation and maintenance funds in the amount of $13,769,392 will be obligated once available on Oct. 1, 2026. The Air Combat Command, Acquisition Management and Integration Center, Langley AFB, Virginia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nAbaco Systems Inc., Huntsville, Alabama, has been awarded a $10,089,723 firm-fixed-price, indefinite-delivery, requirements contract for B-1B sustainment. This contract provides for sustainment services and ethernet switch unit power supply spares. Work will be performed in Huntsville, Alabama, and is expected to be completed by Nov. 26, 2027. Fiscal 2026 contract depot maintenance direct cite funds in the amount of $10,089,723 are being obligated at the time of award. The Air Force Sustainment Center, Robins Air Force Base, Georgia, is the contracting activity (FA8539-26-D-0005).",
+      "ingested_at": "2026-10-07T12:33:30.202975+00:00"
+    },
+    {
+      "source": "Defense.gov Contracts",
+      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
+      "branch_section": "UNKNOWN",
+      "contractor": "Katmai Global Solutions LLC",
+      "award_amount": "$11,991,204",
+      "contracting_activity": "Defense Logistics Agency Energy",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "raw_text": "Katmai Global Solutions LLC,* Anchorage, Alaska, has been awarded a maximum $11,991,204 for government-owned, contractor-operated, aircraft and ground fuel services, storage, and distribution at Vandenberg Space Force Base, California. This was a competitive acquisition with two responses received. This is a four-year base contract with one five-year option period and one six-month option to extend. The performance completion date is Oct. 31, 2030. Using military service is Air Force. Type of appropriation is fiscal 2026 defense working capital funds. The contracting activity is Defense Logistics Agency Energy, Fort Belvoir, Virginia (SPE603-26-C-5016). (Awarded on Sept. 28, 2026)",
+      "ingested_at": "2026-10-07T12:33:30.208148+00:00"
+    }
+  ],
   "pre_award_solicitations": [
     {
       "source": "SAM.gov",
@@ -20,8 +168,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/df0a326db3a845a5a8d1afa4c97ad23b/view",
-      "point_of_contact": "Shanna Patterson (shanna.l.patterson@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -35,8 +183,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/ab68572d22544619b8345db7219b9bfd/view",
-      "point_of_contact": "Sarah McKim (SARAH.MCKIM@NOAA.GOV), Keami Estep (keami.estep@noaa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -50,8 +198,8 @@
       "is_golden_dome": true,
       "is_space": true,
       "url": "https://sam.gov/opp/7ef056f2ec0d4fe7909220320293f532/view",
-      "point_of_contact": "Lee Mutschler (lee.mutschler@spaceforce.mil), Erica Talley (erica.talley.2.ctr@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -65,8 +213,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/089f8b54a1124e7587f555f6d7deaec8/view",
-      "point_of_contact": "Shanna Patterson (shanna.l.patterson@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -80,8 +228,8 @@
       "is_golden_dome": true,
       "is_space": false,
       "url": "https://sam.gov/opp/9181c80a242445db964086c4411c4ee5/view",
-      "point_of_contact": "MDA Advanced Capability Concepts (MDA.ACC-WP@mail.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -95,8 +243,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/9ef5eb405c404c17a4aec0f4dcadfe67/view",
-      "point_of_contact": "Brad Vest (Bradley.D.Vest@nasa.gov), Appendix B Email (hq-nextstep3appb@mail.nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -110,8 +258,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/1f2ff5f5af5e40e59096d3f5996120c5/view",
-      "point_of_contact": "Linda M Nabors (linda.m.nabors@nasa.gov), Ian Park (ian.park@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -125,8 +273,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/1a794955d12546b59698e15d84a87364/view",
-      "point_of_contact": "Brandon Villalpando (brandon.villalpando@spaceforce.mil), Michael Allen (michael.allen.119@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -140,8 +288,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/0b77f8324617421ea2b3fba4cec5e251/view",
-      "point_of_contact": "laura quave (laura.a.quave@nasa.gov), Karen Artis (Karen.L.Artis@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -155,8 +303,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/6208c238ca724934875b14f5a4e80b2b/view",
-      "point_of_contact": "Tracy L. Quintanilla (Tracy.L.Quintanilla@nasa.gov), Katelyn Jaime (katelyn.r.jaime@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -170,8 +318,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/1520abb90244427fbb2aa1c1964b841a/view",
-      "point_of_contact": "Kenneth E. Albright (Agency-SBIR-STTRSolicitation@mail.nasa.gov), James Hibbs (james.s.hibbs@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -185,8 +333,8 @@
       "is_golden_dome": true,
       "is_space": true,
       "url": "https://sam.gov/opp/bc2d5e5543974aab974e37ac591c78da/view",
-      "point_of_contact": "SDA Mailbox  (ussf.pentagon.sda.mbx.fa240126R-006@mail.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -200,8 +348,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/304b2ed57676432ba22c12d2948f0c18/view",
-      "point_of_contact": "Michael Kaszyca (michael.kaszyca@nasa.gov), Christopher Jenkins (christopher.l.jenkins@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -215,8 +363,8 @@
       "is_golden_dome": true,
       "is_space": false,
       "url": "https://sam.gov/opp/fb9bb2d52b074a5eb4eded9b20932253/view",
-      "point_of_contact": "Kimberly Rheaume (kimberly.f.rheaume.civ@mail.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -230,8 +378,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/f5c9b252647648aa953445a068741feb/view",
-      "point_of_contact": "McKenzie Hanson (mckenzie.m.hanson@nasa.gov), Will Garrett (will.c.garrett@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -245,8 +393,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/e1baa77a8343447b8f7a952cc3fa3156/view",
-      "point_of_contact": "John Russo (john.d.russo@nasa.gov), Katelyn Jaime (katelyn.r.jaime@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -260,8 +408,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/cf0e4a5ec0da46f091691e5c7a4b449c/view",
-      "point_of_contact": "Noah Garrison (noah.s.garrison@nasa.gov), Loretta James Hemphill (loretta.jameshemphill@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -275,8 +423,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/a33b6e3301a34e21b7507a67a5b03079/view",
-      "point_of_contact": "Shanna Patterson (shanna.l.patterson@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -290,8 +438,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/435f3cb955d447a9b4a530e82bd540b7/view",
-      "point_of_contact": "Cody Guidry (cody.d.guidry@nasa.gov), Kimberlynn Lancaster (Kimberlynn.m.lancaster@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -305,8 +453,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/bde3413a18594e7a977673fc34a94477/view",
-      "point_of_contact": "JPL Small Business Programs Office (smallbusiness.programsoffice@jpl.nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -320,8 +468,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/852c9872aeff4331a4ece7d668c51186/view",
-      "point_of_contact": "JPL Small Business Programs Office (smallbusiness.programsoffice@jpl.nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -335,8 +483,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/7029a3c7a30e4433a09073422ef4e564/view",
-      "point_of_contact": "JPL Small Business Programs Office (smallbusiness.programsoffice@jpl.nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -350,8 +498,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/b3a197c860214b308533407935d58f89/view",
-      "point_of_contact": "Ricardo Santos-Concepcion (ricardo.santos-concepcion@nasa.gov), Steve Parker (steve.parker@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -365,8 +513,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/b9faee050291435b9ea8fafecdbb1618/view",
-      "point_of_contact": "laura quave (laura.a.quave@nasa.gov), Karen Artis (Karen.L.Artis@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -380,8 +528,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/a110fae109384992b13b0829f8cace9a/view",
-      "point_of_contact": "Joshua Taggart (joshua.d.taggart@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -395,8 +543,8 @@
       "is_golden_dome": true,
       "is_space": false,
       "url": "https://sam.gov/opp/1f35a40030d34cb19167619d5266f2c6/view",
-      "point_of_contact": "Stephannie Siembab (stephannie.siembab@us.af.mil), Morgan Grudich (morgan.grudich@us.af.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -410,8 +558,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/631b1c951d1649a999b21695c26ad94c/view",
-      "point_of_contact": "Tracy Bremer (tracy.g.bremer@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -425,8 +573,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/e7a7ab8e74f543cc822ae330d38ececd/view",
-      "point_of_contact": "John Seacrist (john.seacrist@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -440,8 +588,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/29c79bd2f819486e87642b65b278ec07/view",
-      "point_of_contact": "COMSO Contracting (SSC/CMK) (ssc.pleo.contractinggateway@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -455,8 +603,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/bb9972f245da4db3b9861095f36058dc/view",
-      "point_of_contact": "Michael A Shook (Michael.Shook@va.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -470,8 +618,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/6294a5d633c64829a7dbdd36de161034/view",
-      "point_of_contact": "Licinda Peters (licinda.m.peters.civ@army.mil), Renee J. Bayton (renee.j.bayton.civ@army.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -485,8 +633,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/0ed6ebb5ca1840e9b9f593e58b7a813b/view",
-      "point_of_contact": "John Seacrist (john.seacrist@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -500,8 +648,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/1a29d67404a749eeb4ca5da3a2c178fe/view",
-      "point_of_contact": "Stacy Hollis (stacy.m.hollis@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -515,8 +663,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/866f7cf63a0a4cb7a7ffb2cd190bbf1d/view",
-      "point_of_contact": "Kimberly Beck (afrc-flight-opportunities-procurement@mail.nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -530,8 +678,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/2e49c25b24de4752baed33e93b23b195/view",
-      "point_of_contact": "Tracy Bremer (tracy.g.bremer@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -545,8 +693,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/23f4a6bccab74856bfa774902fccd296/view",
-      "point_of_contact": "Chhunheng Phay (chhunheng.phay@us.af.mil), Matthew MacEachern (matthew.maceachern@us.af.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -560,8 +708,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/1ce8bb9c8bb2424291ccb49c336851fd/view",
-      "point_of_contact": "Rosalia Toberman (rosalia.toberman-1@nasa.gov), Sherry Choo (sherry.s.choo@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -575,8 +723,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/421154e3ad474de79858929492d1926b/view",
-      "point_of_contact": "Christopher Petrosky (christopher.petrosky.4@spaceforce.mil), Robert Beaudry (robert.beaudry@spaceforce.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -590,8 +738,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/b4015648b60246df8250cd1b6a3d4189/view",
-      "point_of_contact": "Alexander Bring (BringAG@state.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -605,8 +753,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/907d4daa2625465e86f45efcc2d7a77b/view",
-      "point_of_contact": "Tracy Bremer (tracy.g.bremer@nasa.gov), Will Garrett (will.c.garrett@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -620,8 +768,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/f0cae2e3d69b4a38ac2d77a8b7c28f3e/view",
-      "point_of_contact": "Tracy Bremer (tracy.g.bremer@nasa.gov), Will Garrett (will.c.garrett@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -635,8 +783,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/ba10db148a584c7298898f30ed35e855/view",
-      "point_of_contact": "Huot, Tracy (thuot@usgs.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -650,8 +798,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/0abccb46617d4d349ad634dd50c59c74/view",
-      "point_of_contact": "Kimberly Beck (kimberly.a.beck-1@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -665,8 +813,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/8bcb83b52f0a4154928401497f7d0a74/view",
-      "point_of_contact": "McKenzie Hanson (mckenzie.m.hanson@nasa.gov), Tiffany Neal (tiffany.neal@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -680,23 +828,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/b0c0d14da13c4642b14ae690b6e466d9/view",
-      "point_of_contact": "Daniel Han (daniel.s.han@nasa.gov), Jerry Edmond (jerry.edmond-1@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
-    },
-    {
-      "source": "SAM.gov",
-      "title": "Delivery and execution of the 20-hour virtual executive training course entitled Stewardship of Federal Resources",
-      "solicitation_number": "80NSSC26944296Q",
-      "notice_type": "Special Notice",
-      "agency_office": "NATIONAL AERONAUTICS AND SPACE ADMINISTRATION.NATIONAL AERONAUTICS AND SPACE ADMINISTRATION.NASA SHARED SERVICES CENTER",
-      "response_deadline": "2026-07-09T15:00:00-05:00",
-      "naics_code": "541330",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "url": "https://sam.gov/opp/21da3181123c4a7c87b36de69b1d118d/view",
-      "point_of_contact": "McKenzie Hanson (mckenzie.m.hanson@nasa.gov), Shari Trigg (shari.trigg@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -710,8 +843,8 @@
       "is_golden_dome": false,
       "is_space": true,
       "url": "https://sam.gov/opp/89fdd52d29dc493cb102b9a5e256a30a/view",
-      "point_of_contact": "Allyson Grooms (allyson.grooms@nasa.gov)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     },
     {
       "source": "SAM.gov",
@@ -725,153 +858,126 @@
       "is_golden_dome": true,
       "is_space": false,
       "url": "https://sam.gov/opp/795eac57c1c3441f868526012d90dd83/view",
-      "point_of_contact": "Benjamin Davis (benjamin.c.davis5.civ@mail.mil), Willis Brice (willis.brice@mail.mil)",
-      "ingested_at": "2026-10-07T01:01:33.832451+00:00"
+      "point_of_contact": "See Listing",
+      "ingested_at": "2026-10-07T12:33:30.209091+00:00"
     }
   ],
-  "defense_contracts": [
+  "spec_and_otas": [
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4620231/contracts-for-oct-6-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Aegis Aerospace Inc.",
-      "award_amount": "$9,359,118",
-      "contracting_activity": "UNKNOWN",
+      "source": "Space Enterprise Consortium (SpEC)",
+      "title": "Opportunitiescalebnstxl2025-11-10T12:31:37-08:00",
+      "solicitation_number": "SpEC-OTA",
+      "notice_type": "Other Transaction Agreement (OTA) Prototype",
+      "agency_office": "Space Systems Command (SSC) / NSTXL",
+      "response_deadline": "See SpEC Member Portal",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "Aegis Aerospace Inc., Webster, Texas, has been awarded a $9,359,118 modification (P00001) to a previously awarded contract (FA8809-26-F-B003) for transitioning missions from the Department of War human-rated payload support task order. The modification brings the total cumulative face value of the contract to $34,323,859 from $24,964,741. Work will be performed at Houston, Texas, and is expected to be completed by Sept. 30, 2034. Fiscal 2026 research and development funds in the amount of $654,507 are being obligated at time of award. The Space Systems Command, Kirtland, Air Force Base, Albuquerque, New Mexico, is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:16.885616+00:00"
+      "url": "https://space-enterprise.org/author/calebnstxl/",
+      "point_of_contact": "NSTXL SpEC Consortium Management",
+      "ingested_at": "2026-10-07T12:33:37.233922+00:00"
     },
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "BAE Systems Inc.",
-      "award_amount": "$99,206,056",
-      "contracting_activity": "UNKNOWN",
+      "source": "Space Enterprise Consortium (SpEC)",
+      "title": "AllCurrentAwarded20212022Maritime and Aviation Receiver Card (MAVRC)A part of SSC\u2019s Military Communications and Positioning, Navig",
+      "solicitation_number": "SpEC-OTA",
+      "notice_type": "Other Transaction Agreement (OTA) Prototype",
+      "agency_office": "Space Systems Command (SSC) / NSTXL",
+      "response_deadline": "See SpEC Member Portal",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "BAE Systems Inc., Rockville, Maryland, is awarded a $99,206,056 hybrid cost-plus-fixed-fee and cost-plus-incentive-fee contract (N0003026C3033) to provide systems engineering and integration support services for Portfolio Acquisition Executive (PAE) Strategic Systems Programs (SSP). This contract provides supporting systems engineering, integration, technical information, fleet-support, program-management, cybersecurity, documentation, and related support-service requirements. This award also benefits a Foreign Military Sale. Work will be performed in Rockville, Maryland (61%); Washington, D.C. (20%); Cape Canaveral, Florida (4%); Saint Mary's, Georgia (2%); Silverdale, Washington (1%); Groton, Connecticut (1%); Frederick, Maryland (1%); North Kingstown, Rhode Island (1%); York, Pennsylvania (1%); Huntsville, Alabama (1%); Barrow-in-Furness, United Kingdom (1%); and various other locations under 1% each (6%). Efforts are expected to be completed Sept. 30, 2027. Fiscal 2025 One Big Beautiful Bill Act (OBBBA) funds in the amount of $4,832,638 will be obligated upon award. No funds will expire at the end of the current fiscal year. This contract was awarded as a sole-source acquisition pursuant to 10 U.S. Code 2304(c)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. PAE SSP, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:24.497241+00:00"
+      "url": "#",
+      "point_of_contact": "NSTXL SpEC Consortium Management",
+      "ingested_at": "2026-10-07T12:33:37.235039+00:00"
+    }
+  ],
+  "sbir_and_spacewerx": [
+    {
+      "source": "SpaceWERX",
+      "title": "Get Funded",
+      "solicitation_number": "SpaceWERX-CSO",
+      "notice_type": "StratFI Opportunity",
+      "agency_office": "USSF / SpaceWERX",
+      "response_deadline": "See SpaceWERX Notice",
+      "classification": "Non-Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "url": "https://spacewerx.us/",
+      "point_of_contact": "SpaceWERX Ventures Directorate",
+      "ingested_at": "2026-10-07T12:33:46.709231+00:00"
     },
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "American Systems Corp.",
-      "award_amount": "$43,266,824",
-      "contracting_activity": "UNKNOWN",
+      "source": "SpaceWERX",
+      "title": "The SpaceWERX Ventures branch works directly with the U.S. Space Force Space Systems Command, Space Development Agency, and the Ai",
+      "solicitation_number": "SpaceWERX-CSO",
+      "notice_type": "StratFI Opportunity",
+      "agency_office": "USSF / SpaceWERX",
+      "response_deadline": "See SpaceWERX Notice",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "American Systems Corp., McLean, Virginia, has been awarded a $43,266,824 firm fixed price task order for Red LAN Sustainment. This contract provides for the continued operations and maintenance of the Red Local Area Network (Red LAN) System and Red LAN System Data Provider/Data Recipient additions. Work will be performed at Schriever Space Force Base, Colorado, and is expected to be completed by September 29, 2031. This award is the result of a competitive acquisition and 16 offers were received. Fiscal 2026 operations and maintenance funds in the amount of $2,001,232 are being obligated at the time of award. The Space Systems Command, Peterson Space Force Base, Colorado, is the contracting activity (FA8821-26-F-B015).",
-      "ingested_at": "2026-10-07T01:01:24.498856+00:00"
+      "url": "https://spacewerx.us/accelerate/stratfi-tacfi/",
+      "point_of_contact": "SpaceWERX Ventures Directorate",
+      "ingested_at": "2026-10-07T12:33:46.709502+00:00"
     },
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4618190/contracts-for-oct-2-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Vision Quest Solutions Inc.",
-      "award_amount": "$25,274,553",
-      "contracting_activity": "UNKNOWN",
+      "source": "SpaceWERX",
+      "title": "Terms | Contact | AFWERX Alerts",
+      "solicitation_number": "SpaceWERX-CSO",
+      "notice_type": "SpaceWERX Challenge",
+      "agency_office": "USSF / SpaceWERX",
+      "response_deadline": "See SpaceWERX Notice",
+      "classification": "Non-Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "url": "https://afresearchlab.com/terms/",
+      "point_of_contact": "SpaceWERX Ventures Directorate",
+      "ingested_at": "2026-10-07T12:33:46.709554+00:00"
+    },
+    {
+      "source": "SpaceWERX",
+      "title": "CareersJoin the Space Force",
+      "solicitation_number": "SpaceWERX-CSO",
+      "notice_type": "SpaceWERX Challenge",
+      "agency_office": "USSF / SpaceWERX",
+      "response_deadline": "See SpaceWERX Notice",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "Vision Quest Solutions Inc., Rapid City, South Dakota, has been awarded a $25,274,553 firm-fixed-price, single award contract for Fire Protection and Emergency Services. This contract provides for the contractor to furnish all labor, tools, materials, equipment, supervision, personnel and all else necessary to manage and accomplish 24-hour 7 days a week fire protection and emergency services. Work will be performed at Cavalier Space Force Station, North Dakota, and is expected to be completed by Oct. 31, 2031. This contract was a competitive 100% small business set aside acquisition and seven offers were received. Fiscal 2027 operation and maintenance funds in the amount of $5,117,556 will be obligated for the base year. The 319th Contracting Squadron, Grand Forks Air Force Base, North Dakota, is the contracting activity (FA465926C0002).",
-      "ingested_at": "2026-10-07T01:01:24.499244+00:00"
-    },
+      "url": "https://www.spaceforce.com/",
+      "point_of_contact": "SpaceWERX Ventures Directorate",
+      "ingested_at": "2026-10-07T12:33:46.709623+00:00"
+    }
+  ],
+  "ic_and_diu": [
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "L3Harris Interstate Electronics Corp.",
-      "award_amount": "$46,850,128",
-      "contracting_activity": "UNKNOWN",
+      "source": "NRO DII / ARC",
+      "title": "NRO Director's Innovation Initiative (DII) - Advanced Disruptive Space Tech",
+      "solicitation_number": "NRO-DII-ANNUAL",
+      "notice_type": "Broad Agency Announcement (BAA)",
+      "agency_office": "National Reconnaissance Office (NRO) / AS&T",
+      "response_deadline": "Annual Open Solicitations",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "L3Harris Interstate Electronics Corp., Yorba Linda, California, is being awarded a $46,850,128 cost-plus-incentive-fee and cost-plus-fixed-fee contract (N0003027C2001) for services and support for flight test instrumentation systems for the Trident II Strategic Weapon System. This contract has optional line items which could increase the amount to $207,054,517, if exercised. Work will be performed in Yorba Linda, California (55%); Cape Canaveral, Florida (30%); Washington, D.C. (7%); Groton, Connecticut (3%); Bremerton, Washington (2%); Kings Bay, Georgia (2%); and Barrow-in-Furness, United Kingdom (1%). Work is expected to be completed on 30 September 2031. No funding will be obligated on this contract at time of award, and no funds will expire at the end of the current fiscal year, as it is being awarded subject to the availability of funds in fiscal 2027. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:30.867614+00:00"
+      "url": "https://acq.westfields.net/",
+      "point_of_contact": "NRO Acquisition Research Center (ARC)",
+      "ingested_at": "2026-10-07T12:33:54.267711+00:00"
     },
     {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Systems Planning and Analysis",
-      "award_amount": "$37,651,082",
-      "contracting_activity": "UNKNOWN",
+      "source": "NGA Commercial BAA",
+      "title": "NGA Boosting Innovative GEOINT Research (BIG-R) & Commercial Satellites",
+      "solicitation_number": "HM0476-BAA",
+      "notice_type": "Commercial GEOINT BAA",
+      "agency_office": "National Geospatial-Intelligence Agency (NGA)",
+      "response_deadline": "Standing Open Call",
       "classification": "Space Relevant",
       "is_golden_dome": false,
       "is_space": true,
-      "raw_text": "Systems Planning and Analysis, Inc., Alexandria, Virginia, is being awarded a $37,651,082 cost-plus-fixed-fee term task order (N0003027F3023) for the Trident II Strategic Weapons System (SWS). This value includes optional line items, if exercised. Tasks to be performed include missile operations and maintenance support, missile production support, and missile development support. Work will be performed in Washington, D.C. (72%); Silverdale, Washington (9%); Cape Canaveral, Florida (8%); Denver, Colorado (4%); Sunnyvale, California (3%); Kings Bay, Georgia (2%); Charleston, South Carolina (1%); and Alexandria, Virginia (1%). Work is expected to be completed on Sept. 30, 2029. Fiscal 2026 Weapons Procurement, Navy funds in the amount of $443,105 and Fiscal 2025 Weapons Procurement, Navy funds in the amount of $5,098,327 will be obligated on this award. No funds will expire at the end of the fiscal year. This task order will be awarded as a sole source acquisition with the authority of 15 U.S. Code 638 Research and Development. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:30.868419+00:00"
-    },
-    {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4616977/contracts-for-oct-1-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Trident Research LLC",
-      "award_amount": "$9,263,815",
-      "contracting_activity": "UNKNOWN",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "raw_text": "Trident Research LLC, Austin, Texas, is being awarded a $9,263,815 cost-plus-fixed-fee contract (N0003027C2010) for engineering support of the Portable Impact Location System operated during Trident II Strategic Weapon System flight tests. This contract has optional line items which could increase the amount to $33,607,156, if exercised. Work will be performed in Austin, Texas (70%); and Cape Canaveral, Florida (30%). Work is expected to be completed by December 2030. No funding will be obligated on this award, and no funding will expire at the end of the fiscal year, as it will be subject to the availability of funds. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:30.871225+00:00"
-    },
-    {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Lockheed Martin Space",
-      "award_amount": "$41,972,953",
-      "contracting_activity": "UNKNOWN",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $41,972,953 cost-plus-fixed-fee modification (P00033) to a previously awarded and announced contract (N0003024C0100) for Trident II (D5) missile production and deployed systems support. Work will be performed in Orlando, Florida (62%); Denver, Colorado (20%); Cape Canaveral, Florida (7%); Titusville, Florida (5%); Irvine, California (4%); and various locations less than 1% each (2%). Work is expected to be completed June 30, 2028. Fiscal 2026 research, development, test and evaluation (Navy) funds in the amount of $2,000,000 will be obligated on this award. No funds will expire at the end of the current fiscal year. This contract is being awarded to the contractor on a sole source basis under 10 U.S. Code 3204(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:33.819640+00:00"
-    },
-    {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Lockheed Martin Space",
-      "award_amount": "$9,629,380",
-      "contracting_activity": "UNKNOWN",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $9,629,380 cost-plus-fixed-fee modification, P00019, to previously award and announced contract (N0003025C0100) for Sea-Launched Cruise Missile - Nuclear integration and facility design, warhead handling, engineering, integration support, and special studies efforts. Work will be performed in Cape Canaveral, Florida (45%); Bangor, Washington (21%); Titusville, Florida (17%); Kings Bay, Georgia (7%) Sunnyvale, California (4%); Bangor Base, Washington (3%); Valley Forge, Pennsylvania (1%); Denver, Colorado (1%); and locations less than 1.0% each (1%). Work is expected to be completed Sept. 30, 2027. Fiscal 2025 research, development, test and evaluation (Navy) funds in the amount of $9,371,936 will be obligated on this award and no funds will expire at the end of the current fiscal year. This contract is being awarded on a sole source basis under 10 U.S. Code 2304(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T01:01:33.822680+00:00"
-    },
-    {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "ACMT Inc.",
-      "award_amount": "$2,400,000,000",
-      "contracting_activity": "UNKNOWN",
-      "classification": "Golden Dome Priority",
-      "is_golden_dome": true,
-      "is_space": true,
-      "raw_text": "ACMT Inc., Manchester, Connecticut (FA8121-26-D-B005); Bedek Aviation Group Israel Aerospace Industries Ltd., Ben Gurion International Airport, Israel (FA81212-26-D-B006); Chromalloy Component Services Inc., San Antonio, Texas (FA8121-26-D-B007); Chromalloy Gas Turbine LLC, Newnan, Georgia (FA8121-26-D-B008); Chromalloy San Diego Corp, San Diego, California (FA8121-26-D-B009); Jedco Inc., Grand Rapids, Michigan (FA8121-26-D-B010); Paramount Machine Co. Inc., Manchester, Connecticut (FA8121-26-D-B011); Bet Shemesh Engines Ltd., Shemesh, Israel (FA8121-26-D-B012); Schaeffler Aerospace Canada Inc., Ontario, Canada (FA8121-26-D-B013); Turbochrome Ltd., Kiryat Gat, Israel (FA8121-26-D-B014); PAS Technologies Inc., Kansas City, Missouri (FA8121-26-D-B015); Ferrotherm LLC, Cleveland, Ohio (FA8121-26-D-B016); Patria Belgium Engine Center, Herstal, Belgium (FA8121-26-D-B017); Barnes Group Inc., East Granby, Connecticut (FA8121-26-D-B018); C.F. Roark Welding & Engineering Co., Inc., Brownsburg, Indiana (FA8121-26-D-B019); RTX Corp., East Hartford, Connecticut (FA8121-26-D-B020); Southern Aero Partners Inc., Tulsa, Oklahoma (FA8121-26-D-B021); Transaero Inc., Melville, New York (FA8121-26-D-B022); Union Machine Co. of Lynn Inc., Groveland, Massachusetts (FA8121-26-D-B023); Wall Colmonoy Corp., Cincinnati, Ohio (FA8121-26-D-B024); Numet Acquisition Inc., Orange, Connecticut (FA8121-26-D-B025) have been awarded a maximum $2,400,000,000 indefinite-delivery/indefinite-quantity, firm-fixed-price contract for F-15 and F-16 engine work. This contract provides the repair, overhaul, remanufacture, and new manufacture of aircraft parts for the F100-PW-220/229 engine. Work will be performed at each awardees location as listed above and is expected to be completed by Sept. 30, 2036. This contract involves foreign military sales to Argentina, Austria, Brazil, Chile, Colombia, Ecuador, Egypt, France, Greece, Indonesia, Israel, Japan, Jordan, Korea, Malaysia, Mexico, Netherlands, Pakistan, Philippines, Poland, Portugal, Romania, Saudi Arabia, Singapore, South Africa, Taiwan, Thailand, Tunisia, and T\u00fcrkiye. These contracts were competitive acquisitions, and 27 offers were received. Fiscal 2026 working capital funds in the amount of $10,500\u202f($500 per awardee) are being obligated at time of award. The Air Force Sustainment Center, Tinker Air Force Base, Oklahoma, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nL3Harris, Greenville, Texas, was awarded a $461,908,308 firm-fixed-price definitization contracting action to provide commercial satellite communications connectivity for designated executive airlift aircraft. The contract supports authorized government personnel and is expected to be completed by Oct. 31, 2028. This contract was a sole-source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $62,305,059 are obligated at the time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA254126CB014PZ004). \u00a0\r\n\u00a0\r\nThe Johns Hopkins University Applied Physics Laboratory LLC, Laurel, Maryland, has been awarded a $300,000,000 indefinite delivery/indefinite quantity contract for Mission-related Research and Development, Simulation, Modeling and Operations analysis, Information Technology and Space Science Engineering in relation to human performance. This contract provides for the design, development and rapid prototyping of models and technology relating to human performance, warfighter bioengineering, combat and disaster threat modeling, analysis of health impacts of operational environments, warfighter optimization, and health and data management. Work will be performed at Laurel, Maryland, and is expected to be completed by Sept. 30, 2031. This contract was a sole source acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $20,298 for its first task order (FA238426FB003) are being obligated at time of award. The Air Force Reperch Laboratory, Wright-Patterson Air Force Base, Ohio, is the contracting activity (FA238426DB003).\u00a0\r\n\u00a0\u00a0\r\nBAE Systems Information and Electronic Systems Integration Inc., Nashua, New Hampshire, was awarded a $146,685,279 contract for the F-15EX Lot 7/8 Eagle Passive Active Warning Survivability System (EPAWSS) production hardware procurement. This contract provides for procurement of 40 F-15EX Lot 7/8 EPAWSS production hardware sets, magazines and retainers. \u00a0Work will be performed at Nashua, New Hampshire, and is expected to be completed by Aug. 31, 2030. This contract was a sole source acquisition. Fiscal 2025 and 2026 procurement funds in the amount of $58,827,876 are being obligated at time of award. The Air Force Life Cycle Management Center, Wright-Patterson Air Force Base, Ohio, is the contracting activity (FA8634-26-C-B004).\u00a0\r\n\u00a0\u00a0\r\nAspen Construction Co., Hackensack, Minnesota, was awarded a ceiling $132,667,510 firm-fixed-price indefinite delivery/indefinite quantity contract for paving services. This contract provides for the complete maintenance of all paved surfaces at Joint Base Langley-Eustis. Work will be performed at Joint Base Langley-Eustis, Virginia, and is expected to be completed by Oct. 13, 2033. This contract was a sole source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $2,000 are being obligated via a task order for the minimum guarantee amount at time of award. The 633d Contracting Squadron, Langley Air Force Base, Virginia, is the contracting activity (FA480026D0008).\u00a0\r\n\u00a0\u00a0\r\nThe Boeing Co., Oklahoma City, Oklahoma, has been awarded a $95,525,413 firm-fixed-price contract to provide commercial satellite communications services in support of authorized government requirements. Work is expected to be completed by Sept. 30, 2029. This was a sole-source acquisition. No Funds are being obligated at time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA254126CB014PZ004).\u00a0\r\n\u00a0\u00a0\r\nNorthrop Grumman Systems Corp., Warner Robins, Georgia, has been awarded a $71,653,554 firm-fixed-price requirements contract for repair of the AN/APN-241 Low Power Color Radar. This contract provides for depot-level maintenance, repair, testing, packaging, handling, storage, transportation, and associated data support for AN/APN-241 radar components. Work will be performed at Robins Air Force Base, Georgia, and is expected to be completed by Sept. 29, 2031. This contract was a sole-source acquisition. No funds are being obligated at the time of award; funds will be obligated through subsequent delivery orders. The Air Force Sustainment Center, Robins Air Force Base, Georgia, is the contracting activity (FA8538-26-D-0002). \u00a0\r\n\u00a0\u00a0\r\nVTS JV. LLC, Anchorage, Alaska, has been awarded a $ 49,978,879 firm-fixed-price contract for Modular Equipment Lease. This contract provides for a commercial non-personal service contract to furnish design, manufacture, furnishing, transportation, installation, and preventive and corrective maintenance for modular equipment units supporting temporary barracks. Work will be performed at Joint Base Elmendorf-Richardson, Alaska, and is expected to be completed by Sept. 29, 2031. This contract was a sole source acquisition. Fiscal 2026 operations and maintenance funds in the amount of $10,438,888 are being obligated at time of award. The 673rd Contracting Squadron, Joint Base Elmendorf-Richardson, Alaska, is the contracting activity (FA500-26-C-0018). (Awarded on Sept. 29, 2026).\r\n\u00a0\u00a0\r\nSierra Nevada Corp., Fort Walton Beach, Florida, has been awarded a $41,831,912 firm-fixed-price, cost-plus-fixed-fee, and cost-reimbursement contract for A-29 sustainment. This contract provides for training devices, mission planning and debrief systems, line replaceable Units, alternate mission equipment, ground support equipment, test equipment, commercial technical publications, field service representatives, and spares. Work will be performed in Fort Walton Beach, Florida, and is expected to be completed by Sept. 30, 2031. This contract involves Foreign Military Sales (FMS) to Lebanon. This contract was a sole source acquisition. FMS funds in the amount of $ 9,371,563 are being obligated at the time of award. The Air Force Life Cycle Management Center, Wright Patterson Air Force Base, Ohio, is the contracting activity (FA8637-26-C-B001).\u00a0\r\n\u00a0\u00a0\r\nSouza Construction, Inc., Farmersville, California (FA8501-26-D-0006); Top Gun Contracting Inc., Warner Robins, Georgia (FA8501-26-D-0007); and Vet Con LLC, Farmersville, California (FA8501-26-D-0004), were awarded a maximum $40,000,000 multi-award, indefinite-delivery/indefinite-quantity contract for paving services. This contract provides for all plant, labor, materials, equipment, transportation, supervision, administration, management and software necessary to perform base-wide paving projects. Work will be performed at Robins Air Force Base, Georgia and is expected to be completed by Oct. 1, 2031. These contracts were competitive acquisitions and five offers were received. No funds are being obligated at the time of award. The Air Force Material Command Operational Contracting, Warner Robins, Georgia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nDefense Engineering Corp., Beavercreek, Ohio, was awarded a $37,592,905 cost-plus-fixed-fee contract for Spectrum Technologies for Rapid Innovation, Dominance, and Execution. This contract provides for the final report, software, and hardware. Work will be performed at Beavercreek, Ohio, and is expected to be completed by December 2031. This contract was a competitive acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $398,025 are being obligated at time of award. The Air Force Research Laboratory, Wright-Patterson Air Force Base, Ohio. is the contracting activity (FA2377-26-C-B012). (Awarded on Sept. 29, 2026).\r\n\u00a0\u00a0\r\nGoodrich Corp., Westford, Massachusetts, has been awarded a $35,994,377 firm-fixed-price and cost reimbursement definitization modification (PZ0003) to a previously awarded contract (FA8527-26-C-B003) for Optical Sensors Interface ground support. The modification brings the total cumulative face value of the contract to $68,167,792 from $32,173,415. Work will be performed at multiple locations within the continental U.S., outside of the continental U.S. and is expected to be completed by Sept. 21, 2028. Fiscal 2026 operations and maintenance funds in the amount of $9,858,815 are being obligated at time of award. The Air Force Life Cycle Management Center, Robins Air Force Base, Georgia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nLeidos Inc., Reston, Virginia, has been awarded a maximum ceiling $34,390,948 cost-plus-fixed-fee contract for Future Integration and Research Enhancements. This contract provides onsite research and development support and addresses the immediate needs of The Air Force Research Laboratory Information and Spectrum Warfare programs at Kirtland Air Force Base, New Mexico, in the areas of Laser Sources and Effects, Beam Control Technologies, Laser Weapon Systems Engineering, and Directed Energy Systems Test Planning and Execution. Work will be performed at Kirtland AFB, New Mexico, and is expected to be completed by Sept. 30, 2031. This contract was a competitive acquisition and 12 offers were received. Fiscal 2026 for research, development, test and evaluation funds in the amount of $939,533 are obligated at time of award. The AFRL, Kirtland Air Force Base, New Mexico, is the contracting activity (FA9451-26-C-X015).\u00a0\r\n\u00a0\u00a0\r\nLiberty Dynamic LLC, Sheridan, Colorado, has been awarded a $25,000,000 indefinite-delivery/indefinite-quantity, firm-fixed-price, Small Business Innovation Research (SBIR) Phase III contract for the Remote Activated Integrated Deterrent System (RAIDS). This contract provides for a remotely activated architecture system to counter small, unmanned aircraft systems. Work will be performed in various locations across the contiguous U.S. and is expected to be completed by Sept. 25, 2031. This contract was a sole source acquisition. Fiscal 2026 research, development, test and evaluation funds in the amount of $104,000 are being obligated at time of award. The 10th Contracting Squadron, U.S. Air Force Academy, Colorado, is the contracting activity (FA7000-26-D-0013). \u00a0\r\n\u00a0\u00a0\r\nThe Boeing Co., El Segundo, California, has been awarded a cost-plus-incentive-fee undefinitized contract action with a not-to-exceed price ceiling of $22,000,000 modification (P00162) to previously awarded (FA8808-19-C-0001) for Joint Hub Spares and Spares Management. The modification brings the total cumulative face value of the contract to $638,392,556 from $616,392,556. Work will be performed in El Segundo, California; and Colorado Springs, Colorado, and is expected to be completed by June 6, 2028. Fiscal 2026 procurement funds in the amount of $10,766,000; and fiscal 2025 procurement funds in the amount of $27,100, are being obligated at time of award. The Space Force Portfolio Acquisition Executive for Satellite Communications and Positioning, Navigation, and Timing, Los Angeles Air Force Base, California, is the contracting activity (FA8808-19-C-0001).\u00a0\r\n\u00a0\u00a0\r\nBAE Systems Space & Mission Systems Inc., Broomfield, Colorado, has been awarded a maximum ceiling $19,679,844, cost-plus-fixed-fee contract for Laser Utilization for Military Innovation and Novel Applications. This contract provides for activities to exploit the advantages of pulsed lasers and integrate Solid State Laser technology with existing beam control systems. Work will be performed at Kirtland Air Force Base, New Mexico, and is expected to be completed by Sept. 29, 2031. This contract was a competitive acquisition and six offers were received. Fiscal 2026 research, development, test and evaluation funds in the amount of $1,000,000 are being obligated at time of award. The Air Force Research Laboratory, Kirtland Air Force Base, New Mexico, is the contracting activity (FA9451-26-C-X020).\u00a0\r\n\u00a0\u00a0\r\nLockheed Martin Space, Sunnyvale, California, has been awarded a $15,721,117 cost-plus-incentive-fee modification (P00205) to a previously awarded contract (FA8810-18-C-0005) for the Next Generation Overhead Persistent Infrared Geosynchronous. The modification brings the total cumulative face value of the contract to $8,262,513,789. Work will be performed at Boulder, Colorado and is expected to be completed by\u202fJuly 31, 2029. The contract is incrementally funded, and no funds will be obligated at contract award. Space Systems Command, Los Angeles Air Force Base, California, is the contracting activity.\u00a0\r\n\u00a0\u00a0\r\nTrace Systems Inc., Tampa, Florida, has been awarded a $13,769,392 modification (P00011) to previously awarded (FA4890-25-F-0002) to exercise option year two for the Air Forces Central (AFCENT) Communications Engineering and Installation Support Program II.\u202fThis modification brings the total cumulative face value of the contract to $38,505,598.\u202fWork will be performed in Shaw Air Force Base, South Carolina, and the AFCENT area of responsibility, and is expected to be completed March 31, 2030.\u202f\u00a0Fiscal 2027 operation and maintenance funds in the amount of $13,769,392 will be obligated once available on Oct. 1, 2026. The Air Combat Command, Acquisition Management and Integration Center, Langley AFB, Virginia, is the contracting activity. \u00a0\r\n\u00a0\u00a0\r\nAbaco Systems Inc., Huntsville, Alabama, has been awarded a $10,089,723 firm-fixed-price, indefinite-delivery, requirements contract for B-1B sustainment. This contract provides for sustainment services and ethernet switch unit power supply spares. Work will be performed in Huntsville, Alabama, and is expected to be completed by Nov. 26, 2027. Fiscal 2026 contract depot maintenance direct cite funds in the amount of $10,089,723 are being obligated at the time of award. The Air Force Sustainment Center, Robins Air Force Base, Georgia, is the contracting activity (FA8539-26-D-0005).",
-      "ingested_at": "2026-10-07T01:01:33.825215+00:00"
-    },
-    {
-      "source": "Defense.gov Contracts",
-      "article_url": "https://www.defense.gov/News/Contracts/Contract/Article/4615442/contracts-for-sept-30-2026/",
-      "branch_section": "UNKNOWN",
-      "contractor": "Katmai Global Solutions LLC",
-      "award_amount": "$11,991,204",
-      "contracting_activity": "Defense Logistics Agency Energy",
-      "classification": "Space Relevant",
-      "is_golden_dome": false,
-      "is_space": true,
-      "raw_text": "Katmai Global Solutions LLC,* Anchorage, Alaska, has been awarded a maximum $11,991,204 for government-owned, contractor-operated, aircraft and ground fuel services, storage, and distribution at Vandenberg Space Force Base, California. This was a competitive acquisition with two responses received. This is a four-year base contract with one five-year option period and one six-month option to extend. The performance completion date is Oct. 31, 2030. Using military service is Air Force. Type of appropriation is fiscal 2026 defense working capital funds. The contracting activity is Defense Logistics Agency Energy, Fort Belvoir, Virginia (SPE603-26-C-5016). (Awarded on Sept. 28, 2026)",
-      "ingested_at": "2026-10-07T01:01:33.831350+00:00"
+      "url": "https://acquisition.geoint.services/",
+      "point_of_contact": "NGA Commercial Solutions Office",
+      "ingested_at": "2026-10-07T12:33:54.267711+00:00"
     }
   ],
   "congressional_hearings": []

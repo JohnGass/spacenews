@@ -6,103 +6,103 @@
   <title>Global Space Wire // Executive Media Briefing</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Compact Google News accordion styling */
+    /* Ultra-tight accordion drawer */
     .story-drawer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.25s ease-out, opacity 0.2s ease-out;
+      transition: max-height 0.2s ease-out, opacity 0.15s ease-out;
       opacity: 0;
     }
-    .story-card.open .story-drawer {
-      max-height: 400px;
+    .story-row.open .story-drawer {
+      max-height: 350px;
       opacity: 1;
     }
-    .story-card.open .chevron-icon {
+    .story-row.open .chevron-icon {
       transform: rotate(90deg);
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
 
-  <!-- Top Multi-Dashboard Navigation Bar -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between py-3">
+  <!-- Compact Top Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5">
+      <div class="flex items-center justify-between">
         
-        <!-- Left: Brand & Dashboard Mode Switcher -->
-        <div class="flex items-center gap-6">
+        <!-- Left: Portal Switcher -->
+        <div class="flex items-center gap-4">
           <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span class="text-sm font-bold tracking-tight text-white uppercase font-mono">Space Intel Portal</span>
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase font-mono tracking-wider text-slate-200">Space Intel</span>
           </div>
 
-          <!-- View Switcher Tabs -->
-          <nav class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
-            <a href="index.html" class="px-3 py-1 rounded text-slate-400 hover:text-white transition">
+          <nav class="flex items-center bg-slate-950 p-0.5 rounded border border-slate-800 text-[11px]">
+            <a href="index.html" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition">
               🏛 Procurement & OSINT
             </a>
-            <a href="news.html" class="px-3 py-1 rounded bg-slate-800 text-white font-semibold border border-slate-700 shadow-sm">
+            <a href="news.html" class="px-2.5 py-1 rounded bg-slate-800 text-white font-semibold border border-slate-700">
               📰 Global Space Wire
             </a>
           </nav>
         </div>
 
-        <!-- Right: Status & Refresh -->
-        <div class="flex items-center gap-3">
-          <span id="report-date" class="text-xs font-mono bg-slate-950 text-slate-400 px-3 py-1 rounded border border-slate-800">
+        <!-- Right: Status -->
+        <div class="flex items-center gap-2.5">
+          <span id="report-date" class="text-[11px] font-mono bg-slate-950 text-slate-400 px-2.5 py-1 rounded border border-slate-800">
             Syncing...
           </span>
-          <button id="btn-refresh" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-3 py-1.5 rounded transition">
+          <button id="btn-refresh" class="text-[11px] bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2.5 py-1 rounded transition">
             Refresh
           </button>
         </div>
       </div>
 
-      <!-- Category Filter Pills Bar (Google News Style) -->
-      <div class="flex items-center gap-1.5 overflow-x-auto py-2.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
-        <button data-cat="all" class="cat-pill px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white whitespace-nowrap">Top Stories</button>
-        <button data-cat="China" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇨🇳 China</button>
-        <button data-cat="Russia" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇷🇺 Russia</button>
-        <button data-cat="Launch" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🚀 Launch</button>
-        <button data-cat="Policy & Hill" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🏛 Policy & Hill</button>
-        <button data-cat="Spacecraft" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛰 Spacecraft</button>
-        <button data-cat="Commercial" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">💼 Commercial</button>
-        <button data-cat="Technology" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">⚡ Technology</button>
-        <button data-cat="International" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🌍 International</button>
-        <button data-cat="Golden Dome" class="cat-pill px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap">★ Golden Dome</button>
+      <!-- Tight Category Filter Pills -->
+      <div class="flex items-center gap-1 overflow-x-auto pt-2 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
+        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-semibold bg-cyan-600 text-white whitespace-nowrap">All Stories</button>
+        <button data-cat="China" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇨🇳 China</button>
+        <button data-cat="Russia" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🇷🇺 Russia</button>
+        <button data-cat="Launch" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🚀 Launch</button>
+        <button data-cat="Spacecraft & Ops" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛰 Spacecraft & Ops</button>
+        <button data-cat="Commercial" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">💼 Commercial</button>
+        <button data-cat="Policy & Hill" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🏛 Policy & Hill</button>
+        <button data-cat="Technology" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">⚡ Technology</button>
+        <button data-cat="National Security" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🛡 National Security</button>
+        <button data-cat="International" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap">🌍 International</button>
+        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap">★ Golden Dome</button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-3">
 
-    <!-- Search Toolbar -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2">
-      <div class="text-xs text-slate-400 font-mono flex items-center gap-2">
-        <span>CURRENT FEED:</span>
-        <span id="active-category-label" class="font-bold text-slate-200 uppercase">Top Stories</span>
-        <span id="story-count" class="text-slate-500">&bull; 0 stories loaded</span>
+    <!-- Dense Toolbar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
+      <div class="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+        <span>FEED:</span>
+        <span id="active-category-label" class="font-bold text-slate-200 uppercase">All Stories</span>
+        <span id="story-count" class="text-slate-500">&bull; 0 stories</span>
       </div>
 
-      <div class="w-full sm:w-80">
-        <input type="text" id="search-input" placeholder="Search keywords, nations, leaders, launch vehicles..." 
-          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500 transition">
+      <div class="w-full sm:w-72">
+        <input type="text" id="search-input" placeholder="Quick search wire..." 
+          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-cyan-500 transition">
       </div>
     </div>
 
-    <!-- Loading and Error Indicators -->
-    <div id="loading" class="text-center py-24 text-slate-400 text-sm font-mono">
-      <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
-      <div>Loading global space wire...</div>
+    <!-- Status States -->
+    <div id="loading" class="text-center py-20 text-slate-400 text-xs font-mono">
+      <div class="inline-block w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-2"></div>
+      <div>Loading space wire...</div>
     </div>
 
-    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-5 rounded-lg text-rose-300 text-sm space-y-2">
-      <div class="font-bold flex items-center gap-2"><span>⚠</span> Failed to load news stream</div>
-      <div id="error-details" class="font-mono text-xs text-rose-400"></div>
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-4 rounded text-rose-300 text-xs space-y-1">
+      <div class="font-bold">Failed to load news payload</div>
+      <div id="error-details" class="font-mono text-rose-400"></div>
     </div>
 
-    <!-- Google News-Style Dense Headlines List -->
-    <div id="news-container" class="hidden space-y-2"></div>
+    <!-- Dense Google News Terminal Wire -->
+    <div id="news-container" class="hidden bg-slate-900 border border-slate-800 rounded-lg divide-y divide-slate-800/70 overflow-hidden shadow-sm"></div>
 
   </main>
 
@@ -151,7 +151,7 @@
         const data = await res.json();
         
         rawArticles = data.space_news || [];
-        setSafeText('report-date', 'REPORT DATE: ' + (data.report_date || 'N/A'));
+        setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A'));
         
         renderStories();
         loading.classList.add('hidden');
@@ -170,7 +170,6 @@
 
       container.innerHTML = '';
 
-      // Filter articles by category and search query
       const filtered = rawArticles.filter(function(art) {
         const matchesQuery = query === '' || 
           art.title.toLowerCase().includes(query) || 
@@ -190,65 +189,60 @@
       setSafeText('story-count', filtered.length + ' stories');
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="p-8 text-center text-slate-500 font-mono text-xs border border-slate-800 rounded-lg bg-slate-900/50">No stories match the selected criteria.</div>';
+        container.innerHTML = '<div class="p-6 text-center text-slate-500 font-mono text-xs">No wire stories match the selected criteria.</div>';
         return;
       }
 
       filtered.forEach(function(art, idx) {
-        const card = document.createElement('div');
-        card.className = 'story-card bg-slate-900/90 border border-slate-800 hover:border-slate-700 rounded-lg transition-colors';
-        card.setAttribute('data-index', idx);
+        const row = document.createElement('div');
+        row.className = 'story-row hover:bg-slate-800/40 transition-colors';
 
-        // Category Badge Color
+        // Compact category styling
         let catBadge = 'bg-slate-800 text-slate-300 border-slate-700';
         if (art.category === 'China') catBadge = 'bg-red-950/40 text-red-400 border-red-800/50';
         if (art.category === 'Russia') catBadge = 'bg-orange-950/40 text-orange-400 border-orange-800/50';
         if (art.category === 'Launch') catBadge = 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50';
+        if (art.category === 'Spacecraft & Ops') catBadge = 'bg-purple-950/40 text-purple-400 border-purple-800/50';
+        if (art.category === 'Commercial') catBadge = 'bg-amber-950/40 text-amber-300 border-amber-800/50';
         if (art.category === 'Policy & Hill') catBadge = 'bg-blue-950/40 text-blue-400 border-blue-800/50';
-        if (art.category === 'Spacecraft') catBadge = 'bg-purple-950/40 text-purple-400 border-purple-800/50';
         if (art.category === 'Technology') catBadge = 'bg-cyan-950/40 text-cyan-400 border-cyan-800/50';
 
-        // Related Reporting Sub-Block
+        // Related coverage pills
         let relatedHtml = '';
         if (art.related_coverage && art.related_coverage.length > 0) {
           relatedHtml = 
-            '<div class="mt-3 pt-3 border-t border-slate-800/80">' +
-              '<div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">' +
-                '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Other Reporting on this Story:' +
-              '</div>' +
-              '<div class="flex flex-wrap gap-2">' +
-                art.related_coverage.map(function(rel) {
-                  return '<a href="' + escapeHtml(rel.url) + '" target="_blank" class="text-xs bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-2.5 py-1 rounded text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1">' +
-                    '<span class="font-bold text-slate-300">' + escapeHtml(rel.source) + ':</span> ' + escapeHtml(rel.title.slice(0, 50)) + '... ↗' +
-                  '</a>';
-                }).join('') +
-              '</div>' +
+            '<div class="pt-2 border-t border-slate-800/80 flex items-center gap-2 flex-wrap">' +
+              '<span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Other Reporting:</span>' +
+              art.related_coverage.map(function(rel) {
+                return '<a href="' + escapeHtml(rel.url) + '" target="_blank" class="text-[11px] bg-slate-900 hover:bg-slate-800 border border-slate-800 px-2 py-0.5 rounded text-cyan-400 hover:text-cyan-300 transition">' +
+                  '<span class="font-bold text-slate-300">' + escapeHtml(rel.source) + ':</span> ' + escapeHtml(rel.title.slice(0, 45)) + '... ↗' +
+                '</a>';
+              }).join('') +
             '</div>';
         }
 
-        // Card HTML: Compact Single-Line Header + Expandable Dropdown Drawer
-        card.innerHTML = 
-          '<div class="story-header px-4 py-3 cursor-pointer flex items-center justify-between gap-3 select-none">' +
-            '<div class="flex items-center gap-3 min-w-0 flex-1">' +
-              '<span class="text-[11px] font-mono font-bold text-slate-400 shrink-0 w-28 truncate">' + escapeHtml(art.source) + '</span>' +
-              '<span class="text-[10px] font-medium border px-2 py-0.5 rounded shrink-0 ' + catBadge + '">' + escapeHtml(art.category) + '</span>' +
-              '<span class="text-sm font-medium text-slate-100 truncate hover:text-cyan-300 transition">' + escapeHtml(art.title) + '</span>' +
+        row.innerHTML = 
+          '<div class="story-header px-3.5 py-2 cursor-pointer flex items-center justify-between gap-3 select-none">' +
+            '<div class="flex items-center gap-2.5 min-w-0 flex-1">' +
+              '<span class="text-[11px] font-mono font-semibold text-slate-400 shrink-0 w-28 truncate">' + escapeHtml(art.source) + '</span>' +
+              '<span class="text-[9px] font-medium border px-1.5 py-0.2 rounded shrink-0 ' + catBadge + '">' + escapeHtml(art.category) + '</span>' +
+              '<span class="text-xs font-medium text-slate-100 truncate hover:text-cyan-300 transition">' + escapeHtml(art.title) + '</span>' +
             '</div>' +
-            '<div class="flex items-center gap-3 shrink-0">' +
-              '<span class="text-xs font-mono text-slate-500 hidden sm:inline">' + escapeHtml(art.pub_date || '') + '</span>' +
-              '<span class="chevron-icon text-slate-400 text-xs transition-transform duration-200">▸</span>' +
+            '<div class="flex items-center gap-2.5 shrink-0">' +
+              '<span class="text-[11px] font-mono text-slate-500 hidden sm:inline">' + escapeHtml(art.pub_date || '') + '</span>' +
+              '<span class="chevron-icon text-slate-400 text-[10px] transition-transform duration-150">▸</span>' +
             '</div>' +
           '</div>' +
 
-          '<div class="story-drawer px-4 pb-4">' +
-            '<div class="p-3.5 bg-slate-950/80 rounded-lg border border-slate-800/80 space-y-3">' +
-              '<div class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800/60">' +
+          '<div class="story-drawer px-3.5 pb-2.5">' +
+            '<div class="p-3 bg-slate-950/80 rounded border border-slate-800/80 space-y-2">' +
+              '<div class="flex items-center justify-between text-[11px] text-slate-400 pb-1.5 border-b border-slate-800/60">' +
                 '<div>' +
                   '<span class="text-slate-500">Byline:</span> <span class="text-slate-300 font-medium">' + escapeHtml(art.author || art.source) + '</span>' +
                   ' &bull; <span class="text-slate-500">Beat:</span> ' + escapeHtml(art.tier || art.category) +
                 '</div>' +
-                '<a href="' + escapeHtml(art.url) + '" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-3 py-1 rounded text-xs transition">' +
-                  'Read Full Article ↗' +
+                '<a href="' + escapeHtml(art.url) + '" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium px-2 py-0.5 rounded text-[10px] transition">' +
+                  'Full Article ↗' +
                 '</a>' +
               '</div>' +
               '<p class="text-xs text-slate-300 leading-relaxed font-sans">' +
@@ -258,24 +252,21 @@
             '</div>' +
           '</div>';
 
-        // Click row header to toggle open/close
-        const headerEl = card.querySelector('.story-header');
-        headerEl.addEventListener('click', function() {
-          card.classList.toggle('open');
+        row.querySelector('.story-header').addEventListener('click', function() {
+          row.classList.toggle('open');
         });
 
-        container.appendChild(card);
+        container.appendChild(row);
       });
     }
 
-    // Pill Filtering Event Handlers
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.cat-pill').forEach(function(pill) {
         pill.addEventListener('click', function() {
           document.querySelectorAll('.cat-pill').forEach(function(p) {
-            p.className = 'cat-pill px-3 py-1 rounded-full text-xs font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+            p.className = 'cat-pill px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
           });
-          this.className = 'cat-pill px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white whitespace-nowrap';
+          this.className = 'cat-pill px-2.5 py-0.5 rounded text-[11px] font-semibold bg-cyan-600 text-white whitespace-nowrap';
           
           currentCategory = this.getAttribute('data-cat');
           setSafeText('active-category-label', this.textContent.trim());

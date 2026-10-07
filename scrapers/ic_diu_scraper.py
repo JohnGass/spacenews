@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any
 from urllib.parse import quote
 import requests
@@ -13,64 +13,56 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 class ICDIUScraper:
     """
     Ingests commercial innovation and intelligence community opportunities:
-    1. Defense Innovation Unit (DIU) Commercial Solutions Openings (CSOs)
-    2. In-Q-Tel (IQT) Strategic Investment Problem Sets & Focus Areas
-    3. NRO & NGA Unclassified Acquisition Initiatives (DII & Commercial GEOINT BAAs)
+    1. Live DIU Commercial Solutions Openings (CSOs)
+    2. NRO & NGA unclassified solicitations via SAM.gov
+    3. In-Q-Tel (IQT) technology problem sets
     """
     DIU_OPEN_URL = "https://www.diu.mil/work-with-us/open-solicitations"
-    IQT_FOCUS_URL = "https://www.iqt.org/focus-areas/"
+    SAM_API_URL = "https://api.sam.gov/opportunities/v2/search"
 
     def __init__(self):
+        self.sam_api_key = os.getenv("SAM_GOV_API_KEY")
         self.scraper_api_key = os.getenv("SCRAPER_API_KEY")
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": "SpaceIntelPipeline/2.0"})
 
-    def _fetch_html(self, url: str) -> str:
-        fetch_url = f"https://api.scraperapi.com?api_key={self.scraper_api_key}&url={quote(url)}" if self.scraper_api_key else url
+    def fetch_diu_csos(self) -> List[Dict[str, Any]]:
+        """Scrapes active Defense Innovation Unit (DIU) CSOs."""
+        logging.info("Scraping DIU Commercial Solutions Openings (CSOs)...")
+        fetch_url = f"https://api.scraperapi.com?api_key={self.scraper_api_key}&url={quote(self.DIU_OPEN_URL)}" if self.scraper_api_key else self.DIU_OPEN_URL
+
+        csos = []
         try:
             resp = self.session.get(fetch_url, timeout=25)
             if resp.status_code == 200:
-                return resp.text
+                soup = BeautifulSoup(resp.text, "html.parser")
+                cards = soup.find_all(["div", "article", "a"], class_=re.compile(r"solicitation|card|challenge|item", re.IGNORECASE))
+                for card in cards:
+                    txt = card.get_text().strip()
+                    if len(txt) < 20 or "view all" in txt.lower():
+                        continue
+
+                    a_tag = card if card.name == "a" else card.find("a", href=True)
+                    href = a_tag["href"] if a_tag else ""
+                    url = href if href.startswith("http") else f"https://www.diu.mil{href}"
+
+                    rel = evaluate_relevance(txt)
+                    csos.append({
+                        "source": "Defense Innovation Unit (DIU)",
+                        "title": txt.splitlines()[0][:130].strip(),
+                        "solicitation_number": "DIU-CSO",
+                        "notice_type": "Commercial Solutions Opening (CSO)",
+                        "agency_office": "DIU / OSD",
+                        "response_deadline": "Check Challenge Window",
+                        "classification": rel["classification"],
+                        "is_golden_dome": rel["is_golden_dome"],
+                        "is_space": rel["is_space"],
+                        "url": url if url.startswith("http") else "https://www.diu.mil/work-with-us/open-solicitations",
+                        "point_of_contact": "DIU Commercial Team",
+                        "ingested_at": datetime.now(timezone.utc).isoformat()
+                    })
         except Exception as e:
-            logging.error(f"Failed to fetch {url}: {e}")
-        return ""
-
-    def fetch_diu_csos(self) -> List[Dict[str, Any]]:
-        """Scrapes active Defense Innovation Unit (DIU) Commercial Solutions Openings."""
-        logging.info("Scraping DIU Commercial Solutions Openings (CSOs)...")
-        html = self._fetch_html(self.DIU_OPEN_URL)
-        if not html:
-            return []
-
-        soup = BeautifulSoup(html, "html.parser")
-        cards = soup.find_all(["div", "article", "a"], class_=re.compile(r"solicitation|card|challenge|item", re.IGNORECASE))
-        if not cards:
-            cards = soup.find_all("a", href=re.compile(r"/work-with-us/open-solicitations/", re.IGNORECASE))
-
-        csos = []
-        for card in cards:
-            title = card.get_text().strip()
-            if len(title) < 20 or "view all" in title.lower():
-                continue
-
-            href = card.get("href") or (card.find("a", href=True)["href"] if card.find("a", href=True) else "")
-            full_url = href if href.startswith("http") else f"https://www.diu.mil{href}"
-
-            rel = evaluate_relevance(title)
-            csos.append({
-                "source": "Defense Innovation Unit (DIU)",
-                "title": title[:140].replace("\n", " "),
-                "solicitation_number": "DIU-CSO",
-                "notice_type": "Commercial Solutions Opening (CSO)",
-                "agency_office": "DIU / OSD",
-                "response_deadline": "Check DIU Challenge Window",
-                "classification": rel["classification"],
-                "is_golden_dome": rel["is_golden_dome"],
-                "is_space": rel["is_space"],
-                "url": full_url,
-                "point_of_contact": "DIU Commercial Acquisition Directorate",
-                "ingested_at": datetime.now(timezone.utc).isoformat()
-            })
+            logging.error(f"DIU CSO scraping error: {e}")
 
         # Deduplicate
         seen = set()
@@ -80,90 +72,123 @@ class ICDIUScraper:
                 seen.add(c["title"])
                 deduped.append(c)
 
-        logging.info(f"Captured {len(deduped)} DIU CSO opportunities.")
+        logging.info(f"Captured {len(deduped)} DIU CSOs.")
         return deduped
 
-    def fetch_iqt_focus_areas(self) -> List[Dict[str, Any]]:
-        """Scrapes In-Q-Tel technology problem sets and strategic focus areas."""
-        logging.info("Scraping In-Q-Tel (IQT) strategic technology problem sets...")
-        html = self._fetch_html(self.IQT_FOCUS_URL)
-        if not html:
+    def fetch_nro_and_nga_sam(self) -> List[Dict[str, Any]]:
+        """Queries SAM.gov for unclassified NRO and NGA solicitations."""
+        if not self.sam_api_key:
             return []
 
-        soup = BeautifulSoup(html, "html.parser")
-        focus_cards = soup.find_all(["div", "h2", "h3", "article"])
-        iqt_items = []
+        logging.info("Querying SAM.gov for NRO & NGA unclassified opportunities...")
+        now = datetime.now(timezone.utc)
+        posted_from = (now - timedelta(days=45)).strftime("%m/%d/%Y")
+        posted_to = now.strftime("%m/%d/%Y")
 
-        target_keywords = ["space", "satellite", "orbital", "sensor", "autonomous", "quantum", "optical", "analytics"]
+        ic_queries = [
+            '"National Geospatial-Intelligence Agency"',
+            '"National Reconnaissance Office"',
+            '"Commercial GEOINT"',
+            '"Director\'s Innovation Initiative"'
+        ]
 
-        for elem in focus_cards:
-            text = elem.get_text().strip()
-            if len(text) < 25 or len(text) > 300:
-                continue
+        seen_ids = set()
+        results = []
 
-            if any(k in text.lower() for k in target_keywords):
-                link_tag = elem.find("a", href=True)
-                url = link_tag["href"] if link_tag else "https://www.iqt.org/focus-areas/"
-                full_url = url if url.startswith("http") else f"https://www.iqt.org{url}"
+        for q in ic_queries:
+            try:
+                params = {
+                    "api_key": self.sam_api_key,
+                    "q": q,
+                    "deptname": "DEPT OF DEFENSE",
+                    "postedFrom": posted_from,
+                    "postedTo": posted_to,
+                    "limit": 50
+                }
+                resp = self.session.get(self.SAM_API_URL, params=params, timeout=25)
+                if resp.status_code != 200:
+                    continue
 
-                iqt_items.append({
-                    "source": "In-Q-Tel (IQT)",
-                    "title": text.splitlines()[0][:130],
-                    "solicitation_number": "IQT-Strategic-Focus",
-                    "notice_type": "Strategic IC Commercial Venture",
-                    "agency_office": "In-Q-Tel / CIA / NRO / NGA",
-                    "response_deadline": "Continuous Pitch Intake",
-                    "classification": "Space Relevant",
-                    "is_golden_dome": False,
-                    "is_space": True,
-                    "url": full_url,
-                    "point_of_contact": "IQT Technology Practice Lead",
-                    "ingested_at": datetime.now(timezone.utc).isoformat()
-                })
+                for item in resp.json().get("opportunitiesData", []):
+                    nid = item.get("noticeId")
+                    if not nid or nid in seen_ids:
+                        continue
+                    seen_ids.add(nid)
 
-        seen = set()
-        deduped = []
-        for item in iqt_items:
-            if item["title"] not in seen:
-                seen.add(item["title"])
-                deduped.append(item)
+                    title = item.get("title", "")
+                    office = item.get("fullParentPathName", "Intelligence Community")
+                    rel = evaluate_relevance(f"{title} {office}")
 
-        logging.info(f"Captured {len(deduped)} In-Q-Tel technology problem areas.")
-        return deduped
+                    is_nro = "reconnaissance" in office.lower() or "nro" in title.lower()
+                    source_label = "NRO (SAM.gov)" if is_nro else "NGA (SAM.gov)"
 
-    def fetch_ic_arc_initiatives(self) -> List[Dict[str, Any]]:
-        """Catalogs standing NRO Director's Innovation Initiative (DII) and NGA BAA portals."""
+                    results.append({
+                        "source": source_label,
+                        "title": title,
+                        "solicitation_number": item.get("solicitationNumber", "IC-OPP"),
+                        "notice_type": item.get("type", "IC Broad Agency Announcement"),
+                        "agency_office": office,
+                        "response_deadline": item.get("responseDeadLine", "See Notice"),
+                        "classification": rel["classification"],
+                        "is_golden_dome": rel["is_golden_dome"],
+                        "is_space": True,
+                        "url": f"https://sam.gov/opp/{nid}/view",
+                        "point_of_contact": "IC Acquisition Directorate",
+                        "ingested_at": now.isoformat()
+                    })
+            except Exception as e:
+                logging.error(f"Error querying NRO/NGA SAM notices: {e}")
+
+        logging.info(f"Captured {len(results)} NRO/NGA solicitations.")
+        return results
+
+    def get_standing_ic_portals(self) -> List[Dict[str, Any]]:
+        """Provides verified public-facing industry entry points."""
         now = datetime.now(timezone.utc).isoformat()
         return [
             {
-                "source": "NRO DII / ARC",
-                "title": "NRO Director's Innovation Initiative (DII) - Advanced Disruptive Space Tech",
-                "solicitation_number": "NRO-DII-ANNUAL",
-                "notice_type": "Broad Agency Announcement (BAA)",
-                "agency_office": "National Reconnaissance Office (NRO) / AS&T",
-                "response_deadline": "Annual Open Solicitations",
+                "source": "NRO Public Acquisition Portal",
+                "title": "NRO Director's Innovation Initiative (DII) & Business Opportunities",
+                "solicitation_number": "NRO-DII-PORTAL",
+                "notice_type": "Public Acquisition Center",
+                "agency_office": "National Reconnaissance Office (NRO)",
+                "response_deadline": "Annual Open Rounds",
                 "classification": "Space Relevant",
                 "is_golden_dome": False,
                 "is_space": True,
-                "url": "https://acq.westfields.net/",
-                "point_of_contact": "NRO Acquisition Research Center (ARC)",
+                "url": "https://www.nro.gov/Acquisition/",
+                "point_of_contact": "NRO Office of Contracts",
                 "ingested_at": now
             },
             {
-                "source": "NGA Commercial BAA",
-                "title": "NGA Boosting Innovative GEOINT Research (BIG-R) & Commercial Satellites",
-                "solicitation_number": "HM0476-BAA",
-                "notice_type": "Commercial GEOINT BAA",
+                "source": "NGA Industry Portal",
+                "title": "NGA Commercial GEOINT, BIG-R BAA & Industry Engagement",
+                "solicitation_number": "NGA-INDUSTRY",
+                "notice_type": "Commercial Solutions Portal",
                 "agency_office": "National Geospatial-Intelligence Agency (NGA)",
-                "response_deadline": "Standing Open Call",
+                "response_deadline": "Continuous Intake",
                 "classification": "Space Relevant",
                 "is_golden_dome": False,
                 "is_space": True,
-                "url": "https://acquisition.geoint.services/",
-                "point_of_contact": "NGA Commercial Solutions Office",
+                "url": "https://www.nga.mil/industry.html",
+                "point_of_contact": "NGA Commercial Operations",
+                "ingested_at": now
+            },
+            {
+                "source": "In-Q-Tel (IQT)",
+                "title": "IQT Commercial Space, Autonomous Systems & Sensor Problem Sets",
+                "solicitation_number": "IQT-FOCUS",
+                "notice_type": "Strategic Commercial Venture",
+                "agency_office": "In-Q-Tel (CIA / NRO / NGA / USSF)",
+                "response_deadline": "Continuous Pitch Intake",
+                "classification": "Space Relevant",
+                "is_golden_dome": False,
+                "is_space": True,
+                "url": "https://www.iqt.org/portfolio/",
+                "point_of_contact": "IQT Space & Hardware Practice",
                 "ingested_at": now
             }
         ]
 
     def get_all_ic_and_diu(self) -> List[Dict[str, Any]]:
-        return self.fetch_diu_csos() + self.fetch_iqt_focus_areas() + self.fetch_ic_arc_initiatives()
+        return self.fetch_diu_csos() + self.fetch_nro_and_nga_sam() + self.get_standing_ic_portals()

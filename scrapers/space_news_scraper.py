@@ -11,19 +11,35 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 class SpaceNewsScraper:
     """
-    Ingests global space industry reporting, classifies articles into
-    tightly bounded beats (China, Russia, Launch, Spacecraft & Ops, Commercial, etc.),
-    and clusters related coverage across outlets.
+    Broad-spectrum Space Intelligence Ingestion Engine.
+    Aggregates across 16 premier national security, commercial, launch, 
+    allied/international, and analytical space reporting feeds.
     """
     FEEDS = [
+        # --- Strategic Analysis & Doctrine ---
         {"name": "The Space Review", "url": "https://www.thespacereview.com/feed.xml", "tier": "Strategic Analysis"},
-        {"name": "Ars Technica", "url": "https://arstechnica.com/space/feed/", "tier": "Technical & Launch"},
+        
+        # --- Launch Operations & Technical Investigative ---
+        {"name": "Ars Technica Space", "url": "https://arstechnica.com/space/feed/", "tier": "Technical & Launch"},
         {"name": "Spaceflight Now", "url": "https://spaceflightnow.com/feed/", "tier": "Mission Ops"},
+        
+        # --- National Security, Pentagon & Policy ---
         {"name": "Breaking Defense", "url": "https://breakingdefense.com/category/space/feed/", "tier": "National Security Space"},
-        {"name": "Air & Space Forces", "url": "https://www.airandspaceforces.com/category/space/feed/", "tier": "National Security Space"},
+        {"name": "Air & Space Forces", "url": "https://www.airandspaceforces.com/category/space/feed/", "tier": "USSF & Force Design"},
+        {"name": "Defense News", "url": "https://www.defensenews.com/arc/outboundfeeds/rss/?outputType=xml", "tier": "Defense Acquisition"},
+        {"name": "Defense One", "url": "https://www.defenseone.com/rss/all/", "tier": "Pentagon Strategy"},
+        {"name": "C4ISRNET", "url": "https://www.c4isrnet.com/arc/outboundfeeds/rss/?outputType=xml", "tier": "Space C2 & Sensors"},
         {"name": "SpacePolicyOnline", "url": "https://spacepolicyonline.com/feed/", "tier": "Policy & Hill"},
-        {"name": "SpaceNews", "url": "https://spacenews.com/feed/", "tier": "Global Industry"},
-        {"name": "Payload Space", "url": "https://payloadspace.com/feed/", "tier": "Commercial & Venture"},
+
+        # --- Commercial Industry & Satellite Communications ---
+        {"name": "SpaceNews", "url": "https://spacenews.com/feed/", "tier": "Global Space Industry"},
+        {"name": "Payload Space", "url": "https://payloadspace.com/feed/", "tier": "Space Economy & Venture"},
+        {"name": "SatNews", "url": "https://news.satnews.com/feed/", "tier": "Satellite & Payloads"},
+        {"name": "Via Satellite", "url": "https://www.satellitetoday.com/feed/", "tier": "COMSATCOM & Commercial"},
+
+        # --- Allied & International ---
+        {"name": "European Spaceflight", "url": "https://europeanspaceflight.com/feed/", "tier": "European Launch & Industry"},
+        {"name": "SpaceRef", "url": "https://spaceref.com/feed/", "tier": "Global Exploration"},
         {"name": "NASA News", "url": "https://www.nasa.gov/news-release/feed/", "tier": "Civil Agency"}
     ]
 
@@ -42,13 +58,9 @@ class SpaceNewsScraper:
         return re.sub(r"\s+", " ", clean).strip()
 
     def _classify_topic(self, title: str, description: str) -> str:
-        """
-        Prioritized classification engine:
-        Evaluates title first to avoid company name collisions (e.g. 'Terran Orbital').
-        """
         corpus = f"{title} {description}"
 
-        # 1. Executive / Corporate / Financial moves ALWAYS go to Commercial
+        # 1. Executive / C-Suite / Corporate M&A moves ALWAYS route to Commercial
         exec_pattern = re.compile(
             r"\b(names|appoints|taps|hires|named|executive|c-suite|ceo|coo|cfo|cto|president|"
             r"board\s+of\s+directors|merger|merges|acquires|acquisition|earnings|quarterly|"
@@ -64,15 +76,15 @@ class SpaceNewsScraper:
         if re.search(r"\b(russia|russian|roscosmos|moscow|angara|soyuz|vostochny|plesetsk|glonass)\b", corpus, re.I):
             return "Russia"
 
-        # 3. Policy, Legislative & Hill
+        # 3. Policy, Hill & Regulatory
         if re.search(r"\b(congress|senate|house|hasc|sasc|appropriations|ndaa|lawmaker|capitol\s*hill|legislation|white\s*house|space\s*council|faa|fcc|treaty|budget|regulatory)\b", corpus, re.I):
             return "Policy & Hill"
 
-        # 4. Launch & Propulsion (Rockets, Boosters, Launch Events - explicitly excludes loose 'orbit')
+        # 4. Launch & Propulsion (Rockets, Boosters, Launch Events - strictly excludes loose 'orbit')
         if re.search(r"\b(launch|launches|launched|launching|rocket|booster|liftoff|starship|falcon\s*9|falcon\s*heavy|new\s*glenn|vulcan|sls|super\s*heavy|electron|static\s*fire|engine\s*test|hot\s*fire|pad\s*[0-9a-zA-Z]+|spaceport|cape\s*canaveral|vandenberg|kourou)\b", corpus, re.I):
             return "Launch"
 
-        # 5. Spacecraft & In-Orbit Operations (Sensors, Satellites, Tracking, Rendezvous)
+        # 5. Spacecraft & In-Orbit Operations (Sensors, Tracking, RF, SDA, RPO)
         if re.search(r"\b(spacecraft|satellite|satellites|constellation|bus|rf-sensor|sensor|sensors|payload|on-orbit|in-orbit|orbital\s*target|orbital\s*debris|rendezvous|docking|proximity|rpo|space\s*domain\s*awareness|sda|ssa|space\s*tracking|maneuver|deorbit|flight\s*operations)\b", corpus, re.I):
             return "Spacecraft & Ops"
 
@@ -80,15 +92,14 @@ class SpaceNewsScraper:
         if re.search(r"\b(optical\s*comm|laser|quantum|nuclear|solar\s*array|ai|edge\s*compute|isam|in-space\s*servicing|refueling|materials|additive)\b", corpus, re.I):
             return "Technology"
 
-        # 7. Broader Commercial Industry
+        # 7. Commercial Space Ventures & Startups
         if re.search(r"\b(commercial|venture|startup|investment|spacex|blue\s*origin|rocket\s*lab|astrobotic|axiom|planet\s*labs|spire|capella|hawkeye)\b", corpus, re.I):
             return "Commercial"
 
-        # 8. International Civil Alliances
+        # 8. Allied & International
         if re.search(r"\b(esa|europe|european|jaxa|japan|isro|india|uae|australia|uk\s*space|artemis\s*accords)\b", corpus, re.I):
             return "International"
 
-        # 9. Fallback: National Security / USSF
         return "National Security"
 
     def _parse_items(self, content: str) -> List[dict]:
@@ -136,7 +147,7 @@ class SpaceNewsScraper:
 
     def _cluster_related_reporting(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         def get_keywords(t: str) -> Set[str]:
-            stopwords = {"space", "force", "launch", "first", "plans", "tests", "after", "about", "could", "would", "names", "taps"}
+            stopwords = {"space", "force", "launch", "first", "plans", "tests", "after", "about", "could", "would", "names", "taps", "with", "from"}
             words = set(re.findall(r"\b[a-zA-Z]{4,}\b", t.lower()))
             return words - stopwords
 
@@ -158,7 +169,7 @@ class SpaceNewsScraper:
 
         return articles
 
-    def scrape_all_feeds(self, limit_per_feed: int = 8) -> List[Dict[str, Any]]:
+    def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
         logging.info(f"Ingesting space wire from {len(self.FEEDS)} premier industry outlets...")
         all_articles = []
         seen_links: Set[str] = set()

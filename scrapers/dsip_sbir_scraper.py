@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 class DSIPSbirScraper:
     """
     Ingests non-FAR innovation pathways:
-    1. SBIR.gov API for active DoD / NASA Space Topics
-    2. SAM.gov query for SpaceWERX Open Topic, TacFI, and StratFI notices
+    1. SBIR.gov API for active DoD Space / Missile Defense Topics
+    2. SAM.gov targeted queries for SpaceWERX Open Topic, TacFI, and StratFI notices
     """
     SBIR_API_URL = "https://api.www.sbir.gov/public/api/solicitations"
     SAM_API_URL = "https://api.sam.gov/opportunities/v2/search"
@@ -25,7 +25,7 @@ class DSIPSbirScraper:
     def fetch_sbir_topics(self) -> List[Dict[str, Any]]:
         """Queries SBIR.gov for active space and missile defense topics."""
         logging.info("Querying SBIR.gov for active space topics...")
-        keywords = ["space", "satellite", "orbital", "cislunar"]
+        keywords = ["spacecraft", "satellite", "orbital", "cislunar", "missile warning"]
         seen_ids = set()
         topics = []
 
@@ -45,7 +45,7 @@ class DSIPSbirScraper:
                         continue
 
                     # Filter out non-aerospace hits
-                    corpus = f"{title} {agency} {item.get('solicitation_description', '')[:300]}"
+                    corpus = f"{title} {agency} {item.get('solicitation_description', '')[:400]}"
                     rel = evaluate_relevance(corpus)
                     if not rel["is_relevant"]:
                         continue
@@ -74,16 +74,22 @@ class DSIPSbirScraper:
         return topics
 
     def fetch_spacewerx_sam_notices(self) -> List[Dict[str, Any]]:
-        """Queries SAM.gov for SpaceWERX Open Topic, TacFI, and StratFI calls."""
+        """Queries SAM.gov specifically for SpaceWERX and USSF TacFI/StratFI calls."""
         if not self.sam_api_key:
             return []
 
-        logging.info("Querying SAM.gov for SpaceWERX, TacFI, and StratFI calls...")
+        logging.info("Querying SAM.gov specifically for SpaceWERX notices...")
         now = datetime.now(timezone.utc)
-        posted_from = (now - timedelta(days=45)).strftime("%m/%d/%Y")
+        posted_from = (now - timedelta(days=60)).strftime("%m/%d/%Y")
         posted_to = now.strftime("%m/%d/%Y")
 
-        queries = ['"SpaceWERX"', '"StratFI" space', '"TacFI" space', '"Space Ventures" AFWERX']
+        # Specific queries targeting USSF/SpaceWERX, dropping generic Air Force TacFI
+        queries = [
+            '"SpaceWERX"',
+            '"Space Systems Command" AND "TacFI"',
+            '"Space Systems Command" AND "StratFI"',
+            '"Space Force" AND "StratFI"'
+        ]
         seen_ids = set()
         results = []
 
@@ -105,18 +111,23 @@ class DSIPSbirScraper:
                     nid = item.get("noticeId")
                     if not nid or nid in seen_ids:
                         continue
-                    seen_ids.add(nid)
 
                     title = item.get("title", "")
-                    office = item.get("fullParentPathName", "SpaceWERX / DAF")
-                    rel = evaluate_relevance(f"{title} {office}")
+                    office = item.get("fullParentPathName", "SpaceWERX / USSF")
+                    desc = str(item.get("description") or "")
 
+                    # Strict relevance guard
+                    rel = evaluate_relevance(f"{title} {office} {desc[:300]}")
+                    if not rel["is_relevant"]:
+                        continue
+
+                    seen_ids.add(nid)
                     is_stratfi = "stratfi" in title.lower()
                     is_tacfi = "tacfi" in title.lower()
                     notice_type = "StratFI Opportunity" if is_stratfi else ("TacFI Opportunity" if is_tacfi else "SpaceWERX Challenge")
 
                     results.append({
-                        "source": "SpaceWERX / DAF",
+                        "source": "SpaceWERX / USSF",
                         "title": title,
                         "solicitation_number": item.get("solicitationNumber", "SpaceWERX"),
                         "notice_type": notice_type,
@@ -132,7 +143,7 @@ class DSIPSbirScraper:
             except Exception as e:
                 logging.error(f"Error querying SpaceWERX notices: {e}")
 
-        logging.info(f"Captured {len(results)} SpaceWERX / TacFI / StratFI notices.")
+        logging.info(f"Captured {len(results)} verified SpaceWERX notices.")
         return results
 
     def get_all_sbir_and_spacewerx(self) -> List[Dict[str, Any]]:

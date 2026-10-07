@@ -1,15 +1,15 @@
 {
   "report_date": "2026-10-07",
-  "generated_at": "2026-10-07T17:05:11.304893+00:00",
+  "generated_at": "2026-10-07T17:31:41.006583+00:00",
   "summary": {
     "total_contracts": 9,
     "total_solicitations": 18,
     "total_spec_and_otas": 1,
     "total_sbir_and_spacewerx": 0,
     "total_ic_and_diu": 3,
-    "total_space_news": 51,
+    "total_space_news": 57,
     "total_hearings": 0,
-    "golden_dome_priority_count": 7
+    "golden_dome_priority_count": 8
   },
   "defense_contracts": [
     {
@@ -23,7 +23,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Aegis Aerospace Inc., Webster, Texas, has been awarded a $9,359,118 modification (P00001) to a previously awarded contract (FA8809-26-F-B003) for transitioning missions from the Department of War human-rated payload support task order. The modification brings the total cumulative face value of the contract to $34,323,859 from $24,964,741. Work will be performed at Houston, Texas, and is expected to be completed by Sept. 30, 2034. Fiscal 2026 research and development funds in the amount of $654,507 are being obligated at time of award. The Space Systems Command, Kirtland, Air Force Base, Albuquerque, New Mexico, is the contracting activity.",
-      "ingested_at": "2026-10-07T17:03:48.101857+00:00"
+      "ingested_at": "2026-10-07T17:31:10.043869+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -36,7 +36,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "BAE Systems Inc., Rockville, Maryland, is awarded a $99,206,056 hybrid cost-plus-fixed-fee and cost-plus-incentive-fee contract (N0003026C3033) to provide systems engineering and integration support services for Portfolio Acquisition Executive (PAE) Strategic Systems Programs (SSP). This contract provides supporting systems engineering, integration, technical information, fleet-support, program-management, cybersecurity, documentation, and related support-service requirements. This award also benefits a Foreign Military Sale. Work will be performed in Rockville, Maryland (61%); Washington, D.C. (20%); Cape Canaveral, Florida (4%); Saint Mary's, Georgia (2%); Silverdale, Washington (1%); Groton, Connecticut (1%); Frederick, Maryland (1%); North Kingstown, Rhode Island (1%); York, Pennsylvania (1%); Huntsville, Alabama (1%); Barrow-in-Furness, United Kingdom (1%); and various other locations under 1% each (6%). Efforts are expected to be completed Sept. 30, 2027. Fiscal 2025 One Big Beautiful Bill Act (OBBBA) funds in the amount of $4,832,638 will be obligated upon award. No funds will expire at the end of the current fiscal year. This contract was awarded as a sole-source acquisition pursuant to 10 U.S. Code 2304(c)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. PAE SSP, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:03:54.978738+00:00"
+      "ingested_at": "2026-10-07T17:31:18.280696+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -49,7 +49,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "American Systems Corp., McLean, Virginia, has been awarded a $43,266,824 firm fixed price task order for Red LAN Sustainment. This contract provides for the continued operations and maintenance of the Red Local Area Network (Red LAN) System and Red LAN System Data Provider/Data Recipient additions. Work will be performed at Schriever Space Force Base, Colorado, and is expected to be completed by September 29, 2031. This award is the result of a competitive acquisition and 16 offers were received. Fiscal 2026 operations and maintenance funds in the amount of $2,001,232 are being obligated at the time of award. The Space Systems Command, Peterson Space Force Base, Colorado, is the contracting activity (FA8821-26-F-B015).",
-      "ingested_at": "2026-10-07T17:03:54.980466+00:00"
+      "ingested_at": "2026-10-07T17:31:18.282891+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -62,7 +62,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Vision Quest Solutions Inc., Rapid City, South Dakota, has been awarded a $25,274,553 firm-fixed-price, single award contract for Fire Protection and Emergency Services. This contract provides for the contractor to furnish all labor, tools, materials, equipment, supervision, personnel and all else necessary to manage and accomplish 24-hour 7 days a week fire protection and emergency services. Work will be performed at Cavalier Space Force Station, North Dakota, and is expected to be completed by Oct. 31, 2031. This contract was a competitive 100% small business set aside acquisition and seven offers were received. Fiscal 2027 operation and maintenance funds in the amount of $5,117,556 will be obligated for the base year. The 319th Contracting Squadron, Grand Forks Air Force Base, North Dakota, is the contracting activity (FA465926C0002).",
-      "ingested_at": "2026-10-07T17:03:54.980796+00:00"
+      "ingested_at": "2026-10-07T17:31:18.283388+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -75,7 +75,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "L3Harris Interstate Electronics Corp., Yorba Linda, California, is being awarded a $46,850,128 cost-plus-incentive-fee and cost-plus-fixed-fee contract (N0003027C2001) for services and support for flight test instrumentation systems for the Trident II Strategic Weapon System. This contract has optional line items which could increase the amount to $207,054,517, if exercised. Work will be performed in Yorba Linda, California (55%); Cape Canaveral, Florida (30%); Washington, D.C. (7%); Groton, Connecticut (3%); Bremerton, Washington (2%); Kings Bay, Georgia (2%); and Barrow-in-Furness, United Kingdom (1%). Work is expected to be completed on 30 September 2031. No funding will be obligated on this contract at time of award, and no funds will expire at the end of the current fiscal year, as it is being awarded subject to the availability of funds in fiscal 2027. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:03:57.617699+00:00"
+      "ingested_at": "2026-10-07T17:31:20.833881+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -88,7 +88,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Systems Planning and Analysis, Inc., Alexandria, Virginia, is being awarded a $37,651,082 cost-plus-fixed-fee term task order (N0003027F3023) for the Trident II Strategic Weapons System (SWS). This value includes optional line items, if exercised. Tasks to be performed include missile operations and maintenance support, missile production support, and missile development support. Work will be performed in Washington, D.C. (72%); Silverdale, Washington (9%); Cape Canaveral, Florida (8%); Denver, Colorado (4%); Sunnyvale, California (3%); Kings Bay, Georgia (2%); Charleston, South Carolina (1%); and Alexandria, Virginia (1%). Work is expected to be completed on Sept. 30, 2029. Fiscal 2026 Weapons Procurement, Navy funds in the amount of $443,105 and Fiscal 2025 Weapons Procurement, Navy funds in the amount of $5,098,327 will be obligated on this award. No funds will expire at the end of the fiscal year. This task order will be awarded as a sole source acquisition with the authority of 15 U.S. Code 638 Research and Development. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:03:57.618494+00:00"
+      "ingested_at": "2026-10-07T17:31:20.834945+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -101,7 +101,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Trident Research LLC, Austin, Texas, is being awarded a $9,263,815 cost-plus-fixed-fee contract (N0003027C2010) for engineering support of the Portable Impact Location System operated during Trident II Strategic Weapon System flight tests. This contract has optional line items which could increase the amount to $33,607,156, if exercised. Work will be performed in Austin, Texas (70%); and Cape Canaveral, Florida (30%). Work is expected to be completed by December 2030. No funding will be obligated on this award, and no funding will expire at the end of the fiscal year, as it will be subject to the availability of funds. This contract was awarded as a sole source acquisition pursuant to 10 U.S. Code 3204 (a)(1) and was previously synopsized on the System for Award Management (SAM.gov) online portal. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:03:57.621539+00:00"
+      "ingested_at": "2026-10-07T17:31:20.838745+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -114,7 +114,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $41,972,953 cost-plus-fixed-fee modification (P00033) to a previously awarded and announced contract (N0003024C0100) for Trident II (D5) missile production and deployed systems support. Work will be performed in Orlando, Florida (62%); Denver, Colorado (20%); Cape Canaveral, Florida (7%); Titusville, Florida (5%); Irvine, California (4%); and various locations less than 1% each (2%). Work is expected to be completed June 30, 2028. Fiscal 2026 research, development, test and evaluation (Navy) funds in the amount of $2,000,000 will be obligated on this award. No funds will expire at the end of the current fiscal year. This contract is being awarded to the contractor on a sole source basis under 10 U.S. Code 3204(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:04:01.085158+00:00"
+      "ingested_at": "2026-10-07T17:31:22.654822+00:00"
     },
     {
       "source": "Defense.gov Contracts",
@@ -127,7 +127,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "raw_text": "Lockheed Martin Space, Titusville, Florida, is being awarded a $9,629,380 cost-plus-fixed-fee modification, P00019, to previously award and announced contract (N0003025C0100) for Sea-Launched Cruise Missile - Nuclear integration and facility design, warhead handling, engineering, integration support, and special studies efforts. Work will be performed in Cape Canaveral, Florida (45%); Bangor, Washington (21%); Titusville, Florida (17%); Kings Bay, Georgia (7%) Sunnyvale, California (4%); Bangor Base, Washington (3%); Valley Forge, Pennsylvania (1%); Denver, Colorado (1%); and locations less than 1.0% each (1%). Work is expected to be completed Sept. 30, 2027. Fiscal 2025 research, development, test and evaluation (Navy) funds in the amount of $9,371,936 will be obligated on this award and no funds will expire at the end of the current fiscal year. This contract is being awarded on a sole source basis under 10 U.S. Code 2304(a)(1) and was previously synopsized on the Systems for Award Management (SAM) website, with one proposal received. Strategic Systems Programs, Washington, D.C., is the contracting activity.",
-      "ingested_at": "2026-10-07T17:04:01.088690+00:00"
+      "ingested_at": "2026-10-07T17:31:22.659193+00:00"
     }
   ],
   "space_news": [
@@ -144,7 +144,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.580183+00:00"
+      "ingested_at": "2026-10-07T17:31:36.270555+00:00"
     },
     {
       "source": "Ars Technica Space",
@@ -175,7 +175,7 @@
           "url": "https://spacepolicyonline.com/news/starship-to-attempt-first-orbital-flight-next-week/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:05.581228+00:00"
+      "ingested_at": "2026-10-07T17:31:36.271523+00:00"
     },
     {
       "source": "Ars Technica Space",
@@ -190,7 +190,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.581836+00:00"
+      "ingested_at": "2026-10-07T17:31:36.272072+00:00"
     },
     {
       "source": "Ars Technica Space",
@@ -205,7 +205,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.582926+00:00"
+      "ingested_at": "2026-10-07T17:31:36.273204+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -220,7 +220,7 @@
       "is_golden_dome": true,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.745993+00:00"
+      "ingested_at": "2026-10-07T17:31:36.428495+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -235,7 +235,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.746156+00:00"
+      "ingested_at": "2026-10-07T17:31:36.428693+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -250,7 +250,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.746319+00:00"
+      "ingested_at": "2026-10-07T17:31:36.428892+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -271,7 +271,7 @@
           "url": "https://satnews.com/2026/10/07/fcc-grants-spacex-approval-for-15000-satellite-very-low-earth-orbit-direct-to-device-constellation/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:05.746515+00:00"
+      "ingested_at": "2026-10-07T17:31:36.429113+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -297,7 +297,7 @@
           "url": "https://spacepolicyonline.com/news/next-crewed-boeing-starliner-flight-not-until-2028/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:05.746712+00:00"
+      "ingested_at": "2026-10-07T17:31:36.429353+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -323,7 +323,7 @@
           "url": "https://satnews.com/2026/10/07/fcc-grants-spacex-approval-for-15000-satellite-very-low-earth-orbit-direct-to-device-constellation/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:05.747210+00:00"
+      "ingested_at": "2026-10-07T17:31:36.429970+00:00"
     },
     {
       "source": "Spaceflight Now",
@@ -338,7 +338,103 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:05.747441+00:00"
+      "ingested_at": "2026-10-07T17:31:36.430249+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "Spacecraft & Ops",
+      "title": "Can Golden Dome truly succeed without logistics and sustainment in space?",
+      "author": "Breaking Defense",
+      "pub_date": "Mon, 05 Oct 2026",
+      "description": "[Sponsored] Former MDA Director Lt. Gen. (ret.) Trey Obering says on-orbit servicing could enhance orbital resilience.",
+      "url": "https://breakingdefense.com/2026/10/can-golden-dome-truly-succeed-without-logistics-and-sustainment-in-space/",
+      "classification": "Golden Dome Priority",
+      "is_golden_dome": true,
+      "is_space": true,
+      "related_coverage": [
+        {
+          "source": "Payload Space",
+          "title": "Colorado Springs, Huntsville Team Up on Golden Dome",
+          "url": "https://payloadspace.com/colorado-springs-huntsville-team-up-on-golden-dome/"
+        }
+      ],
+      "ingested_at": "2026-10-07T17:31:36.514171+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "Spacecraft & Ops",
+      "title": "DIU, Space Force team up to kick-start buys of commercial sats for monitoring GEO",
+      "author": "Theresa Hitchens",
+      "pub_date": "Tue, 29 Sep 2026",
+      "description": "Both firms are working under earlier Pentagon contracts to demonstrate rendezvous and proximity operators that could also support future orbital warfare.",
+      "url": "https://breakingdefense.com/2026/09/diu-space-force-team-up-to-kick-start-buys-of-commercial-sats-for-monitoring-geo/",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T17:31:36.514881+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "Commercial",
+      "title": "Air, Space Forces pick up research pace for orbital cargo delivery",
+      "author": "Theresa Hitchens",
+      "pub_date": "Wed, 23 Sep 2026",
+      "description": "The current focus is on low cost, high volume commercial cargo reentry pods, an Air Force Research Laboratory spokesperson told Breaking Defense.",
+      "url": "https://breakingdefense.com/2026/09/air-space-forces-pick-up-research-pace-for-orbital-cargo-delivery/",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T17:31:36.515306+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "Spacecraft & Ops",
+      "title": "Space Force to prototype new software to fuse commercial, military space tracking data",
+      "author": "Theresa Hitchens",
+      "pub_date": "Fri, 18 Sep 2026",
+      "description": "Our number one priority right now is: How do we improve support to space control operations?&#8221; Col. Barry Crocker, head of Space Force Mission Delta 2 responsible for keeping tabs on on-orbit threats, told Breaking Defense",
+      "url": "https://breakingdefense.com/2026/09/space-force-to-prototype-new-software-to-fuse-commercial-military-space-tracking-data/",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T17:31:36.515646+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "National Security",
+      "title": "Chairman Caine talks cislunar ops, plus a window into next-gen airlift",
+      "author": "Breaking Defense Staff",
+      "pub_date": "Thu, 17 Sep 2026",
+      "description": "We discuss top news from the final day of AFA 2026.",
+      "url": "https://breakingdefense.com/2026/09/chairman-caine-talks-cislunar-ops-plus-a-window-into-next-gen-airlift/",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T17:31:36.515933+00:00"
+    },
+    {
+      "source": "Breaking Defense",
+      "tier": "National Security Space",
+      "category": "Spacecraft & Ops",
+      "title": "Space Force\u2019s GMTI program gets a name, with Northrop as prime: General",
+      "author": "Michael Marrow",
+      "pub_date": "Wed, 16 Sep 2026",
+      "description": "Separately, the Space Force plans to issue the first operational contracts for space domain awareness to commercial firms \u201cvery soon,\u201d according to Space Force Col. Timothy Tremailo.",
+      "url": "https://breakingdefense.com/2026/09/space-forces-gmti-program-gets-a-name-with-northrop-as-prime-general/",
+      "classification": "Space Relevant",
+      "is_golden_dome": false,
+      "is_space": true,
+      "related_coverage": [],
+      "ingested_at": "2026-10-07T17:31:36.516137+00:00"
     },
     {
       "source": "Air & Space Forces",
@@ -353,7 +449,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:06.192243+00:00"
+      "ingested_at": "2026-10-07T17:31:36.723747+00:00"
     },
     {
       "source": "C4ISRNET",
@@ -374,7 +470,7 @@
           "url": "https://www.satellitetoday.com/government-military/2026/10/07/germanys-push-to-boost-its-space-defense-capabilities/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:07.263234+00:00"
+      "ingested_at": "2026-10-07T17:31:37.367945+00:00"
     },
     {
       "source": "SpacePolicyOnline",
@@ -389,7 +485,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.611965+00:00"
+      "ingested_at": "2026-10-07T17:31:37.944617+00:00"
     },
     {
       "source": "SpacePolicyOnline",
@@ -410,7 +506,7 @@
           "url": "https://spaceflightnow.com/2026/10/01/live-coverage-nasa-spacex-to-launch-next-crewed-mission-to-the-international-space-station/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:07.612192+00:00"
+      "ingested_at": "2026-10-07T17:31:37.944819+00:00"
     },
     {
       "source": "SpacePolicyOnline",
@@ -431,7 +527,7 @@
           "url": "https://arstechnica.com/space/2026/09/starships-first-orbital-launch-gives-lift-to-spacexs-next-gen-starlinks/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:07.612982+00:00"
+      "ingested_at": "2026-10-07T17:31:37.945515+00:00"
     },
     {
       "source": "SpaceNews",
@@ -446,7 +542,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.709648+00:00"
+      "ingested_at": "2026-10-07T17:31:38.071859+00:00"
     },
     {
       "source": "SpaceNews",
@@ -461,7 +557,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.709921+00:00"
+      "ingested_at": "2026-10-07T17:31:38.072183+00:00"
     },
     {
       "source": "SpaceNews",
@@ -482,7 +578,7 @@
           "url": "https://satnews.com/2026/10/07/fcc-grants-spacex-approval-for-15000-satellite-very-low-earth-orbit-direct-to-device-constellation/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:07.710502+00:00"
+      "ingested_at": "2026-10-07T17:31:38.072885+00:00"
     },
     {
       "source": "SpaceNews",
@@ -497,7 +593,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.710736+00:00"
+      "ingested_at": "2026-10-07T17:31:38.073164+00:00"
     },
     {
       "source": "SpaceNews",
@@ -512,7 +608,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.710987+00:00"
+      "ingested_at": "2026-10-07T17:31:38.073473+00:00"
     },
     {
       "source": "SpaceNews",
@@ -527,7 +623,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.711088+00:00"
+      "ingested_at": "2026-10-07T17:31:38.073603+00:00"
     },
     {
       "source": "SpaceNews",
@@ -542,7 +638,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.711571+00:00"
+      "ingested_at": "2026-10-07T17:31:38.074171+00:00"
     },
     {
       "source": "Payload Space",
@@ -557,7 +653,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.922910+00:00"
+      "ingested_at": "2026-10-07T17:31:38.274921+00:00"
     },
     {
       "source": "Payload Space",
@@ -572,7 +668,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.923212+00:00"
+      "ingested_at": "2026-10-07T17:31:38.275214+00:00"
     },
     {
       "source": "Payload Space",
@@ -586,8 +682,14 @@
       "classification": "Golden Dome Priority",
       "is_golden_dome": true,
       "is_space": true,
-      "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.923550+00:00"
+      "related_coverage": [
+        {
+          "source": "Breaking Defense",
+          "title": "Can Golden Dome truly succeed without logistics and sustainment in space?",
+          "url": "https://breakingdefense.com/2026/10/can-golden-dome-truly-succeed-without-logistics-and-sustainment-in-space/"
+        }
+      ],
+      "ingested_at": "2026-10-07T17:31:38.275528+00:00"
     },
     {
       "source": "Payload Space",
@@ -602,7 +704,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.923768+00:00"
+      "ingested_at": "2026-10-07T17:31:38.275733+00:00"
     },
     {
       "source": "Payload Space",
@@ -617,7 +719,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.924084+00:00"
+      "ingested_at": "2026-10-07T17:31:38.276024+00:00"
     },
     {
       "source": "Payload Space",
@@ -632,7 +734,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.924410+00:00"
+      "ingested_at": "2026-10-07T17:31:38.276318+00:00"
     },
     {
       "source": "Payload Space",
@@ -647,7 +749,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.924690+00:00"
+      "ingested_at": "2026-10-07T17:31:38.276587+00:00"
     },
     {
       "source": "Payload Space",
@@ -662,7 +764,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:07.924908+00:00"
+      "ingested_at": "2026-10-07T17:31:38.276783+00:00"
     },
     {
       "source": "SatNews",
@@ -677,7 +779,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.341588+00:00"
+      "ingested_at": "2026-10-07T17:31:38.694158+00:00"
     },
     {
       "source": "SatNews",
@@ -692,7 +794,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.341979+00:00"
+      "ingested_at": "2026-10-07T17:31:38.694541+00:00"
     },
     {
       "source": "SatNews",
@@ -723,7 +825,7 @@
           "url": "https://spacenews.com/navigate-successfully-demonstrates-onboard-precise-orbit-determination-aboard-d-orbits-ion-satellite-carrier/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:08.342148+00:00"
+      "ingested_at": "2026-10-07T17:31:38.694709+00:00"
     },
     {
       "source": "SatNews",
@@ -738,7 +840,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.342322+00:00"
+      "ingested_at": "2026-10-07T17:31:38.694882+00:00"
     },
     {
       "source": "SatNews",
@@ -753,7 +855,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.342660+00:00"
+      "ingested_at": "2026-10-07T17:31:38.695209+00:00"
     },
     {
       "source": "SatNews",
@@ -768,7 +870,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.343006+00:00"
+      "ingested_at": "2026-10-07T17:31:38.695530+00:00"
     },
     {
       "source": "Via Satellite",
@@ -783,7 +885,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.451141+00:00"
+      "ingested_at": "2026-10-07T17:31:38.774387+00:00"
     },
     {
       "source": "Via Satellite",
@@ -798,7 +900,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.451471+00:00"
+      "ingested_at": "2026-10-07T17:31:38.774777+00:00"
     },
     {
       "source": "Via Satellite",
@@ -813,7 +915,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.451700+00:00"
+      "ingested_at": "2026-10-07T17:31:38.775051+00:00"
     },
     {
       "source": "Via Satellite",
@@ -828,7 +930,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.452031+00:00"
+      "ingested_at": "2026-10-07T17:31:38.775428+00:00"
     },
     {
       "source": "Via Satellite",
@@ -843,7 +945,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.452381+00:00"
+      "ingested_at": "2026-10-07T17:31:38.775831+00:00"
     },
     {
       "source": "Via Satellite",
@@ -858,7 +960,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.452640+00:00"
+      "ingested_at": "2026-10-07T17:31:38.776131+00:00"
     },
     {
       "source": "Via Satellite",
@@ -879,7 +981,7 @@
           "url": "https://www.c4isrnet.com/global/europe/2026/09/23/europes-push-to-reduce-us-reliance-is-reshaping-the-defense-space-market/"
         }
       ],
-      "ingested_at": "2026-10-07T17:05:08.452950+00:00"
+      "ingested_at": "2026-10-07T17:31:38.776497+00:00"
     },
     {
       "source": "Via Satellite",
@@ -894,7 +996,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:08.453384+00:00"
+      "ingested_at": "2026-10-07T17:31:38.776998+00:00"
     },
     {
       "source": "European Spaceflight",
@@ -909,7 +1011,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:09.546190+00:00"
+      "ingested_at": "2026-10-07T17:31:39.514416+00:00"
     },
     {
       "source": "European Spaceflight",
@@ -924,7 +1026,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:09.546785+00:00"
+      "ingested_at": "2026-10-07T17:31:39.514996+00:00"
     },
     {
       "source": "European Spaceflight",
@@ -939,7 +1041,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:09.547069+00:00"
+      "ingested_at": "2026-10-07T17:31:39.515264+00:00"
     },
     {
       "source": "NASA News",
@@ -954,7 +1056,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:11.039022+00:00"
+      "ingested_at": "2026-10-07T17:31:40.578788+00:00"
     },
     {
       "source": "NASA News",
@@ -969,7 +1071,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:11.039272+00:00"
+      "ingested_at": "2026-10-07T17:31:40.579062+00:00"
     },
     {
       "source": "NASA News",
@@ -984,7 +1086,7 @@
       "is_golden_dome": false,
       "is_space": true,
       "related_coverage": [],
-      "ingested_at": "2026-10-07T17:05:11.039365+00:00"
+      "ingested_at": "2026-10-07T17:31:40.579153+00:00"
     }
   ],
   "pre_award_solicitations": [
@@ -1001,7 +1103,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/ab68572d22544619b8345db7219b9bfd/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1016,7 +1118,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/7ef056f2ec0d4fe7909220320293f532/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1031,7 +1133,7 @@
       "is_space": false,
       "url": "https://sam.gov/opp/9181c80a242445db964086c4411c4ee5/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1046,7 +1148,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/1a794955d12546b59698e15d84a87364/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1061,7 +1163,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/bc2d5e5543974aab974e37ac591c78da/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1076,7 +1178,7 @@
       "is_space": false,
       "url": "https://sam.gov/opp/fb9bb2d52b074a5eb4eded9b20932253/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1091,7 +1193,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/852c9872aeff4331a4ece7d668c51186/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1106,7 +1208,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/a110fae109384992b13b0829f8cace9a/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1121,7 +1223,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/e7a7ab8e74f543cc822ae330d38ececd/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1136,7 +1238,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/29c79bd2f819486e87642b65b278ec07/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1151,7 +1253,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/bb9972f245da4db3b9861095f36058dc/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1166,7 +1268,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/6294a5d633c64829a7dbdd36de161034/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1181,7 +1283,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/0ed6ebb5ca1840e9b9f593e58b7a813b/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1196,7 +1298,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/23f4a6bccab74856bfa774902fccd296/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1211,7 +1313,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/421154e3ad474de79858929492d1926b/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1226,7 +1328,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/b4015648b60246df8250cd1b6a3d4189/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1241,7 +1343,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/ba10db148a584c7298898f30ed35e855/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     },
     {
       "source": "SAM.gov",
@@ -1256,7 +1358,7 @@
       "is_space": false,
       "url": "https://sam.gov/opp/795eac57c1c3441f868526012d90dd83/view",
       "point_of_contact": "See Listing",
-      "ingested_at": "2026-10-07T17:04:01.098449+00:00"
+      "ingested_at": "2026-10-07T17:31:22.671229+00:00"
     }
   ],
   "spec_and_otas": [
@@ -1272,7 +1374,7 @@
       "is_space": true,
       "url": "https://sam.gov/opp/0ed6ebb5ca1840e9b9f593e58b7a813b/view",
       "point_of_contact": "Space Systems Command Contracting",
-      "ingested_at": "2026-10-07T17:04:05.060843+00:00"
+      "ingested_at": "2026-10-07T17:31:26.396079+00:00"
     }
   ],
   "sbir_and_spacewerx": [],
@@ -1289,7 +1391,7 @@
       "is_space": true,
       "url": "https://www.nro.gov/Acquisition/",
       "point_of_contact": "NRO Office of Contracts",
-      "ingested_at": "2026-10-07T17:05:04.898355+00:00"
+      "ingested_at": "2026-10-07T17:31:35.971707+00:00"
     },
     {
       "source": "NGA Industry Portal",
@@ -1303,7 +1405,7 @@
       "is_space": true,
       "url": "https://www.nga.mil/industry.html",
       "point_of_contact": "NGA Commercial Operations",
-      "ingested_at": "2026-10-07T17:05:04.898355+00:00"
+      "ingested_at": "2026-10-07T17:31:35.971707+00:00"
     },
     {
       "source": "In-Q-Tel (IQT)",
@@ -1317,7 +1419,7 @@
       "is_space": true,
       "url": "https://www.iqt.org/portfolio/",
       "point_of_contact": "IQT Space & Hardware Practice",
-      "ingested_at": "2026-10-07T17:05:04.898355+00:00"
+      "ingested_at": "2026-10-07T17:31:35.971707+00:00"
     }
   ],
   "congressional_hearings": []

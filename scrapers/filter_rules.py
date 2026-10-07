@@ -1,12 +1,23 @@
 import re
 
-# Negative filters to eliminate base civil engineering & facility false positives
+# Negative filters: base facilities, civil works, aviation aircraft & mechanical false positives
 EXCLUSION_TERMS = [
+    # Non-space "space" phrases
+    r"\bconfined\s+space\b", r"\bair\s*space\b", r"\bwork\s*space\b",
+    r"\bstorage\s*space\b", r"\boffice\s*space\b", r"\bparking\s*space\b",
+    r"\bcyber\s*space\b",
+    # Aviation & Aircraft hardware (non-orbital)
+    r"\baircraft\b", r"\bairplane\b", r"\baviation\b", r"\bairframe\b",
+    r"\bfuselage\b", r"\blanding\s+gear\b", r"\bjet\s+engine\b",
+    r"\bturbine\s+blade\b", r"\bhelicopter\b", r"\brotorcraft\b",
+    r"\bhydraulic\s+valve\b", r"\bball\s+valve\b", r"\bcheck\s+valve\b",
+    r"\bplumbing\s+valve\b", r"\bpneumatic\s+valve\b",
+    # Ground & Maritime vehicles
     r"\btank\b", r"\barmored vehicle\b", r"\bhowitzer\b", r"\bmortar\b",
     r"\bsubmarine\b", r"\bdestroyer\b", r"\bfrigate\b", r"\bdrydock\b",
     r"\bfuel oil\b", r"\bbarracks\b", r"\bdormitory\b", r"\bmess hall\b",
     r"\buniform\b", r"\btruck\b", r"\btreadmill\b", r"\bdental\b",
-    # Facility & Civil Works Exclusions
+    # Civil works & base maintenance
     r"\basphalt\b", r"\bpaving\b", r"\broad repair\b", r"\broof\b", r"\broofing\b",
     r"\bjanitorial\b", r"\bcustodial\b", r"\brefuse\b", r"\bgarbage\b",
     r"\bmowing\b", r"\blandscaping\b", r"\bgrounds maintenance\b",
@@ -19,7 +30,8 @@ SPACE_CORE_TERMS = [
     r"\bspace\s+force\b", r"\bussf\b", r"\bspace\s+systems\s+command\b", r"\bssc\b",
     r"\bspace\s+operations\s+command\b", r"\bspoc\b", r"\bstarcom\b",
     r"\bspace\s+development\s+agency\b", r"\bsda\b", r"\busspacecom\b",
-    r"\bnational\s+reconnaissance\s+office\b", r"\bnro\b", r"\bnasa\b",
+    r"\bspacewerx\b",
+    r"\bnational\s+reconnaissance\s+office\b", r"\bnro\b",
     r"\bsatellite\b", r"\bspacecraft\b", r"\bpayload\b", r"\borbital\b",
     r"\bvleo\b", r"\bleo\b", r"\bmeo\b", r"\bgeo\b", r"\bcislunar\b",
     r"\blaunch\s+vehicle\b", r"\bnssl\b", r"\btactically\s+responsive\s+space\b",
@@ -54,10 +66,10 @@ def evaluate_relevance(text: str) -> dict:
     is_excluded = bool(EXCLUSION_REGEX.search(text))
     has_space = bool(SPACE_REGEX.search(text))
     has_golden_dome = bool(GOLDEN_DOME_REGEX.search(text))
-    
-    # Exclude if base maintenance, unless explicitly tied to Golden Dome tracking / MW
-    is_relevant = (has_space or has_golden_dome) and (not is_excluded or has_golden_dome)
-    
+
+    # Relevant only if matched to space/missile terms and not flagged by negative hardware/civil patterns
+    is_relevant = (has_space or has_golden_dome) and not is_excluded
+
     return {
         "is_relevant": is_relevant,
         "is_space": has_space,

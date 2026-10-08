@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worldwide Space & Defense Rolling Calendar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .story-drawer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.16s ease-out, opacity 0.14s ease-out;
+      opacity: 0;
+    }
+    .story-row.open .story-drawer {
+      max-height: 350px;
+      opacity: 1;
+    }
+    .story-row.open .chevron-icon {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Compact Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5">
+      <div class="flex items-center justify-between">
+        
+        <!-- Left: 4-Way Portal Switcher -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="text-[11px] font-bold uppercase font-mono tracking-wider text-slate-200">Space Intel</span>
+          </div>
+
+          <nav class="flex items-center bg-slate-950 p-0.5 rounded border border-slate-800 text-[10px]">
+            <a href="index.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
+              🏛 Procurement
+            </a>
+            <a href="news.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
+              📰 Global Wire
+            </a>
+            <a href="clients.html" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white transition">
+              🎯 Client Wire
+            </a>
+            <a href="calendar.html" class="px-2.5 py-0.5 rounded bg-amber-950/60 text-amber-300 font-semibold border border-amber-700/60">
+              📅 Calendar
+            </a>
+          </nav>
+        </div>
+
+        <!-- Right: Status & Refresh -->
+        <div class="flex items-center gap-2">
+          <span id="report-date" class="text-[10px] font-mono bg-slate-950 text-slate-400 px-2 py-0.5 rounded border border-slate-800">
+            Rolling Window
+          </span>
+          <button id="btn-refresh" class="text-[10px] bg-amber-600 hover:bg-amber-500 text-white font-medium px-2.5 py-0.5 rounded transition">
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Wrapped Category Filter Pills Bar -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-1 border-t border-slate-800/60" id="category-pills">
+        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-amber-600 text-white">All Events</button>
+        <button data-cat="Launches" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🚀 Launches</button>
+        <button data-cat="Earnings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">📈 Earnings Calls</button>
+        <button data-cat="Hearings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🏛 Hearings & Posture</button>
+        <button data-cat="Conferences" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🌐 Symposia & Conferences</button>
+        <button data-cat="Military Exercises" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🛡 Military Exercises</button>
+        <button data-cat="Webinars" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">💻 Panels & Webinars</button>
+        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30">★ Golden Dome</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 py-2 space-y-1.5">
+
+    <!-- Dense Toolbar -->
+    <div class="flex items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
+      <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+        <span class="text-slate-500">LOOKAHEAD:</span>
+        <span id="active-category-label" class="font-bold text-amber-400 uppercase">All Events</span>
+        <span id="event-count" class="text-slate-500">&bull; 0 scheduled</span>
+      </div>
+
+      <div class="w-64">
+        <input type="text" id="search-input" placeholder="Search launches, companies, cities..." 
+          class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-amber-500 transition">
+      </div>
+    </div>
+
+    <!-- Status States -->
+    <div id="loading" class="text-center py-16 text-slate-400 text-xs font-mono">
+      <div class="inline-block w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mb-1.5"></div>
+      <div>Compiling worldwide space and defense calendar...</div>
+    </div>
+
+    <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-3 rounded text-rose-300 text-xs space-y-1">
+      <div class="font-bold">Failed to load calendar data</div>
+      <div id="error-details" class="font-mono text-rose-400"></div>
+    </div>
+
+    <!-- Ultra-Dense Rolling Calendar Wire Container -->
+    <div id="calendar-container" class="hidden bg-slate-900/90 border border-slate-800 rounded divide-y divide-slate-800/60 overflow-hidden shadow-sm"></div>
+
+  </main>
+
+  <script>
+    let rawEvents = [];
+    let currentCategory = 'all';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .split('&').join('&amp;')
+        .split('<').join('&lt;')
+        .split('>').join('&gt;')
+        .split('"').join('&quot;')
+        .split("'").join('&#039;');
+    }
+
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function getPayloadUrl() {
+      let path = window.location.pathname;
+      if (path.endsWith('.html')) path = path.slice(0, path.lastIndexOf('/') + 1);
+      if (!path.endsWith('/')) path += '/';
+      return window.location.origin + path + 'data/latest.json?t=' + Date.now();
+    }
+
+    async function loadCalendar() {
+      const loading = document.getElementById('loading');
+      const container = document.getElementById('calendar-container');
+      const errBox = document.getElementById('error-box');
+      const errDetails = document.getElementById('error-details');
+
+      loading.classList.remove('hidden');
+      container.classList.add('hidden');
+      errBox.classList.add('hidden');
+
+      const targetUrl = getPayloadUrl();
+      try {
+        const res = await fetch(targetUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
+        const data = await res.json();
+        
+        rawEvents = data.rolling_calendar || [];
+        setSafeText('report-date', 'SCHEDULED THROUGH 2027');
+        
+        renderEvents();
+        loading.classList.add('hidden');
+        container.classList.remove('hidden');
+      } catch (err) {
+        loading.classList.add('hidden');
+        if (errDetails) errDetails.textContent = err.message;
+        errBox.classList.remove('hidden');
+      }
+    }
+
+    function getCategoryBadge(cat, isGolden) {
+      if (isGolden) {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-amber-500/10 text-amber-300 border-amber-500/40">★ Golden Dome</span>';
+      }
+      if (cat === 'Launches') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-emerald-950/50 text-emerald-300 border-emerald-800/60">Launch</span>';
+      }
+      if (cat === 'Earnings') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-blue-950/50 text-blue-300 border-blue-800/60">Earnings</span>';
+      }
+      if (cat === 'Hearings') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-purple-950/50 text-purple-300 border-purple-800/60">Hearing</span>';
+      }
+      if (cat === 'Conferences') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-cyan-950/50 text-cyan-300 border-cyan-800/60">Symposium</span>';
+      }
+      if (cat === 'Military Exercises') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-rose-950/50 text-rose-300 border-rose-800/60">Exercise</span>';
+      }
+      return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-slate-800 text-slate-300 border-slate-700">' + escapeHtml(cat) + '</span>';
+    }
+
+    function renderEvents() {
+      const container = document.getElementById('calendar-container');
+      const searchEl = document.getElementById('search-input');
+      const query = (searchEl ? searchEl.value : '').toLowerCase().trim();
+
+      container.innerHTML = '';
+
+      const filtered = rawEvents.filter(function(evt) {
+        const matchesQuery = query === '' || 
+          evt.title.toLowerCase().includes(query) || 
+          (evt.location && evt.location.toLowerCase().includes(query)) ||
+          (evt.description && evt.description.toLowerCase().includes(query)) ||
+          (evt.category && evt.category.toLowerCase().includes(query));
+
+        let matchesCat = true;
+        if (currentCategory === 'Golden Dome') {
+          matchesCat = !!evt.is_golden_dome;
+        } else if (currentCategory !== 'all') {
+          matchesCat = (evt.category === currentCategory);
+        }
+
+        return matchesQuery && matchesCat;
+      });
+
+      setSafeText('event-count', filtered.length + ' scheduled');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-slate-500 font-mono text-xs">No calendar events found matching the criteria.</div>';
+        return;
+      }
+
+      filtered.forEach(function(evt) {
+        const row = document.createElement('div');
+        row.className = 'story-row hover:bg-slate-850/60 transition-colors';
+
+        const catBadge = getCategoryBadge(evt.category, evt.is_golden_dome);
+
+        // One line per event: [Date] [Category] [Title] [Location] [▸]
+        row.innerHTML = 
+          '<div class="story-header px-2.5 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
+            '<div class="flex items-center gap-2 min-w-0 flex-1">' +
+              '<span class="text-[10px] font-mono font-bold text-amber-400 shrink-0 w-24">' + escapeHtml(evt.display_date || evt.date) + '</span>' +
+              catBadge +
+              '<span class="text-xs text-slate-200 truncate hover:text-amber-300 transition font-normal">' + escapeHtml(evt.title) + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-2.5 shrink-0">' +
+              '<span class="text-[10px] font-mono text-slate-500 hidden sm:inline truncate max-w-xs">' + escapeHtml(evt.location || '') + '</span>' +
+              '<span class="chevron-icon text-slate-500 text-[10px] transition-transform duration-120">▸</span>' +
+            '</div>' +
+          '</div>' +
+
+          // Expandable Details Drawer
+          '<div class="story-drawer px-2.5 pb-1.5">' +
+            '<div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1.5">' +
+              '<div class="flex items-center justify-between text-[10px] pb-1 border-b border-slate-800/60">' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<span class="font-mono font-bold text-amber-400 uppercase tracking-wide">' + escapeHtml(evt.source || evt.category) + '</span>' +
+                  '<span class="text-slate-600">&bull;</span>' +
+                  '<span class="text-slate-400">Venue: <span class="text-slate-200 font-medium">' + escapeHtml(evt.location || 'See Details') + '</span></span>' +
+                  '<span class="text-slate-600">&bull;</span>' +
+                  '<span class="text-slate-500">Date: ' + escapeHtml(evt.display_date || evt.date) + '</span>' +
+                '</div>' +
+                (evt.url ? '<a href="' + escapeHtml(evt.url) + '" target="_blank" class="bg-amber-600 hover:bg-amber-500 text-white font-medium px-2 py-0.5 rounded text-[9px] transition shrink-0">Official Event Page ↗</a>' : '') +
+              '</div>' +
+              '<p class="text-[11px] text-slate-300 leading-relaxed font-sans">' +
+                escapeHtml(evt.description || 'No detailed description available. Click event link above.') +
+              '</p>' +
+            '</div>' +
+          '</div>';
+
+        row.querySelector('.story-header').addEventListener('click', function() {
+          row.classList.toggle('open');
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.cat-pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          document.querySelectorAll('.cat-pill').forEach(function(p) {
+            p.className = 'cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
+          });
+          this.className = 'cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-amber-600 text-white';
+          
+          currentCategory = this.getAttribute('data-cat');
+          setSafeText('active-category-label', this.textContent.trim());
+          renderEvents();
+        });
+      });
+
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.addEventListener('keyup', renderEvents);
+
+      const btnRefresh = document.getElementById('btn-refresh');
+      if (btnRefresh) btnRefresh.addEventListener('click', loadCalendar);
+
+      loadCalendar();
+    });
+  </script>
+</body>
+</html>

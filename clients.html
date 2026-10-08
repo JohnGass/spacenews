@@ -48,10 +48,10 @@
           </nav>
         </div>
 
-        <!-- Right: Status & Refresh -->
+        <!-- Right: Status -->
         <div class="flex items-center gap-2">
           <span id="report-date" class="text-[10px] font-mono bg-slate-950 text-slate-400 px-2 py-0.5 rounded border border-slate-800">
-            Syncing...
+            Past 14 Days Only
           </span>
           <button id="btn-refresh" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-2.5 py-0.5 rounded transition">
             Refresh
@@ -78,7 +78,7 @@
       </div>
 
       <div class="w-64">
-        <input type="text" id="search-input" placeholder="Search client news, awards, RFPs..." 
+        <input type="text" id="search-input" placeholder="Filter client hits (LinkedIn, X, Press)..." 
           class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-emerald-500 transition">
       </div>
     </div>
@@ -86,7 +86,7 @@
     <!-- Status States -->
     <div id="loading" class="text-center py-16 text-slate-400 text-xs font-mono">
       <div class="inline-block w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mb-1.5"></div>
-      <div>Monitoring 29 Tanagra client feeds...</div>
+      <div>Scanning LinkedIn, X, PR wires & trade news for Tanagra clients...</div>
     </div>
 
     <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-3 rounded text-rose-300 text-xs space-y-1">
@@ -173,7 +173,7 @@
         const data = await res.json();
         
         rawClientItems = data.client_intel || [];
-        setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A'));
+        setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A') + ' (<=14 Days)');
         
         renderClientStories();
         loading.classList.add('hidden');
@@ -183,6 +183,26 @@
         if (errDetails) errDetails.textContent = err.message;
         errBox.classList.remove('hidden');
       }
+    }
+
+    function getChannelBadge(channel) {
+      const ch = channel || 'Trade Wire';
+      if (ch === 'LinkedIn') {
+        return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-sky-950/50 text-sky-300 border-sky-800/60">LinkedIn</span>';
+      }
+      if (ch === 'X / Twitter') {
+        return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-slate-800 text-slate-200 border-slate-700">X / Twitter</span>';
+      }
+      if (ch === 'YouTube') {
+        return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-red-950/50 text-red-300 border-red-800/60">YouTube</span>';
+      }
+      if (ch === 'Press Release') {
+        return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-purple-950/50 text-purple-300 border-purple-800/60">PR Wire</span>';
+      }
+      if (ch === 'Gov Contract') {
+        return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-amber-950/50 text-amber-300 border-amber-800/60">DoD Award</span>';
+      }
+      return '<span class="text-[9px] font-mono font-medium border px-1 py-0 rounded shrink-0 bg-emerald-950/50 text-emerald-300 border-emerald-800/60">Trade Wire</span>';
     }
 
     function renderClientStories() {
@@ -197,7 +217,8 @@
           item.title.toLowerCase().includes(query) || 
           item.description.toLowerCase().includes(query) ||
           item.client.toLowerCase().includes(query) ||
-          item.source.toLowerCase().includes(query);
+          item.source.toLowerCase().includes(query) ||
+          (item.channel && item.channel.toLowerCase().includes(query));
 
         let matchesClient = (currentClient === 'all' || item.client === currentClient);
         return matchesQuery && matchesClient;
@@ -206,7 +227,7 @@
       setSafeText('story-count', filtered.length + ' records');
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="p-6 text-center text-slate-500 font-mono text-xs">No intelligence records match this client in the current ingestion cycle.</div>';
+        container.innerHTML = '<div class="p-4 text-center text-slate-500 font-mono text-xs">No records found for this client in the past 14 days.</div>';
         return;
       }
 
@@ -214,39 +235,39 @@
         const row = document.createElement('div');
         row.className = 'story-row hover:bg-slate-850/60 transition-colors';
 
-        const isAward = item.type && item.type.includes('Contract Award');
-        const badgeColor = isAward 
-          ? 'bg-amber-950/40 text-amber-300 border-amber-800/50' 
-          : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50';
+        const channelBadge = getChannelBadge(item.channel);
 
+        // UNEXPANDED: Ultra-dense line row with Client + Channel Badge + Title + Date
         row.innerHTML = 
-          '<div class="story-header px-3 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
-            '<div class="flex items-center gap-2 min-w-0 flex-1">' +
-              '<span class="text-[9px] font-mono font-medium border px-1.5 py-0.2 rounded shrink-0 ' + badgeColor + '">' + escapeHtml(item.client) + '</span>' +
+          '<div class="story-header px-2.5 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
+            '<div class="flex items-center gap-1.5 min-w-0 flex-1">' +
+              '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-emerald-950/60 text-emerald-300 border-emerald-800/50">' + escapeHtml(item.client) + '</span>' +
+              channelBadge +
               '<span class="text-xs text-slate-200 truncate hover:text-emerald-300 transition font-normal">' + escapeHtml(item.title) + '</span>' +
             '</div>' +
-            '<div class="flex items-center gap-2.5 shrink-0">' +
+            '<div class="flex items-center gap-2 shrink-0">' +
               '<span class="text-[10px] font-mono text-slate-500 hidden sm:inline">' + escapeHtml(item.pub_date || '') + '</span>' +
               '<span class="chevron-icon text-slate-500 text-[10px] transition-transform duration-120">▸</span>' +
             '</div>' +
           '</div>' +
 
-          '<div class="story-drawer px-3 pb-2">' +
-            '<div class="p-2.5 bg-slate-950 rounded border border-slate-800 space-y-1.5">' +
-              '<div class="flex items-center justify-between text-[11px] pb-1 border-b border-slate-800/60">' +
+          // EXPANDED: Full context, outlet source, direct link
+          '<div class="story-drawer px-2.5 pb-1.5">' +
+            '<div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1.5">' +
+              '<div class="flex items-center justify-between text-[10px] pb-1 border-b border-slate-800/60">' +
                 '<div class="flex items-center gap-2 flex-wrap">' +
                   '<span class="font-mono font-bold text-emerald-400 uppercase tracking-wide">' + escapeHtml(item.source) + '</span>' +
                   '<span class="text-slate-600">&bull;</span>' +
-                  '<span class="text-slate-400">Target Client: <span class="text-slate-200 font-medium">' + escapeHtml(item.client) + '</span></span>' +
+                  '<span class="text-slate-400">Client: <span class="text-slate-200 font-medium">' + escapeHtml(item.client) + '</span></span>' +
                   '<span class="text-slate-600">&bull;</span>' +
-                  '<span class="text-slate-500">Domain: ' + escapeHtml(item.domain || '') + '</span>' +
+                  '<span class="text-slate-500">Channel: ' + escapeHtml(item.channel || 'News') + '</span>' +
                 '</div>' +
-                '<a href="' + escapeHtml(item.url) + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-2 py-0.5 rounded text-[10px] transition shrink-0">' +
-                  'View Source ↗' +
+                '<a href="' + escapeHtml(item.url) + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-2 py-0.5 rounded text-[9px] transition shrink-0">' +
+                  'View Signal ↗' +
                 '</a>' +
               '</div>' +
               '<p class="text-[11px] text-slate-300 leading-relaxed font-sans">' +
-                escapeHtml(item.description || 'No excerpt available. Click source link above.') +
+                escapeHtml(item.description || 'No excerpt available. Click link above to view post.') +
               '</p>' +
             '</div>' +
           '</div>';

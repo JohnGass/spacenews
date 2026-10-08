@@ -161,21 +161,56 @@
 
     function buildPills() {
       const container = document.getElementById('client-pills');
+      container.innerHTML = '';
+
+      // All Clients Pill
+      const allBtn = document.createElement('button');
+      allBtn.setAttribute('data-client', 'all');
+      allBtn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white flex items-center gap-1';
+      allBtn.innerHTML = `<span>All Clients</span> <span id="client-count-all" class="font-mono text-[9px] bg-emerald-950 px-1 rounded">0</span>`;
+      allBtn.addEventListener('click', function() {
+        document.querySelectorAll('.client-pill').forEach(p => {
+          p.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1';
+        });
+        allBtn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white flex items-center gap-1';
+        currentClient = 'all';
+        setSafeText('active-client-label', 'All Clients');
+        renderClientStories();
+      });
+      container.appendChild(allBtn);
+
+      // 29 Client Pills with embedded count slots
       CLIENT_LIST.forEach(function(c) {
         const btn = document.createElement('button');
         btn.setAttribute('data-client', c);
-        btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
-        btn.textContent = c;
+        btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1';
+        btn.innerHTML = `<span>${escapeHtml(c)}</span> <span id="client-count-${c.replace(/[^a-zA-Z0-9]/g, '')}" class="font-mono text-[9px] bg-slate-800 text-slate-400 px-1 rounded">0</span>`;
         btn.addEventListener('click', function() {
-          document.querySelectorAll('.client-pill').forEach(function(p) {
-            p.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
+          document.querySelectorAll('.client-pill').forEach(p => {
+            p.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1';
           });
-          btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white';
+          btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white flex items-center gap-1';
           currentClient = c;
           setSafeText('active-client-label', c);
           renderClientStories();
         });
         container.appendChild(btn);
+      });
+    }
+
+    function updateClientCounts(items) {
+      setSafeText('client-count-all', items.length);
+      CLIENT_LIST.forEach(function(c) {
+        const count = items.filter(i => i.client === c).length;
+        const elId = 'client-count-' + c.replace(/[^a-zA-Z0-9]/g, '');
+        const el = document.getElementById(elId);
+        if (el) {
+          el.textContent = count;
+          // Highlight clients with active signals
+          if (count > 0) {
+            el.className = 'font-mono text-[9px] bg-emerald-950 text-emerald-300 px-1 rounded border border-emerald-700/60 font-bold';
+          }
+        }
       });
     }
 
@@ -197,6 +232,7 @@
         
         // Sort client signals newest-first
         rawClientItems = sortByDate(data.client_intel || []);
+        updateClientCounts(rawClientItems);
         setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A') + ' (<=14 Days)');
         
         renderClientStories();

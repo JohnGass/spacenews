@@ -118,7 +118,6 @@ class SpaceNewsScraper:
         {"name": "South China Morning Post", "url": "https://news.google.com/rss/search?q=site:scmp.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "China Space Tracking"},
         {"name": "China Daily", "url": "https://news.google.com/rss/search?q=site:chinadaily.com.cn+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC State Media"},
         {"name": "Xinhua News", "url": "https://news.google.com/rss/search?q=site:xinhuanet.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC Official Wire"},
-        {"name": "Taibo English", "url": "https://news.google.com/rss/search?q=site:en.taibo.cn+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Chinese Commercial Space"},
 
         # --- National Security Space, Pentagon & Defense Trade ---
         {"name": "Breaking Defense", "url": "https://breakingdefense.com/category/space/feed/", "tier": "National Security Space"},
@@ -327,7 +326,6 @@ class SpaceNewsScraper:
                 if re.search(r'[\u4e00-\u9fff]', desc):
                     desc = translate_zh_to_en(desc)
 
-                # Wrap Chinese pages in Google Translate proxy
                 if is_chinese or "taibo.cn" in link:
                     link = make_translated_link(link)
 
@@ -346,6 +344,7 @@ class SpaceNewsScraper:
                     "pub_date": item['pub_date'][:16] if item['pub_date'] else "Recent",
                     "description": desc,
                     "url": link,
+                    "raw_url": item['link'],
                     "classification": rel["classification"],
                     "is_golden_dome": rel["is_golden_dome"],
                     "is_space": rel["is_space"],
@@ -397,6 +396,7 @@ class SpaceNewsScraper:
                         "pub_date": pub_date[:10] if pub_date else "Recent",
                         "description": f"China in Space reporting: {title}",
                         "url": full_url,
+                        "raw_url": full_url,
                         "classification": "Space Relevant",
                         "is_golden_dome": False,
                         "is_space": True,
@@ -409,7 +409,7 @@ class SpaceNewsScraper:
             logging.error(f"Error scraping china-in-space.com/archive: {e}")
         return results
 
-    def _fetch_taibo_chinese_news(self, limit: int = 15) -> List[dict]:
+    def _fetch_taibo_chinese_news(self, limit: int = 30) -> List[dict]:
         """
         Polls Taibo.cn commercial space wire:
         1. Translates Chinese headlines and summaries to English for dashboard display.
@@ -417,12 +417,12 @@ class SpaceNewsScraper:
         3. Enforces strict 14-day rolling window.
         """
         logging.info("Querying Taibo.cn commercial aerospace wire and translating to English...")
-        query = "site:taibo.cn (商业航天 OR 卫星 OR 航天 OR 火箭) when:14d"
+        query = "site:taibo.cn (商业航天 OR 卫星 OR 航天 OR 火箭 OR 星座 OR 遥感 OR 空间) when:14d"
         feed_url = f"https://news.google.com/rss/search?q={requests.utils.quote(query)}&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
 
         translated_items = []
         try:
-            resp = self.session.get(feed_url, timeout=10)
+            resp = self.session.get(feed_url, timeout=12)
             if resp.status_code != 200:
                 return []
 
@@ -455,6 +455,7 @@ class SpaceNewsScraper:
                     "pub_date": pub_date[:16] if pub_date else "Recent",
                     "description": en_desc[:300],
                     "url": translated_link,
+                    "raw_url": raw_link,
                     "classification": "Space Relevant",
                     "is_golden_dome": False,
                     "is_space": True,
@@ -496,33 +497,14 @@ class SpaceNewsScraper:
     def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
         logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds (<= 14 days)...")
         all_articles = []
-        seen_links: Set[str] = set()
+        seen_keys: Set[str] = set()
 
-        with ThreadPoolExecutor(max_workers=25) as executor:
-            future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
-            for future in as_completed(future_to_feed):
-                feed_items = future.result()
-                for item in feed_items:
-                    clean_link = item['url'].split('?')[0].rstrip('/')
-                    if clean_link in seen_links:
-                        continue
-                    seen_links.add(clean_link)
-                    all_articles.append(item)
+        def get_dedup_key(item: dict) -> str:
+            # Resolve actual article target URL to avoid collision on google translate proxy URLs
+            real_url = resolve_gnews_url(item.get('raw_url') or item['url'])
+            # If still a translate wrapper, fall back to title as primary deduplication key
+            if "translate.google.com" in real_url:
+                return item['title'].strip().lower()
+            return real_url.split('?')[0].rstrip('/').lower()
 
-        taibo_items = self._fetch_taibo_chinese_news(limit=15)
-        for t in taibo_items:
-            clean_link = t['url'].split('?')[0].rstrip('/')
-            if clean_link not in seen_links:
-                seen_links.add(clean_link)
-                all_articles.append(t)
-
-        cis_items = self._scrape_china_in_space_archive(limit=8)
-        for c in cis_items:
-            clean_link = c['url'].split('?')[0].rstrip('/')
-            if clean_link not in seen_links:
-                seen_links.add(clean_link)
-                all_articles.append(c)
-
-        clustered = self._cluster_related_reporting(all_articles)
-        logging.info(f"Ingested {len(clustered)} verified space articles from the past 14 days.")
-        return clustered
+        # 1. Sweep all standard RSS

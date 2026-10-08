@@ -127,23 +127,26 @@
       if (el) el.textContent = text;
     }
 
-    // Chronological date parser (newest first)
+// Chronological date parser: Valid dates sort newest-first; "Recent" sinks to the bottom
     function getItemTimestamp(item) {
-      const candidates = [item.pub_date, item.date, item.ingested_at];
-      for (let i = 0; i < candidates.length; i++) {
-        const val = candidates[i];
-        if (val) {
-          const ts = Date.parse(val);
-          if (!isNaN(ts)) return ts;
+      const pub = (item.pub_date || item.date || '').trim();
+
+      // Exclude non-date labels like "Recent" or "DoD Award" from parsing as current
+      if (pub && !pub.toLowerCase().includes('recent') && !pub.toLowerCase().includes('award')) {
+        const parsed = Date.parse(pub);
+        if (!isNaN(parsed)) {
+          return parsed;
         }
       }
-      return 0;
+
+      // Sink items marked "Recent" to the bottom of the 2-week window
+      const fallback = Date.parse(item.ingested_at) || Date.now();
+      return fallback - (20 * 24 * 60 * 60 * 1000);
     }
 
     function sortByDate(arr) {
       return (arr || []).slice().sort((a, b) => getItemTimestamp(b) - getItemTimestamp(a));
     }
-
     function getPayloadUrl() {
       let path = window.location.pathname;
       if (path.endsWith('.html')) {

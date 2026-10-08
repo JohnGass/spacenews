@@ -1,7 +1,8 @@
 import os
 import re
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
 from typing import List, Dict, Any, Set
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import xml.etree.ElementTree as ET
@@ -10,14 +11,36 @@ from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
+def is_within_14_days(date_str: str) -> bool:
+    """Strictly gates content to the past 14 rolling days."""
+    if not date_str:
+        return False
+    cutoff = datetime.now(timezone.utc) - timedelta(days=14)
+    # 1. Try RFC 2822 standard (standard RSS pubDate)
+    try:
+        dt = parsedate_to_datetime(date_str.strip())
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt >= cutoff
+    except Exception:
+        pass
+    # 2. Try ISO 8601 (Atom feeds)
+    try:
+        dt = datetime.fromisoformat(date_str.strip().replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt >= cutoff
+    except Exception:
+        pass
+    return False
+
 class SpaceNewsScraper:
     """
     Broad-Spectrum Multithreaded Space Intelligence Engine.
-    Polls 75+ global defense, trade press, allied, commercial primes,
-    regional spaceport wires, and strategic news feeds concurrently.
+    Polls 75+ premier feeds concurrently and enforces a strict 14-day rolling cutoff.
     """
     FEEDS = [
-        # --- National Security Space, Pentagon & Defense Trade ---
+        # --- National Security Space & Defense Trade ---
         {"name": "Breaking Defense", "url": "https://breakingdefense.com/category/space/feed/", "tier": "National Security Space"},
         {"name": "Defense Scoop", "url": "https://defensescoop.com/feed/", "tier": "Defense Tech & USSF"},
         {"name": "Air & Space Forces", "url": "https://www.airandspaceforces.com/category/space/feed/", "tier": "USSF Force Design"},
@@ -39,11 +62,10 @@ class SpaceNewsScraper:
         {"name": "Aerospace America", "url": "https://aerospaceamerica.aiaa.org/feed/", "tier": "AIAA Engineering"},
         {"name": "SatNews", "url": "https://news.satnews.com/feed/", "tier": "Satellite & Payloads"},
         {"name": "Via Satellite", "url": "https://www.satellitetoday.com/feed/", "tier": "COMSATCOM"},
-        {"name": "Smallsat News", "url": "https://news.google.com/rss/search?q=site:smallsatnews.com&hl=en-US&gl=US&ceid=US:en", "tier": "Smallsats"},
+        {"name": "Smallsat News", "url": "https://news.google.com/rss/search?q=site:smallsatnews.com+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Smallsats"},
         {"name": "SpaceWatch.Global", "url": "https://spacewatch.global/feed/", "tier": "Geopolitical Commercial"},
         {"name": "SpaceQ", "url": "https://spaceq.ca/feed/", "tier": "Canadian & Allied Space"},
         {"name": "Startup Daily", "url": "https://www.startupdaily.net/category/sectors/space/feed/", "tier": "Indo-Pacific Venture"},
-        {"name": "Business News Australia", "url": "https://news.google.com/rss/search?q=site:businessnewsaustralia.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Commercial Space"},
 
         # --- Launch Operations, Engineering & Hardware ---
         {"name": "Ars Technica Space", "url": "https://arstechnica.com/space/feed/", "tier": "Investigative Launch"},
@@ -53,71 +75,49 @@ class SpaceNewsScraper:
         {"name": "Space.com", "url": "https://www.space.com/feeds/all", "tier": "Spaceflight News"},
         {"name": "SpaceRef", "url": "https://spaceref.com/feed/", "tier": "Civil & Tech Wire"},
         {"name": "Douglas Messier", "url": "https://parabolicarc.com/feed/", "tier": "Parabolic Arc / Analysis"},
-        {"name": "Dawn Aerospace", "url": "https://news.google.com/rss/search?q=site:dawnaerospace.com+OR+%22Dawn+Aerospace%22&hl=en-US&gl=US&ceid=US:en", "tier": "Spaceplane Propulsion"},
-        {"name": "Firefly Aerospace", "url": "https://news.google.com/rss/search?q=%22Firefly+Aerospace%22&hl=en-US&gl=US&ceid=US:en", "tier": "Commercial Launch"},
-        {"name": "Stratolaunch", "url": "https://news.google.com/rss/search?q=%22Stratolaunch%22&hl=en-US&gl=US&ceid=US:en", "tier": "Hypersonic Testing"},
-        {"name": "Sidus Space", "url": "https://news.google.com/rss/search?q=%22Sidus+Space%22&hl=en-US&gl=US&ceid=US:en", "tier": "Satellite Manufacturing"},
-        {"name": "Quantum Space", "url": "https://news.google.com/rss/search?q=%22Quantum+Space%22+satellite&hl=en-US&gl=US&ceid=US:en", "tier": "Cislunar & Super GEO"},
-        {"name": "Lonestar Space", "url": "https://news.google.com/rss/search?q=%22Lonestar+Data+Holdings%22+OR+%22Lonestar+Space%22&hl=en-US&gl=US&ceid=US:en", "tier": "Lunar Data Operations"},
 
-        # --- Strategic Analysis, Think Tanks & Policy ---
+        # --- Strategic Analysis & Policy ---
         {"name": "The Space Review", "url": "https://www.thespacereview.com/feed.xml", "tier": "Strategic Analysis"},
         {"name": "SpacePolicyOnline", "url": "https://spacepolicyonline.com/feed/", "tier": "Policy & Hill"},
         {"name": "The Conversation", "url": "https://theconversation.com/us/topics/space-31/articles.atom", "tier": "Academic Analysis"},
         {"name": "Scientific American", "url": "http://rss.sciam.com/ScientificAmerican-Space", "tier": "Science & Exploration"},
         {"name": "Earthsky", "url": "https://earthsky.org/feed/", "tier": "Orbital Science"},
-        {"name": "Look Up", "url": "https://news.google.com/rss/search?q=%22Look+Up+Space%22+OR+%22LookUpSpace%22&hl=en-US&gl=US&ceid=US:en", "tier": "Space Safety / SSA"},
-        {"name": "Omnidea", "url": "https://news.google.com/rss/search?q=Omnidea+space+propulsion&hl=en-US&gl=US&ceid=US:en", "tier": "Advanced Propulsion"},
 
         # --- Florida & Regional Spaceport News ---
         {"name": "Florida Today", "url": "https://rssfeeds.floridatoday.com/floridatoday/space", "tier": "Cape Canaveral Wire"},
         {"name": "Spectrum News 13", "url": "https://www.mynews13.com/services/rss/feed.space.rss", "tier": "Central Florida Space"},
-        {"name": "Bay News 9", "url": "https://news.google.com/rss/search?q=site:baynews9.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Florida Space Coast"},
-        {"name": "Bradenton Herald", "url": "https://news.google.com/rss/search?q=site:bradenton.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Florida Local"},
-        {"name": "Charlotte Observer", "url": "https://news.google.com/rss/search?q=site:charlotteobserver.com+aerospace+OR+space&hl=en-US&gl=US&ceid=US:en", "tier": "Regional Aerospace"},
-        {"name": "Dayton Daily News", "url": "https://news.google.com/rss/search?q=site:daytondailynews.com+space+OR+nasic&hl=en-US&gl=US&ceid=US:en", "tier": "Wright-Patt / NSIC"},
-        {"name": "Team Orlando", "url": "https://news.google.com/rss/search?q=%22Team+Orlando%22+space+OR+simulation&hl=en-US&gl=US&ceid=US:en", "tier": "Simulation & Training"},
+        {"name": "Bay News 9", "url": "https://news.google.com/rss/search?q=site:baynews9.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Florida Space Coast"},
+        {"name": "Bradenton Herald", "url": "https://news.google.com/rss/search?q=site:bradenton.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Florida Local"},
+        {"name": "Charlotte Observer", "url": "https://news.google.com/rss/search?q=site:charlotteobserver.com+(aerospace+OR+space)+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Regional Aerospace"},
+        {"name": "Dayton Daily News", "url": "https://news.google.com/rss/search?q=site:daytondailynews.com+(space+OR+nasic)+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Wright-Patt / NSIC"},
 
         # --- Global Mainstream, Business & Geopolitical Wires ---
-        {"name": "Wall Street Journal", "url": "https://news.google.com/rss/search?q=site:wsj.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Financial & Aerospace"},
+        {"name": "Wall Street Journal", "url": "https://news.google.com/rss/search?q=site:wsj.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Financial & Aerospace"},
         {"name": "New York Times", "url": "https://rss.nytimes.com/services/xml/rss/nyt/Space.xml", "tier": "Mainstream Wire"},
-        {"name": "Reuters", "url": "https://news.google.com/rss/search?q=site:reuters.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Global Wire"},
-        {"name": "Bloomberg / LatAm", "url": "https://news.google.com/rss/search?q=site:bloomberg.com+space+industry&hl=en-US&gl=US&ceid=US:en", "tier": "Global Financial"},
-        {"name": "Politico", "url": "https://news.google.com/rss/search?q=site:politico.com+space+force+OR+satellite&hl=en-US&gl=US&ceid=US:en", "tier": "Hill Policy"},
-        {"name": "Axios", "url": "https://news.google.com/rss/search?q=site:axios.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Space Economy"},
-        {"name": "CNBC", "url": "https://news.google.com/rss/search?q=site:cnbc.com+space+investing&hl=en-US&gl=US&ceid=US:en", "tier": "Venture & Public Primes"},
+        {"name": "Reuters", "url": "https://news.google.com/rss/search?q=site:reuters.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Global Wire"},
+        {"name": "Politico", "url": "https://news.google.com/rss/search?q=site:politico.com+(%22space+force%22+OR+satellite)+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Hill Policy"},
+        {"name": "Axios", "url": "https://news.google.com/rss/search?q=site:axios.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Space Economy"},
+        {"name": "CNBC", "url": "https://news.google.com/rss/search?q=site:cnbc.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Venture & Public Primes"},
         {"name": "CNN Space", "url": "http://rss.cnn.com/rss/edition_space.rss", "tier": "Mainstream Wire"},
         {"name": "BBC News", "url": "http://feeds.bbci.co.uk/news/science_and_environment/rss.xml", "tier": "UK & Global Science"},
         {"name": "GeekWire", "url": "https://www.geekwire.com/aerospace/feed/", "tier": "Pacific NW Aerospace"},
         {"name": "Gizmodo", "url": "https://gizmodo.com/tag/space/rss", "tier": "Tech & Space"},
-        {"name": "LA Times", "url": "https://news.google.com/rss/search?q=site:latimes.com+aerospace+OR+%22space+force%22&hl=en-US&gl=US&ceid=US:en", "tier": "SoCal Aerospace"},
-        {"name": "Yahoo News", "url": "https://news.google.com/rss/search?q=site:yahoo.com/news+space+force+OR+satellite&hl=en-US&gl=US&ceid=US:en", "tier": "Wire Syndication"},
+        {"name": "LA Times", "url": "https://news.google.com/rss/search?q=site:latimes.com+(aerospace+OR+%22space+force%22)+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "SoCal Aerospace"},
 
-        # --- International & State Actors (China, Russia, Asia, Middle East, Europe) ---
-        {"name": "South China Morning Post", "url": "https://news.google.com/rss/search?q=site:scmp.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "China Space Tracking"},
-        {"name": "China Daily", "url": "https://news.google.com/rss/search?q=site:chinadaily.com.cn+space+launch&hl=en-US&gl=US&ceid=US:en", "tier": "PRC State Media"},
-        {"name": "Xinhua News", "url": "https://news.google.com/rss/search?q=site:xinhuanet.com+satellite+OR+space&hl=en-US&gl=US&ceid=US:en", "tier": "PRC Official Wire"},
+        # --- International & State Actors ---
+        {"name": "South China Morning Post", "url": "https://news.google.com/rss/search?q=site:scmp.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "China Space Tracking"},
+        {"name": "China Daily", "url": "https://news.google.com/rss/search?q=site:chinadaily.com.cn+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC State Media"},
+        {"name": "Xinhua News", "url": "https://news.google.com/rss/search?q=site:xinhuanet.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC Official Wire"},
         {"name": "European Spaceflight", "url": "https://europeanspaceflight.com/feed/", "tier": "European Launch"},
         {"name": "ESA", "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Safety", "tier": "European Space Agency"},
         {"name": "Gov.UK / UKSA", "url": "https://www.gov.uk/government/organisations/uk-space-agency.atom", "tier": "UK Defense & Civil"},
-        {"name": "Jiji Press", "url": "https://news.google.com/rss/search?q=site:jiji.com+space+OR+jaxa&hl=ja&gl=JP&ceid=JP:ja", "tier": "Japanese Aerospace"},
         {"name": "Economic Times", "url": "https://economictimes.indiatimes.com/news/science/rssfeeds/3983049.cms", "tier": "ISRO & Indo-Pacific"},
-        {"name": "NDTV", "url": "https://news.google.com/rss/search?q=site:ndtv.com+isro+OR+space&hl=en-IN&gl=IN&ceid=IN:en", "tier": "South Asian Space"},
+        {"name": "NDTV", "url": "https://news.google.com/rss/search?q=site:ndtv.com+(isro+OR+space)+when:14d&hl=en-IN&gl=IN&ceid=IN:en", "tier": "South Asian Space"},
         {"name": "Radio New Zealand", "url": "https://www.rnz.co.nz/rss/science.xml", "tier": "Oceania / Mahia Launch"},
-        {"name": "Irish Times", "url": "https://news.google.com/rss/search?q=site:irishtimes.com+space+technology&hl=en-IE&gl=IE&ceid=IE:en", "tier": "European Science"},
-        {"name": "Times of Oman", "url": "https://news.google.com/rss/search?q=site:timesofoman.com+space&hl=en-US&gl=US&ceid=US:en", "tier": "Middle East Space"},
-        {"name": "Nairobi Leo", "url": "https://news.google.com/rss/search?q=site:nairobileo.co.ke+space+satellite&hl=en-KE&gl=KE&ceid=KE:en", "tier": "African Space"},
-        {"name": "DPA International", "url": "https://news.google.com/rss/search?q=%22dpa%22+space+launch+OR+satellite&hl=en-US&gl=US&ceid=US:en", "tier": "German / EU Wire"},
 
-        # --- Civil Agencies, Research & Curated Aggregators ---
+        # --- Civil Agencies ---
         {"name": "NASA HQ Releases", "url": "https://www.nasa.gov/news-release/feed/", "tier": "Civil Agency"},
-        {"name": "FAA Commercial Space", "url": "https://news.google.com/rss/search?q=site:faa.gov+%22commercial+space%22+OR+licensing&hl=en-US&gl=US&ceid=US:en", "tier": "Launch Licensing"},
-        {"name": "CASIS / ISS National Lab", "url": "https://www.issnationallab.org/feed/", "tier": "Microgravity & LEO"},
-        {"name": "ODAA", "url": "https://news.google.com/rss/search?q=%22ODAA%22+space+OR+defense&hl=en-US&gl=US&ceid=US:en", "tier": "Defense Compliance"},
-        {"name": "Tohoku Space", "url": "https://news.google.com/rss/search?q=%22Tohoku+University%22+satellite+OR+space&hl=en-US&gl=US&ceid=US:en", "tier": "Allied University R&D"},
-        {"name": "Ikenna Lewis Space", "url": "https://news.google.com/rss/search?q=%22Ikenna+Lewis%22+space&hl=en-US&gl=US&ceid=US:en", "tier": "Analysis & Commentary"},
-        {"name": "Latte Luxury Space", "url": "https://news.google.com/rss/search?q=%22Latte+Luxury%22+space&hl=en-US&gl=US&ceid=US:en", "tier": "Emerging Commercial"},
-        {"name": "Florida SPACErePORT", "url": "https://news.google.com/rss/search?q=%22SPACErePORT%22+OR+%22Florida+Space+Report%22&hl=en-US&gl=US&ceid=US:en", "tier": "Space Coast Curated"}
+        {"name": "CASIS / ISS National Lab", "url": "https://www.issnationallab.org/feed/", "tier": "Microgravity & LEO"}
     ]
 
     def __init__(self):
@@ -219,9 +219,7 @@ class SpaceNewsScraper:
                 a_m = re.search(r"<(?:dc:creator|author)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</(?:dc:creator|author)>", block, re.DOTALL | re.IGNORECASE)
 
                 title = self._clean_text(t_m.group(1)) if t_m else ""
-                link = ""
-                if l_m:
-                    link = (l_m.group(1) or l_m.group(2) or "").strip()
+                link = (l_m.group(1) or l_m.group(2) or "").strip() if l_m else ""
                 pub_date = p_m.group(1).strip() if p_m else ""
                 desc = self._clean_text(d_m.group(1)) if d_m else ""
                 author = self._clean_text(a_m.group(1)) if a_m else ""
@@ -244,6 +242,10 @@ class SpaceNewsScraper:
             raw_items = self._parse_items(resp.text)
             matched = []
             for item in raw_items:
+                # STRICT DATE GATE: Must be <= 14 days old
+                if not is_within_14_days(item.get("pub_date", "")):
+                    continue
+
                 corpus = f"{item['title']} {item['description']}"
                 rel = evaluate_relevance(corpus)
                 if not rel["is_relevant"]:
@@ -296,12 +298,11 @@ class SpaceNewsScraper:
         return articles
 
     def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
-        logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds...")
+        logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds (<= 14 days)...")
         all_articles = []
         seen_links: Set[str] = set()
 
-        # Execute 30 concurrent workers to sweep all 75+ feeds in ~6-9 seconds
-        with ThreadPoolExecutor(max_workers=30) as executor:
+        with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
             for future in as_completed(future_to_feed):
                 feed_items = future.result()
@@ -313,5 +314,5 @@ class SpaceNewsScraper:
                     all_articles.append(item)
 
         clustered = self._cluster_related_reporting(all_articles)
-        logging.info(f"Ingested {len(clustered)} verified space articles across all 75+ feeds.")
+        logging.info(f"Ingested {len(clustered)} verified space articles from the past 14 days.")
         return clustered

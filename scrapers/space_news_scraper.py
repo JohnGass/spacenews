@@ -7,40 +7,81 @@ from typing import List, Dict, Any, Set
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import xml.etree.ElementTree as ET
 import requests
+from bs4 import BeautifulSoup
 from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
+def translate_zh_to_en(text: str) -> str:
+    """Translates Chinese text into English using automated translation relay."""
+    if not text or not re.search(r'[\u4e00-\u9fff]', text):
+        return text
+    try:
+        url = "https://translate.googleapis.com/translate_a/single"
+        params = {
+            "client": "gtx",
+            "sl": "zh-CN",
+            "tl": "en",
+            "dt": "t",
+            "q": text[:1500]
+        }
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        resp = requests.get(url, params=params, headers=headers, timeout=6)
+        if resp.status_code == 200:
+            data = resp.json()
+            if data and isinstance(data, list) and data[0]:
+                translated = "".join(seg[0] for seg in data[0] if seg and seg[0])
+                if translated.strip():
+                    return translated.strip()
+    except Exception:
+        pass
+    return text
+
 def is_within_14_days(date_str: str) -> bool:
-    """Strictly gates content to the past 14 rolling days."""
+    """Strictly enforces rolling 14-day cutoff across RFC, ISO, and standard dates."""
     if not date_str:
         return False
     cutoff = datetime.now(timezone.utc) - timedelta(days=14)
-    # 1. Try RFC 2822 standard (standard RSS pubDate)
+    s = date_str.strip()
     try:
-        dt = parsedate_to_datetime(date_str.strip())
+        dt = parsedate_to_datetime(s)
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
         return dt >= cutoff
     except Exception:
         pass
-    # 2. Try ISO 8601 (Atom feeds)
     try:
-        dt = datetime.fromisoformat(date_str.strip().replace("Z", "+00:00"))
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
         return dt >= cutoff
     except Exception:
         pass
+    match = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})', s)
+    if match:
+        try:
+            year, month, day = int(match.group(1)), int(match.group(2)), int(match.group(3))
+            dt = datetime(year, month, day, tzinfo=timezone.utc)
+            return dt >= cutoff
+        except Exception:
+            pass
     return False
 
 class SpaceNewsScraper:
     """
     Broad-Spectrum Multithreaded Space Intelligence Engine.
-    Polls 75+ premier feeds concurrently and enforces a strict 14-day rolling cutoff.
+    Polls 75+ global feeds concurrently, translates Chinese-language intelligence,
+    and enforces a strict rolling 14-day window.
     """
     FEEDS = [
-        # --- National Security Space & Defense Trade ---
+        # --- China Space Tracking & Doctrine ---
+        {"name": "China in Space", "url": "https://www.china-in-space.com/feed", "tier": "PRC Space Analysis"},
+        {"name": "South China Morning Post", "url": "https://news.google.com/rss/search?q=site:scmp.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "China Space Tracking"},
+        {"name": "China Daily", "url": "https://news.google.com/rss/search?q=site:chinadaily.com.cn+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC State Media"},
+        {"name": "Xinhua News", "url": "https://news.google.com/rss/search?q=site:xinhuanet.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC Official Wire"},
+        {"name": "Taibo English", "url": "https://news.google.com/rss/search?q=site:en.taibo.cn+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "Chinese Commercial Space"},
+
+        # --- National Security Space, Pentagon & Defense Trade ---
         {"name": "Breaking Defense", "url": "https://breakingdefense.com/category/space/feed/", "tier": "National Security Space"},
         {"name": "Defense Scoop", "url": "https://defensescoop.com/feed/", "tier": "Defense Tech & USSF"},
         {"name": "Air & Space Forces", "url": "https://www.airandspaceforces.com/category/space/feed/", "tier": "USSF Force Design"},
@@ -104,18 +145,12 @@ class SpaceNewsScraper:
         {"name": "Gizmodo", "url": "https://gizmodo.com/tag/space/rss", "tier": "Tech & Space"},
         {"name": "LA Times", "url": "https://news.google.com/rss/search?q=site:latimes.com+(aerospace+OR+%22space+force%22)+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "SoCal Aerospace"},
 
-        # --- International & State Actors ---
-        {"name": "South China Morning Post", "url": "https://news.google.com/rss/search?q=site:scmp.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "China Space Tracking"},
-        {"name": "China Daily", "url": "https://news.google.com/rss/search?q=site:chinadaily.com.cn+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC State Media"},
-        {"name": "Xinhua News", "url": "https://news.google.com/rss/search?q=site:xinhuanet.com+space+when:14d&hl=en-US&gl=US&ceid=US:en", "tier": "PRC Official Wire"},
+        # --- Allied & Civil Agencies ---
         {"name": "European Spaceflight", "url": "https://europeanspaceflight.com/feed/", "tier": "European Launch"},
         {"name": "ESA", "url": "https://www.esa.int/rssfeed/Our_Activities/Space_Safety", "tier": "European Space Agency"},
         {"name": "Gov.UK / UKSA", "url": "https://www.gov.uk/government/organisations/uk-space-agency.atom", "tier": "UK Defense & Civil"},
         {"name": "Economic Times", "url": "https://economictimes.indiatimes.com/news/science/rssfeeds/3983049.cms", "tier": "ISRO & Indo-Pacific"},
         {"name": "NDTV", "url": "https://news.google.com/rss/search?q=site:ndtv.com+(isro+OR+space)+when:14d&hl=en-IN&gl=IN&ceid=IN:en", "tier": "South Asian Space"},
-        {"name": "Radio New Zealand", "url": "https://www.rnz.co.nz/rss/science.xml", "tier": "Oceania / Mahia Launch"},
-
-        # --- Civil Agencies ---
         {"name": "NASA HQ Releases", "url": "https://www.nasa.gov/news-release/feed/", "tier": "Civil Agency"},
         {"name": "CASIS / ISS National Lab", "url": "https://www.issnationallab.org/feed/", "tier": "Microgravity & LEO"}
     ]
@@ -134,8 +169,12 @@ class SpaceNewsScraper:
         clean = clean.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"').replace("&#039;", "'")
         return re.sub(r"\s+", " ", clean).strip()
 
-    def _classify_topic(self, title: str, description: str) -> str:
-        corpus = f"{title} {description}"
+    def _classify_topic(self, title: str, description: str, source_name: str = "") -> str:
+        corpus = f"{title} {description}".lower()
+
+        # Direct China attribution
+        if "china in space" in source_name.lower() or "taibo" in source_name.lower():
+            return "China"
 
         # 1. Executive / C-Suite / Corporate M&A moves ALWAYS route to Commercial
         exec_pattern = re.compile(
@@ -242,24 +281,32 @@ class SpaceNewsScraper:
             raw_items = self._parse_items(resp.text)
             matched = []
             for item in raw_items:
-                # STRICT DATE GATE: Must be <= 14 days old
                 if not is_within_14_days(item.get("pub_date", "")):
                     continue
 
-                corpus = f"{item['title']} {item['description']}"
+                title = item['title']
+                desc = item['description']
+
+                # Translate Chinese if detected
+                if re.search(r'[\u4e00-\u9fff]', title):
+                    title = translate_zh_to_en(title)
+                if re.search(r'[\u4e00-\u9fff]', desc):
+                    desc = translate_zh_to_en(desc)
+
+                corpus = f"{title} {desc}"
                 rel = evaluate_relevance(corpus)
                 if not rel["is_relevant"]:
                     continue
 
-                category = self._classify_topic(item['title'], item['description'])
+                category = self._classify_topic(title, desc, feed['name'])
                 matched.append({
                     "source": feed['name'],
                     "tier": feed['tier'],
                     "category": category,
-                    "title": item['title'],
+                    "title": title,
                     "author": item['author'] or feed['name'],
                     "pub_date": item['pub_date'][:16] if item['pub_date'] else "Recent",
-                    "description": item['description'],
+                    "description": desc,
                     "url": item['link'],
                     "classification": rel["classification"],
                     "is_golden_dome": rel["is_golden_dome"],
@@ -272,6 +319,97 @@ class SpaceNewsScraper:
             return matched
         except Exception:
             return []
+
+    def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
+        """Scrapes long-form reporting directly from china-in-space.com/archive."""
+        archive_url = "https://www.china-in-space.com/archive"
+        results = []
+        try:
+            resp = self.session.get(archive_url, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                links = soup.find_all("a", href=re.compile(r"/p/"))
+                seen_urls = set()
+                for a in links:
+                    title = a.get_text().strip()
+                    href = a["href"]
+                    full_url = href if href.startswith("http") else f"https://www.china-in-space.com{href}"
+                    if len(title) < 15 or full_url in seen_urls:
+                        continue
+                    seen_urls.add(full_url)
+
+                    results.append({
+                        "source": "China in Space (Archive)",
+                        "tier": "PRC Space Analysis",
+                        "category": "China",
+                        "title": title,
+                        "author": "China in Space",
+                        "pub_date": "Recent",
+                        "description": f"Long-form reporting from China in Space archive: {title}",
+                        "url": full_url,
+                        "classification": "Space Relevant",
+                        "is_golden_dome": False,
+                        "is_space": True,
+                        "related_coverage": [],
+                        "ingested_at": datetime.now(timezone.utc).isoformat()
+                    })
+                    if len(results) >= limit:
+                        break
+        except Exception as e:
+            logging.error(f"Error scraping china-in-space.com/archive: {e}")
+        return results
+
+    def _fetch_taibo_chinese_news(self, limit: int = 12) -> List[dict]:
+        """Polls Taibo.cn commercial space wire and translates from Chinese to English."""
+        logging.info("Querying Taibo.cn commercial aerospace wire and translating to English...")
+        query = "site:taibo.cn (商业航天 OR 卫星 OR 航天 OR 火箭) when:14d"
+        feed_url = f"https://news.google.com/rss/search?q={requests.utils.quote(query)}&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+
+        translated_items = []
+        try:
+            resp = self.session.get(feed_url, timeout=10)
+            if resp.status_code != 200:
+                return []
+
+            root = ET.fromstring(resp.text.replace("&nbsp;", " "))
+            for item in root.findall(".//item"):
+                pub_date = (item.findtext("pubDate") or "").strip()
+                if not is_within_14_days(pub_date):
+                    continue
+
+                raw_title = (item.findtext("title") or "").strip()
+                link = (item.findtext("link") or "").strip()
+                raw_desc = self._clean_text(item.findtext("description") or "")
+
+                if " - " in raw_title:
+                    raw_title = raw_title.rsplit(" - ", 1)[0].strip()
+
+                # Execute translation
+                en_title = translate_zh_to_en(raw_title)
+                en_desc = translate_zh_to_en(raw_desc)
+
+                translated_items.append({
+                    "source": "Taibo (泰伯网)",
+                    "tier": "Chinese Commercial Space",
+                    "category": "China",
+                    "title": en_title,
+                    "author": "Taibo.cn",
+                    "pub_date": pub_date[:16] if pub_date else "Recent",
+                    "description": en_desc[:300],
+                    "url": link,
+                    "classification": "Space Relevant",
+                    "is_golden_dome": False,
+                    "is_space": True,
+                    "related_coverage": [],
+                    "ingested_at": datetime.now(timezone.utc).isoformat()
+                })
+                if len(translated_items) >= limit:
+                    break
+        except Exception as e:
+            logging.error(f"Error ingesting Taibo.cn: {e}")
+
+        logging.info(f"Captured and translated {len(translated_items)} Taibo.cn articles.")
+        return translated_items
 
     def _cluster_related_reporting(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         def get_keywords(t: str) -> Set[str]:
@@ -302,6 +440,7 @@ class SpaceNewsScraper:
         all_articles = []
         seen_links: Set[str] = set()
 
+        # 1. Sweep all standard and Chinese RSS feeds concurrently
         with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
             for future in as_completed(future_to_feed):
@@ -312,6 +451,22 @@ class SpaceNewsScraper:
                         continue
                     seen_links.add(clean_link)
                     all_articles.append(item)
+
+        # 2. Ingest translated Chinese articles from Taibo.cn
+        taibo_items = self._fetch_taibo_chinese_news(limit=15)
+        for t in taibo_items:
+            clean_link = t['url'].split('?')[0].rstrip('/')
+            if clean_link not in seen_links:
+                seen_links.add(clean_link)
+                all_articles.append(t)
+
+        # 3. Ingest direct china-in-space.com/archive articles
+        cis_items = self._scrape_china_in_space_archive(limit=8)
+        for c in cis_items:
+            clean_link = c['url'].split('?')[0].rstrip('/')
+            if clean_link not in seen_links:
+                seen_links.add(clean_link)
+                all_articles.append(c)
 
         clustered = self._cluster_related_reporting(all_articles)
         logging.info(f"Ingested {len(clustered)} verified space articles from the past 14 days.")

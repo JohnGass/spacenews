@@ -59,9 +59,9 @@
         </div>
       </div>
 
-      <!-- Horizontal Client Selection Pills Bar -->
-      <div class="flex items-center gap-1 overflow-x-auto pt-1 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="client-pills">
-        <button data-client="all" class="client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap">All Clients</button>
+      <!-- Wrapped Client Selection Pills Bar -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-1 border-t border-slate-800/60" id="client-pills">
+        <button data-client="all" class="client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white">All Clients</button>
         <!-- Populated dynamically via JS -->
       </div>
     </div>
@@ -141,13 +141,13 @@
       CLIENT_LIST.forEach(function(c) {
         const btn = document.createElement('button');
         btn.setAttribute('data-client', c);
-        btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+        btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
         btn.textContent = c;
         btn.addEventListener('click', function() {
           document.querySelectorAll('.client-pill').forEach(function(p) {
             p.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
           });
-          btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap';
+          btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white';
           currentClient = c;
           setSafeText('active-client-label', c);
           renderClientStories();

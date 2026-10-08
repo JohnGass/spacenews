@@ -1,10 +1,12 @@
 import os
 import re
+import base64
 import logging
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from typing import List, Dict, Any, Set
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.parse import quote
 import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
@@ -12,10 +14,34 @@ from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
+def resolve_gnews_url(gnews_url: str) -> str:
+    """Extracts the real target destination URL from Google News base64 links."""
+    match = re.search(r'/articles/([A-Za-z0-9_\-]+)', gnews_url)
+    if not match:
+        return gnews_url
+    b64_str = match.group(1)
+    b64_str += '=' * (-len(b64_str) % 4)
+    try:
+        decoded = base64.urlsafe_b64decode(b64_str)
+        urls = re.findall(rb'https?://[^\x00-\x1f\x7f-\xff\s"\'<>]+', decoded)
+        if urls:
+            return urls[0].decode('utf-8', 'ignore')
+    except Exception:
+        pass
+    return gnews_url
+
+def make_translated_link(url: str, src_lang: str = "zh-CN", target_lang: str = "en") -> str:
+    """Wraps URL in Google Translate web proxy so it opens in full English when clicked."""
+    real_url = resolve_gnews_url(url)
+    if "translate.google.com" in real_url:
+        return real_url
+    return f"https://translate.google.com/translate?sl={src_lang}&tl={target_lang}&u={quote(real_url)}"
+
 def translate_zh_to_en(text: str) -> str:
     """Translates Chinese text into English using automated translation relay."""
     if not text or not re.search(r'[\u4e00-\u9fff]', text):
         return text
+    # 1. Primary Google Translate API endpoint
     try:
         url = "https://translate.googleapis.com/translate_a/single"
         params = {
@@ -35,6 +61,19 @@ def translate_zh_to_en(text: str) -> str:
                     return translated.strip()
     except Exception:
         pass
+
+    # 2. Free translation fallback
+    try:
+        url = "https://api.mymemory.translated.net/get"
+        params = {"q": text[:500], "langpair": "zh|en"}
+        resp = requests.get(url, params=params, timeout=5)
+        if resp.status_code == 200:
+            res = resp.json().get("responseData", {}).get("translatedText", "")
+            if res and not res.startswith("MYMEMORY WARNING"):
+                return res.strip()
+    except Exception:
+        pass
+
     return text
 
 def is_within_14_days(date_str: str) -> bool:
@@ -70,8 +109,8 @@ def is_within_14_days(date_str: str) -> bool:
 class SpaceNewsScraper:
     """
     Broad-Spectrum Multithreaded Space Intelligence Engine.
-    Polls 75+ global feeds concurrently, translates Chinese-language intelligence,
-    and enforces a strict rolling 14-day window.
+    Polls 75+ global feeds concurrently, translates Chinese-language intelligence into English,
+    wraps Chinese-language links in web translation proxies, and enforces a strict rolling 14-day window.
     """
     FEEDS = [
         # --- China Space Tracking & Doctrine ---
@@ -279,11 +318,18 @@ class SpaceNewsScraper:
 
                 title = item['title']
                 desc = item['description']
+                link = item['link']
 
+                # Translate Chinese if detected
+                is_chinese = bool(re.search(r'[\u4e00-\u9fff]', title) or re.search(r'[\u4e00-\u9fff]', desc))
                 if re.search(r'[\u4e00-\u9fff]', title):
                     title = translate_zh_to_en(title)
                 if re.search(r'[\u4e00-\u9fff]', desc):
                     desc = translate_zh_to_en(desc)
+
+                # Wrap Chinese pages in Google Translate proxy
+                if is_chinese or "taibo.cn" in link:
+                    link = make_translated_link(link)
 
                 corpus = f"{title} {desc}"
                 rel = evaluate_relevance(corpus)
@@ -299,7 +345,7 @@ class SpaceNewsScraper:
                     "author": item['author'] or feed['name'],
                     "pub_date": item['pub_date'][:16] if item['pub_date'] else "Recent",
                     "description": desc,
-                    "url": item['link'],
+                    "url": link,
                     "classification": rel["classification"],
                     "is_golden_dome": rel["is_golden_dome"],
                     "is_space": rel["is_space"],
@@ -331,7 +377,7 @@ class SpaceNewsScraper:
                     title = a_tag.get_text().strip()
                     href = a_tag.get("href", "")
                     full_url = href if href.startswith("http") else f"https://www.china-in-space.com{href}"
-                    
+
                     if len(title) < 15 or full_url in seen_urls:
                         continue
 
@@ -363,8 +409,13 @@ class SpaceNewsScraper:
             logging.error(f"Error scraping china-in-space.com/archive: {e}")
         return results
 
-    def _fetch_taibo_chinese_news(self, limit: int = 12) -> List[dict]:
-        """Polls Taibo.cn commercial space wire and translates from Chinese to English."""
+    def _fetch_taibo_chinese_news(self, limit: int = 15) -> List[dict]:
+        """
+        Polls Taibo.cn commercial space wire:
+        1. Translates Chinese headlines and summaries to English for dashboard display.
+        2. Wraps destination URLs in Google Translate web proxy so clicking opens in English.
+        3. Enforces strict 14-day rolling window.
+        """
         logging.info("Querying Taibo.cn commercial aerospace wire and translating to English...")
         query = "site:taibo.cn (商业航天 OR 卫星 OR 航天 OR 火箭) when:14d"
         feed_url = f"https://news.google.com/rss/search?q={requests.utils.quote(query)}&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
@@ -382,14 +433,18 @@ class SpaceNewsScraper:
                     continue
 
                 raw_title = (item.findtext("title") or "").strip()
-                link = (item.findtext("link") or "").strip()
+                raw_link = (item.findtext("link") or "").strip()
                 raw_desc = self._clean_text(item.findtext("description") or "")
 
                 if " - " in raw_title:
                     raw_title = raw_title.rsplit(" - ", 1)[0].strip()
 
+                # Translate text for display
                 en_title = translate_zh_to_en(raw_title)
                 en_desc = translate_zh_to_en(raw_desc)
+
+                # Wrap destination link so it opens fully translated in English when clicked
+                translated_link = make_translated_link(raw_link)
 
                 translated_items.append({
                     "source": "Taibo (泰伯网)",
@@ -399,7 +454,7 @@ class SpaceNewsScraper:
                     "author": "Taibo.cn",
                     "pub_date": pub_date[:16] if pub_date else "Recent",
                     "description": en_desc[:300],
-                    "url": link,
+                    "url": translated_link,
                     "classification": "Space Relevant",
                     "is_golden_dome": False,
                     "is_space": True,
@@ -417,8 +472,57 @@ class SpaceNewsScraper:
     def _cluster_related_reporting(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         def get_keywords(t: str) -> Set[str]:
             stopwords = {"space", "force", "launch", "first", "plans", "tests", "after", "about", "could", "would", "names", "taps", "with", "from"}
-            words = set(re.findall(r"\b[a-zA-Z]{4,}\b", t.lower()))
+            words = set(re.findall(r'\b[a-zA-Z]{4,}\b', t.lower()))
             return words - stopwords
 
         for i, art in enumerate(articles):
-            kw_i = get_
+            kw_i = get_keywords(art["title"])
+            related = []
+            for j, other in enumerate(articles):
+                if i == j or art["source"] == other["source"]:
+                    continue
+                kw_j = get_keywords(other["title"])
+                shared = kw_i & kw_j
+                if len(shared) >= 2:
+                    related.append({
+                        "source": other["source"],
+                        "title": other["title"],
+                        "url": other["url"]
+                    })
+            art["related_coverage"] = related[:3]
+
+        return articles
+
+    def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
+        logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds (<= 14 days)...")
+        all_articles = []
+        seen_links: Set[str] = set()
+
+        with ThreadPoolExecutor(max_workers=25) as executor:
+            future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
+            for future in as_completed(future_to_feed):
+                feed_items = future.result()
+                for item in feed_items:
+                    clean_link = item['url'].split('?')[0].rstrip('/')
+                    if clean_link in seen_links:
+                        continue
+                    seen_links.add(clean_link)
+                    all_articles.append(item)
+
+        taibo_items = self._fetch_taibo_chinese_news(limit=15)
+        for t in taibo_items:
+            clean_link = t['url'].split('?')[0].rstrip('/')
+            if clean_link not in seen_links:
+                seen_links.add(clean_link)
+                all_articles.append(t)
+
+        cis_items = self._scrape_china_in_space_archive(limit=8)
+        for c in cis_items:
+            clean_link = c['url'].split('?')[0].rstrip('/')
+            if clean_link not in seen_links:
+                seen_links.add(clean_link)
+                all_articles.append(c)
+
+        clustered = self._cluster_related_reporting(all_articles)
+        logging.info(f"Ingested {len(clustered)} verified space articles from the past 14 days.")
+        return clustered

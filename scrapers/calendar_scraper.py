@@ -14,21 +14,24 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 class CalendarScraper:
     """
-    Worldwide Rolling Space & Defense Calendar Engine.
+    Exhaustive Worldwide Rolling Space & Defense Calendar Engine.
     Aggregates:
-    1. Global Orbital Launch Manifests (Spaceflight Now & Launch Library 2)
-    2. Military Combatant Command Exercises (USSPACECOM, INDOPACOM, SOCOM, NATO, Allied)
+    1. Global Orbital Launch Manifests (Spaceflight Now, Launch Library 2)
+    2. Combatant Command Exercises (USSPACECOM, INDOPACOM, SOCOM, NATO, Allied)
     3. Major Symposia & Conferences (SFA Spacepower Orlando, NSSA, POC, AIAA, Space Foundation)
     4. Strategic Webinars & Think Tanks (CSIS, NSSA, Aerospace Corp CSPS, Payload, Mitchell Institute)
     5. Pure-Play Commercial Space & Defense Prime Earnings Calls
+    6. Congressional Space & Defense Committee Hearings
+
+    Strictly bounded to a rolling 12-month window (Today -> Today + 365 Days).
     """
     SPACENOW_LAUNCH_URL = "https://spaceflightnow.com/launch-schedule/"
     SPACEPOLICY_FEED_URL = "https://spacepolicyonline.com/feed/"
-    LL2_UPCOMING_URL = "https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?limit=30"
+    LL2_UPCOMING_URL = "https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?limit=35"
     CONGRESS_API_URL = "https://api.congress.gov/v3/committee-meeting"
 
     # =========================================================================
-    # 1. CONFERENCES, SYMPOSIA & SUMMITS (Includes SFA Spacepower Orlando, NSSA, POC)
+    # 1. CONFERENCES, SYMPOSIA & SUMMITS (Within Rolling 12 Months)
     # =========================================================================
     CONFERENCES_CATALOG = [
         # --- Fall / Winter 2026 ---
@@ -87,7 +90,7 @@ class CalendarScraper:
             "date": "2026-11-03",
             "category": "Conferences",
             "location": "Los Angeles, CA",
-            "description": "High-level forum bringing together venture capital, private equity, defense primes, and government buyers in dual-use national security space.",
+            "description": "High-level forum uniting venture capital, private equity, defense primes, and government buyers in dual-use national security space.",
             "url": "https://payloadspace.com/events/",
             "source": "Payload Space",
             "is_golden_dome": False
@@ -143,7 +146,7 @@ class CalendarScraper:
             "is_golden_dome": True
         },
 
-        # --- 2027 Flagship Symposia ---
+        # --- Winter / Spring / Summer 2027 ---
         {
             "title": "AIAA SciTech Forum 2027",
             "date": "2027-01-11",
@@ -199,7 +202,7 @@ class CalendarScraper:
             "date": "2027-03-15",
             "category": "Conferences",
             "location": "Washington, DC",
-            "description": "Landmark commercial satellite event featuring commercial constellation operators, launch providers, and DoD procurement leadership.",
+            "description": "The landmark commercial satellite convention featuring commercial constellation operators, launch providers, and DoD procurement leadership.",
             "url": "https://www.satshow.com/",
             "source": "Satellite Show",
             "is_golden_dome": False
@@ -213,6 +216,16 @@ class CalendarScraper:
             "url": "https://www.spacesymposium.org/",
             "source": "Space Foundation",
             "is_golden_dome": True
+        },
+        {
+            "title": "Space Tech Expo USA 2027",
+            "date": "2027-05-18",
+            "category": "Conferences",
+            "location": "Long Beach, CA",
+            "description": "America's largest space manufacturing and engineering trade exhibition focusing on commercial supply chains and launch tech.",
+            "url": "https://www.spacetechexpo.com/",
+            "source": "Space Tech Expo",
+            "is_golden_dome": False
         },
         {
             "title": "Paris Air Show (SIAE 2027)",
@@ -239,7 +252,7 @@ class CalendarScraper:
             "date": "2027-08-07",
             "category": "Conferences",
             "location": "Logan, UT",
-            "description": "Global smallsat gathering covering bus engineering, rideshare launch integration, and proliferated LEO architectures.",
+            "description": "The global hub for smallsat engineering, university rideshares, pLEO constellation buses, and miniaturized optical payloads.",
             "url": "https://www.smallsat.org/",
             "source": "USU / AIAA",
             "is_golden_dome": False
@@ -255,11 +268,21 @@ class CalendarScraper:
             "is_golden_dome": True
         },
         {
+            "title": "AIAA ASCEND 2027",
+            "date": "2027-08-23",
+            "category": "Conferences",
+            "location": "Las Vegas, NV",
+            "description": "Outcome-focused collaborative conference covering commercial LEO destinations, in-space manufacturing, and cislunar development.",
+            "url": "https://www.ascend.select/",
+            "source": "AIAA",
+            "is_golden_dome": False
+        },
+        {
             "title": "AMOS Conference 2027",
             "date": "2027-09-14",
             "category": "Conferences",
             "location": "Wailea, Maui, HI",
-            "description": "International technical conference dedicated to space domain awareness, orbital debris tracking, and telescope surveillance.",
+            "description": "The foremost international technical conference dedicated to space domain awareness, orbital debris tracking, and telescope surveillance.",
             "url": "https://amostech.com/",
             "source": "Maui Economic Development Board",
             "is_golden_dome": True
@@ -276,7 +299,7 @@ class CalendarScraper:
         },
         {
             "title": "International Astronautical Congress (IAC 2027)",
-            "date": "2027-10-11",
+            "date": "2027-10-04",
             "category": "Conferences",
             "location": "Poznań, Poland",
             "description": "Global congress uniting all international space agencies (NASA, ESA, JAXA, ISRO, CNSA) and the commercial space industry.",
@@ -287,7 +310,7 @@ class CalendarScraper:
     ]
 
     # =========================================================================
-    # 2. WEBINARS, THINK TANKS & BRIEFINGS (CSIS, Aerospace CSPS, Mitchell, NSSA)
+    # 2. WEBINARS, THINK TANKS & BRIEFINGS (CSIS, Aerospace, Mitchell, Payload)
     # =========================================================================
     WEBINARS_CATALOG = [
         {
@@ -353,7 +376,7 @@ class CalendarScraper:
     ]
 
     # =========================================================================
-    # 3. MILITARY EXERCISES & WARGAMES CATALOG
+    # 3. MILITARY EXERCISES & WARGAMES CATALOG (USSPACECOM, INDOPACOM, SOCOM, NATO)
     # =========================================================================
     MILITARY_EXERCISES_CATALOG = [
         # --- USSPACECOM & STARCOM ---
@@ -439,7 +462,7 @@ class CalendarScraper:
         },
         {
             "title": "Schriever Wargame 2027",
-            "date": "2027-10-18",
+            "date": "2027-10-04",
             "category": "Military Exercises",
             "location": "Maxwell AFB, AL",
             "description": "Strategic-level multi-domain wargame projecting space conflict scenarios 10 years into the future with Five Eyes and NATO allies.",
@@ -577,7 +600,7 @@ class CalendarScraper:
         self.congress_api_key = os.getenv("CONGRESS_GOV_API_KEY")
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SpaceCalendarEngine/3.5",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SpaceCalendarEngine/4.0",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         })
 
@@ -690,7 +713,140 @@ class CalendarScraper:
                     title = (item.findtext("title") or "").strip()
                     desc = (item.findtext("description") or "").strip()
                     link = (item.findtext("link") or "").strip()
-                    pub = (item.findtext("pubDate") or "").strip()
 
                     if "what's happening" in title.lower() or "calendar" in title.lower() or "/events/" in link:
-                        clean_desc
+                        clean_desc = re.sub(r'<[^>]+>', ' ', desc)
+                        events.append({
+                            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                            "display_date": "Current Week",
+                            "title": title[:130],
+                            "category": "Hearings",
+                            "location": "Washington, DC / Virtual",
+                            "description": clean_desc[:350],
+                            "url": link,
+                            "source": "SpacePolicyOnline.com",
+                            "is_golden_dome": False
+                        })
+        except Exception as e:
+            logging.error(f"Error parsing SpacePolicyOnline feed: {e}")
+        return events
+
+    def fetch_congressional_hearings(self) -> List[Dict[str, Any]]:
+        """Queries Congress.gov API for upcoming space/defense committee hearings."""
+        if not self.congress_api_key:
+            return []
+
+        logging.info("Querying Congress.gov for scheduled upcoming committee hearings...")
+        now = datetime.now(timezone.utc)
+        start_date = now.strftime("%Y-%m-%dT00:00:00Z")
+        hearings = []
+
+        try:
+            params = {
+                "api_key": self.congress_api_key,
+                "format": "json",
+                "fromDateTime": start_date,
+                "limit": 50,
+                "sort": "date+asc"
+            }
+            resp = self.session.get(self.CONGRESS_API_URL, params=params, timeout=12)
+            if resp.status_code == 200:
+                data = resp.json().get("committeeMeetings", [])
+                for m in data:
+                    title = m.get("title", "")
+                    date_str = m.get("date", "")
+                    committees = [c.get("name", "") for c in m.get("committees", [])]
+                    corpus = f"{title} {' '.join(committees)}"
+                    rel = evaluate_relevance(corpus)
+
+                    if not rel["is_relevant"]:
+                        continue
+
+                    iso_date = date_str[:10] if date_str else now.strftime("%Y-%m-%d")
+                    chamber = m.get("chamber", "Congress")
+
+                    hearings.append({
+                        "date": iso_date,
+                        "display_date": iso_date,
+                        "title": title[:140],
+                        "category": "Hearings",
+                        "location": f"Capitol Hill ({chamber})",
+                        "description": f"Committees: {', '.join(committees)} | Scheduled Congressional Hearing.",
+                        "url": m.get("url", "https://www.congress.gov"),
+                        "source": "Congress.gov Schedule",
+                        "is_golden_dome": rel["is_golden_dome"]
+                    })
+        except Exception as e:
+            logging.error(f"Error querying Congress.gov hearings: {e}")
+
+        return hearings
+
+    def get_rolling_calendar(self) -> List[Dict[str, Any]]:
+        """
+        Synthesizes live manifests with deep catalog matrices.
+        Strictly limits output to a rolling 12-month window (Today -> Today + 365 Days)
+        sorted forward-chronologically (earliest upcoming date first).
+        """
+        all_events = []
+
+        # 1. Ingest dynamic launches & manifests
+        ll2_launches = self.fetch_launch_library_manifest()
+        spacenow_launches = self.fetch_spaceflight_now_launches()
+        all_events.extend(ll2_launches)
+        all_events.extend(spacenow_launches)
+
+        # 2. Ingest dynamic policy & hearings
+        all_events.extend(self.fetch_spacepolicyonline_calendar())
+        all_events.extend(self.fetch_congressional_hearings())
+
+        # 3. Add military exercises & wargames
+        all_events.extend(self.MILITARY_EXERCISES_CATALOG)
+
+        # 4. Add global symposia, summits & conferences
+        all_events.extend(self.CONFERENCES_CATALOG)
+
+        # 5. Add corporate earnings calendar
+        for earn in self.EARNINGS_CYCLES:
+            all_events.append({
+                "date": earn["date"],
+                "display_date": earn["date"],
+                "title": f"{earn['company']} ({earn['ticker']}) • {earn['period']}",
+                "category": "Earnings",
+                "location": "Investor Webcast",
+                "description": f"Quarterly financial update and investor teleconference for {earn['company']}.",
+                "url": earn["url"],
+                "source": earn["source"],
+                "is_golden_dome": earn.get("is_gd", False)
+            })
+
+        # 6. Add policy briefings and webinars
+        all_events.extend(self.WEBINARS_CATALOG)
+
+        # Enforce strict 12-Month Rolling Window (Today -> Today + 365 Days)
+        now_dt = datetime.now(timezone.utc)
+        min_ts = (now_dt - timedelta(days=1)).timestamp()
+        max_ts = (now_dt + timedelta(days=365)).timestamp()
+
+        def parse_date_score(evt):
+            d_str = evt.get("date", "")
+            try:
+                dt = datetime.strptime(d_str[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                return dt.timestamp()
+            except Exception:
+                return now_dt.timestamp() + (180 * 86400)
+
+        # Filter strictly within 365 days and sort forward chronologically
+        valid_12mo = [e for e in all_events if min_ts <= parse_date_score(e) <= max_ts]
+        valid_12mo.sort(key=parse_date_score)
+
+        # Deduplicate
+        seen_keys = set()
+        deduped = []
+        for e in valid_12mo:
+            key = f"{e['date']}_{e['title'][:35]}".lower()
+            if key not in seen_keys:
+                seen_keys.add(key)
+                deduped.append(e)
+
+        logging.info(f"Total rolling calendar events compiled (<= 12 months): {len(deduped)}")
+        return deduped

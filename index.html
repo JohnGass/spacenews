@@ -181,7 +181,7 @@
     </div>
   </main>
 
-  <script>
+<script>
     let rawData = null;
     let currentFilter = 'all';
 
@@ -198,6 +198,23 @@
     function setSafeText(id, text) {
       const el = document.getElementById(id);
       if (el) el.textContent = text;
+    }
+
+    // Universal newest-first sort
+    function getItemTimestamp(item) {
+      const candidates = [item.pub_date, item.date, item.ingested_at];
+      for (let i = 0; i < candidates.length; i++) {
+        const val = candidates[i];
+        if (val) {
+          const ts = Date.parse(val);
+          if (!isNaN(ts)) return ts;
+        }
+      }
+      return 0;
+    }
+
+    function sortByDate(arr) {
+      return (arr || []).slice().sort((a, b) => getItemTimestamp(b) - getItemTimestamp(a));
     }
 
     function getPayloadUrl() {
@@ -241,11 +258,12 @@
       setSafeText('stat-ic-diu', data.summary ? (data.summary.total_ic_and_diu ?? 0) : 0);
       setSafeText('stat-solicitations', data.summary ? (data.summary.total_solicitations ?? 0) : 0);
 
-      renderContracts(data.defense_contracts || []);
-      renderCards('spec-list', 'spec-count', data.spec_and_otas || [], 'purple', 'SpEC / OTA');
-      renderCards('spacewerx-list', 'spacewerx-count', data.sbir_and_spacewerx || [], 'rose', 'SpaceWERX / SBIR');
-      renderCards('ic-diu-list', 'ic-diu-count', data.ic_and_diu || [], 'orange', 'DIU / IC');
-      renderCards('solicitations-list', 'solicitations-count', data.pre_award_solicitations || [], 'emerald', 'SAM.gov RFP');
+      // Render each section strictly sorted newest-first
+      renderContracts(sortByDate(data.defense_contracts || []));
+      renderCards('spec-list', 'spec-count', sortByDate(data.spec_and_otas || []), 'purple', 'SpEC / OTA');
+      renderCards('spacewerx-list', 'spacewerx-count', sortByDate(data.sbir_and_spacewerx || []), 'rose', 'SpaceWERX / SBIR');
+      renderCards('ic-diu-list', 'ic-diu-count', sortByDate(data.ic_and_diu || []), 'orange', 'DIU / IC');
+      renderCards('solicitations-list', 'solicitations-count', sortByDate(data.pre_award_solicitations || []), 'emerald', 'SAM.gov RFP');
       filterCards();
     }
 

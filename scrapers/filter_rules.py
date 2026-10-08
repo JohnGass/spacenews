@@ -27,17 +27,36 @@ EXCLUSION_TERMS = [
 ]
 
 SPACE_CORE_TERMS = [
+    # Service Branches, Commands & Offices
     r"\bspace\s+force\b", r"\bussf\b", r"\bspace\s+systems\s+command\b", r"\bssc\b",
     r"\bspace\s+operations\s+command\b", r"\bspoc\b", r"\bstarcom\b",
     r"\bspace\s+development\s+agency\b", r"\bsda\b", r"\busspacecom\b",
-    r"\bspacewerx\b",
-    r"\bnational\s+reconnaissance\s+office\b", r"\bnro\b",
-    r"\bsatellite\b", r"\bspacecraft\b", r"\bpayload\b", r"\borbital\b",
-    r"\bvleo\b", r"\bleo\b", r"\bmeo\b", r"\bgeo\b", r"\bcislunar\b",
-    r"\blaunch\s+vehicle\b", r"\bnssl\b", r"\btactically\s+responsive\s+space\b",
-    r"\btacrs\b", r"\bspace\s+domain\s+awareness\b", r"\bssa\b",
+    r"\bspacewerx\b", r"\bnational\s+reconnaissance\s+office\b", r"\bnro\b",
     r"\bcommercial\s+augmentation\s+space\s+reserve\b", r"\bcasr\b",
     r"\bcommercial\s+space\s+office\b", r"\bcomso\b",
+    
+    # Space C2, Battle Management & Software Layers
+    r"\bspace\s+command\s+and\s+control\b", r"\bspace\s+c2\b",
+    r"\bspace\s+battle\s+management\b", r"\bbmc3\b", r"\bc4isr\s+space\b",
+    r"\bspace\s+enterprise\s+ground\b", r"\bforge\b", r"\bkobayashi\s+maru\b",
+    r"\bjadc2\s+space\b", r"\bmission\s+delta\b",
+    
+    # Space Intelligence, Surveillance & Reconnaissance (ISR)
+    r"\bspace\s+intelligence\b", r"\bspace\s+isr\b", r"\btactical\s+space\s+isr\b",
+    r"\bspace-based\s+isr\b", r"\bspace-based\s+radar\b", r"\bgmti\b", r"\bamti\b",
+    r"\brf\s+geolocation\b", r"\brf\s+sensing\b", r"\bspace\s+domain\s+awareness\b", r"\bsda\b", r"\bssa\b",
+    r"\bspace\s+tracking\b", r"\boptical\s+inter-satellite\b", r"\boisl\b",
+    
+    # Counterspace & Space Electronic Warfare
+    r"\bspace\s+electronic\s+warfare\b", r"\bcounterspace\b", r"\bspace\s+control\b",
+    r"\bgps\s+anti-jamming\b", r"\bresilient\s+pnt\b",
+    
+    # Spacecraft & Regimes
+    r"\bsatellite\b", r"\bspacecraft\b", r"\bpayload\b", r"\borbital\b",
+    r"\bvleo\b", r"\bleo\b", r"\bmeo\b", r"\bgeo\b", r"\bcislunar\b",
+    r"\blaunch\s+vehicle\b", r"\bnssl\b", r"\btactically\s+responsive\s+space\b", r"\btacrs\b",
+    
+    # Space Bases & Ranges
     r"\bvandenberg\b", r"\bcape\s+canaveral\b", r"\bpatrick\s+sfb\b",
     r"\bschriever\b", r"\bpeterson\s+sfb\b", r"\bbuckley\s+sfb\b", r"\blos\s+angeles\s+sfb\b"
 ]
@@ -67,7 +86,6 @@ def evaluate_relevance(text: str) -> dict:
     has_space = bool(SPACE_REGEX.search(text))
     has_golden_dome = bool(GOLDEN_DOME_REGEX.search(text))
 
-    # Relevant only if matched to space/missile terms and not flagged by negative hardware/civil patterns
     is_relevant = (has_space or has_golden_dome) and not is_excluded
 
     return {

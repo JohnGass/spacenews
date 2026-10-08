@@ -201,16 +201,16 @@
     }
 
     // Universal newest-first sort
-    function getItemTimestamp(item) {
-      const candidates = [item.pub_date, item.date, item.ingested_at];
-      for (let i = 0; i < candidates.length; i++) {
-        const val = candidates[i];
-        if (val) {
-          const ts = Date.parse(val);
-          if (!isNaN(ts)) return ts;
+function getItemTimestamp(item) {
+      const pub = (item.pub_date || item.date || '').trim();
+      if (pub && !pub.toLowerCase().includes('recent') && !pub.toLowerCase().includes('open')) {
+        const parsed = Date.parse(pub);
+        if (!isNaN(parsed)) {
+          return parsed;
         }
       }
-      return 0;
+      const fallback = Date.parse(item.ingested_at) || Date.now();
+      return fallback - (20 * 24 * 60 * 60 * 1000);
     }
 
     function sortByDate(arr) {

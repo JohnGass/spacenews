@@ -99,7 +99,7 @@
 
   </main>
 
-  <script>
+<script>
     let rawClientItems = [];
     let currentClient = 'all';
 
@@ -127,6 +127,23 @@
       if (el) el.textContent = text;
     }
 
+    // Chronological date parser (newest first)
+    function getItemTimestamp(item) {
+      const candidates = [item.pub_date, item.date, item.ingested_at];
+      for (let i = 0; i < candidates.length; i++) {
+        const val = candidates[i];
+        if (val) {
+          const ts = Date.parse(val);
+          if (!isNaN(ts)) return ts;
+        }
+      }
+      return 0;
+    }
+
+    function sortByDate(arr) {
+      return (arr || []).slice().sort((a, b) => getItemTimestamp(b) - getItemTimestamp(a));
+    }
+
     function getPayloadUrl() {
       let path = window.location.pathname;
       if (path.endsWith('.html')) {
@@ -145,9 +162,9 @@
         btn.textContent = c;
         btn.addEventListener('click', function() {
           document.querySelectorAll('.client-pill').forEach(function(p) {
-            p.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+            p.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
           });
-          btn.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white';
+          btn.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white';
           currentClient = c;
           setSafeText('active-client-label', c);
           renderClientStories();
@@ -172,7 +189,8 @@
         if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
         const data = await res.json();
         
-        rawClientItems = data.client_intel || [];
+        // Sort client signals newest-first
+        rawClientItems = sortByDate(data.client_intel || []);
         setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A') + ' (<=14 Days)');
         
         renderClientStories();
@@ -237,7 +255,6 @@
 
         const channelBadge = getChannelBadge(item.channel);
 
-        // UNEXPANDED: Ultra-dense line row with Client + Channel Badge + Title + Date
         row.innerHTML = 
           '<div class="story-header px-2.5 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
             '<div class="flex items-center gap-1.5 min-w-0 flex-1">' +
@@ -251,7 +268,6 @@
             '</div>' +
           '</div>' +
 
-          // EXPANDED: Full context, outlet source, direct link
           '<div class="story-drawer px-2.5 pb-1.5">' +
             '<div class="p-2 bg-slate-950 rounded border border-slate-800 space-y-1.5">' +
               '<div class="flex items-center justify-between text-[10px] pb-1 border-b border-slate-800/60">' +
@@ -287,9 +303,9 @@
       if (allPill) {
         allPill.addEventListener('click', function() {
           document.querySelectorAll('.client-pill').forEach(function(p) {
-            p.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 whitespace-nowrap';
+            p.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
           });
-          this.className = 'client-pill px-2 py-0.2 rounded text-[10px] font-semibold bg-emerald-600 text-white whitespace-nowrap';
+          this.className = 'client-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600 text-white';
           currentClient = 'all';
           setSafeText('active-client-label', 'All Clients');
           renderClientStories();
@@ -305,5 +321,7 @@
       loadClientData();
     });
   </script>
+</body>
+</html>
 </body>
 </html>

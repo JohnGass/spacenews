@@ -54,7 +54,7 @@
         <!-- Right: Status & Refresh -->
         <div class="flex items-center gap-2">
           <span id="report-date" class="text-[10px] font-mono bg-slate-950 text-slate-400 px-2 py-0.5 rounded border border-slate-800">
-            Rolling Window
+            Rolling 12 Months
           </span>
           <button id="btn-refresh" class="text-[10px] bg-amber-600 hover:bg-amber-500 text-white font-medium px-2.5 py-0.5 rounded transition">
             Refresh
@@ -62,23 +62,39 @@
         </div>
       </div>
 
-      <!-- Wrapped Category Filter Pills Bar -->
-      <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-1 border-t border-slate-800/60" id="category-pills">
-        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-amber-600 text-white">All Events</button>
-        <button data-cat="Launches" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🚀 Launches</button>
-        <button data-cat="Conferences" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🌐 Symposia & Conferences</button>
-        <button data-cat="Webinars" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">💻 Webinars & Briefings</button>
-        <button data-cat="Military Exercises" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🛡 Military Exercises</button>
-        <button data-cat="Hearings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🏛 Hearings & Posture</button>
-        <button data-cat="Earnings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">📈 Earnings Calls</button>
-        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30">★ Golden Dome</button>
+      <!-- Wrapped Category Filter Pills Bar with Live Embedded Counts -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-0.5 border-t border-slate-800/60" id="category-pills">
+        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-amber-600 text-white flex items-center gap-1">
+          <span>All Events</span> <span id="ccount-all" class="font-mono text-[9px] bg-amber-950/80 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Launches" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🚀 Launches</span> <span id="ccount-Launches" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Conferences" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🌐 Symposia & Conferences</span> <span id="ccount-Conferences" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Webinars" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>💻 Webinars & Briefings</span> <span id="ccount-Webinars" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Military Exercises" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🛡 Military Exercises</span> <span id="ccount-Exercises" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Hearings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🏛 Hearings & Posture</span> <span id="ccount-Hearings" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Earnings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>📈 Earnings Calls</span> <span id="ccount-Earnings" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 flex items-center gap-1">
+          <span>★ Golden Dome</span> <span id="ccount-Golden" class="font-mono text-[9px] bg-amber-950/60 px-1 rounded border border-amber-500/30">0</span>
+        </button>
       </div>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-3 sm:px-4 py-2 space-y-1.5">
 
-    <!-- Dense Toolbar -->
+    <!-- Dense Search Toolbar -->
     <div class="flex items-center justify-between gap-3 pb-1 border-b border-slate-800/80">
       <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
         <span class="text-slate-500">LOOKAHEAD:</span>
@@ -95,7 +111,7 @@
     <!-- Status States -->
     <div id="loading" class="text-center py-16 text-slate-400 text-xs font-mono">
       <div class="inline-block w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mb-1.5"></div>
-      <div>Compiling worldwide space and defense calendar...</div>
+      <div>Compiling rolling 12-month space and defense calendar...</div>
     </div>
 
     <div id="error-box" class="hidden bg-rose-950/40 border border-rose-800 p-3 rounded text-rose-300 text-xs space-y-1">
@@ -168,9 +184,25 @@
         if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
         const data = await res.json();
         
-        // Strictly sort upcoming earliest dates first
-        rawEvents = sortUpcomingAscending(data.rolling_calendar || []);
-        setSafeText('report-date', 'SCHEDULED THROUGH 2027');
+        // Strictly filter to rolling 12 months (Today - 1 day -> Today + 365 days)
+        const nowMs = Date.now();
+        const maxMs = nowMs + (365 * 24 * 60 * 60 * 1000);
+        rawEvents = sortUpcomingAscending((data.rolling_calendar || []).filter(e => {
+          const ts = getEventTimestamp(e);
+          return ts >= (nowMs - 86400000) && ts <= maxMs;
+        }));
+
+        setSafeText('report-date', 'ROLLING 12 MONTHS');
+
+        // Update Pill Badges with exact item counts
+        setSafeText('ccount-all', rawEvents.length);
+        setSafeText('ccount-Launches', rawEvents.filter(e => e.category === 'Launches').length);
+        setSafeText('ccount-Conferences', rawEvents.filter(e => e.category === 'Conferences').length);
+        setSafeText('ccount-Webinars', rawEvents.filter(e => e.category === 'Webinars').length);
+        setSafeText('ccount-Exercises', rawEvents.filter(e => e.category === 'Military Exercises').length);
+        setSafeText('ccount-Hearings', rawEvents.filter(e => e.category === 'Hearings').length);
+        setSafeText('ccount-Earnings', rawEvents.filter(e => e.category === 'Earnings').length);
+        setSafeText('ccount-Golden', rawEvents.filter(e => !!e.is_golden_dome).length);
         
         renderEvents();
         loading.classList.add('hidden');

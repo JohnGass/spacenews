@@ -63,19 +63,41 @@
         </div>
       </div>
 
-      <!-- Tight Category Filter Pills -->
-      <div class="flex items-center gap-1 overflow-x-auto pt-1.5 pb-0.5 border-t border-slate-800/60 no-scrollbar" id="category-pills">
-        <button data-cat="all" class="cat-pill px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-600 text-white whitespace-nowrap">All Stories</button>
-        <button data-cat="China" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🇨🇳 China</button>
-        <button data-cat="Russia" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🇷🇺 Russia</button>
-        <button data-cat="Launch" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🚀 Launch</button>
-        <button data-cat="Spacecraft & Ops" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🛰 Spacecraft & Ops</button>
-        <button data-cat="Commercial" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">💼 Commercial</button>
-        <button data-cat="Policy & Hill" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🏛 Policy & Hill</button>
-        <button data-cat="Technology" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">⚡ Technology</button>
-        <button data-cat="National Security" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🛡 National Security</button>
-        <button data-cat="International" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🌍 International</button>
-        <button data-cat="Golden Dome" class="cat-pill px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30">★ Golden Dome</button>
+      <!-- Wrapped Category Filter Pills Bar with Dynamic Counts -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-0.5 border-t border-slate-800/60" id="category-pills">
+        <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-cyan-600 text-white flex items-center gap-1">
+          <span>All Stories</span> <span id="ncount-all" class="font-mono text-[9px] bg-cyan-950/80 px-1 rounded">0</span>
+        </button>
+        <button data-cat="China" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🇨🇳 China</span> <span id="ncount-China" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Russia" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🇷🇺 Russia</span> <span id="ncount-Russia" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Launch" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🚀 Launch</span> <span id="ncount-Launch" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Spacecraft & Ops" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🛰 Spacecraft & Ops</span> <span id="ncount-Spacecraft" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Commercial" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>💼 Commercial</span> <span id="ncount-Commercial" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Policy & Hill" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🏛 Policy & Hill</span> <span id="ncount-Policy" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Technology" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>⚡ Technology</span> <span id="ncount-Technology" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="National Security" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🛡 National Security</span> <span id="ncount-NatSec" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="International" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 flex items-center gap-1">
+          <span>🌍 International</span> <span id="ncount-International" class="font-mono text-[9px] bg-slate-800 px-1 rounded">0</span>
+        </button>
+        <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 flex items-center gap-1">
+          <span>★ Golden Dome</span> <span id="ncount-Golden" class="font-mono text-[9px] bg-amber-950/60 px-1 rounded border border-amber-500/30">0</span>
+        </button>
       </div>
     </div>
   </header>
@@ -179,6 +201,20 @@
         
         // Sort articles newest-first
         rawArticles = sortByDate(data.space_news || []);
+
+        // Update Pill Badges with exact counts
+        setSafeText('ncount-all', rawArticles.length);
+        setSafeText('ncount-China', rawArticles.filter(a => a.category === 'China').length);
+        setSafeText('ncount-Russia', rawArticles.filter(a => a.category === 'Russia').length);
+        setSafeText('ncount-Launch', rawArticles.filter(a => a.category === 'Launch').length);
+        setSafeText('ncount-Spacecraft', rawArticles.filter(a => a.category === 'Spacecraft & Ops').length);
+        setSafeText('ncount-Commercial', rawArticles.filter(a => a.category === 'Commercial').length);
+        setSafeText('ncount-Policy', rawArticles.filter(a => a.category === 'Policy & Hill').length);
+        setSafeText('ncount-Technology', rawArticles.filter(a => a.category === 'Technology').length);
+        setSafeText('ncount-NatSec', rawArticles.filter(a => a.category === 'National Security').length);
+        setSafeText('ncount-International', rawArticles.filter(a => a.category === 'International').length);
+        setSafeText('ncount-Golden', rawArticles.filter(a => !!a.is_golden_dome).length);
+        
         setSafeText('report-date', 'REPORT: ' + (data.report_date || 'N/A'));
         
         renderStories();

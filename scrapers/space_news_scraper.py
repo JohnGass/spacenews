@@ -507,4 +507,35 @@ class SpaceNewsScraper:
                 return item['title'].strip().lower()
             return real_url.split('?')[0].rstrip('/').lower()
 
-        # 1. Sweep all standard RSS
+        # 1. Sweep all standard RSS feeds concurrently
+        with ThreadPoolExecutor(max_workers=25) as executor:
+            future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
+            for future in as_completed(future_to_feed):
+                feed_items = future.result()
+                for item in feed_items:
+                    key = get_dedup_key(item)
+                    if key in seen_keys:
+                        continue
+                    seen_keys.add(key)
+                    all_articles.append(item)
+
+        # 2. Ingest translated Chinese articles from Taibo.cn (up to 30)
+        taibo_items = self._fetch_taibo_chinese_news(limit=30)
+        for t in taibo_items:
+            key = get_dedup_key(t)
+            if key not in seen_keys:
+                seen_keys.add(key)
+                all_articles.append(t)
+
+        # 3. Ingest direct china-in-space.com/archive articles
+        cis_items = self._scrape_china_in_space_archive(limit=10)
+        for c in cis_items:
+            key = get_dedup_key(c)
+            if key not in seen_keys:
+                seen_keys.add(key)
+                all_articles.append(c)
+
+        clustered = self._cluster_related_reporting(all_articles)
+        final_list = clustered if isinstance(clustered, list) else []
+        logging.info(f"Ingested {len(final_list)} verified space articles from the past 14 days.")
+        return final_list

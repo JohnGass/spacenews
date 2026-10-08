@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from typing import List, Dict, Any, Set
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from urllib.parse import quote
+from urllib.parse import urlparse, quote
 import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
@@ -14,58 +14,101 @@ from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
-def resolve_gnews_url(gnews_url: str) -> str:
-    """Extracts the real target destination URL from Google News base64 links."""
-    match = re.search(r'/articles/([A-Za-z0-9_\-]+)', gnews_url)
-    if not match:
+def to_translate_goog(url: str, sl: str = "zh-CN", tl: str = "en") -> str:
+    """
+    Constructs Google's official full-page translate mirror domain.
+    Eliminates iframe blocks and blank pages by using *.translate.goog.
+    Example: https://www.taibo.cn/p/123 -> https://www-taibo-cn.translate.goog/p/123?...
+    """
+    if not url:
+        return ""
+    if "translate.goog" in url:
+        return url
+    
+    clean_url = url.strip()
+    if not clean_url.startswith("http"):
+        clean_url = "https://" + clean_url
+
+    parsed = urlparse(clean_url)
+    hostname = parsed.hostname or ""
+    if not hostname:
+        return clean_url
+
+    # Convert domain dots to hyphens and hyphens to double hyphens per translate.goog standard
+    clean_parts = [part.replace("-", "--") for part in hostname.split(".")]
+    goog_host = "-".join(clean_parts) + ".translate.goog"
+
+    port_str = f":{parsed.port}" if parsed.port and parsed.port not in (80, 443) else ""
+    path_str = parsed.path or "/"
+
+    query_parts = []
+    if parsed.query:
+        query_parts.append(parsed.query)
+    query_parts.append(f"_x_tr_sl={sl}&_x_tr_tl={tl}&_x_tr_hl=en")
+    new_query = "&".join(query_parts)
+
+    return f"https://{goog_host}{port_str}{path_str}?{new_query}"
+
+def unwrap_gnews_url(gnews_url: str, session: requests.Session) -> str:
+    """Extracts the true destination URL from opaque Google News redirect links."""
+    if not gnews_url or "news.google.com" not in gnews_url:
         return gnews_url
-    b64_str = match.group(1)
-    b64_str += '=' * (-len(b64_str) % 4)
+
+    # Strategy A: Base64 protobuf inspection
+    match = re.search(r'/articles/([A-Za-z0-9_\-]+)', gnews_url)
+    if match:
+        b64_str = match.group(1)
+        b64_str += '=' * (-len(b64_str) % 4)
+        try:
+            decoded = base64.urlsafe_b64decode(b64_str)
+            urls = re.findall(rb'https?://[^\x00-\x1f\x7f-\xff\s"\'<>]+', decoded)
+            if urls:
+                real_url = urls[0].decode('utf-8', 'ignore')
+                if "google.com" not in real_url:
+                    return real_url
+        except Exception:
+            pass
+
+    # Strategy B: Fast meta-refresh / header resolution
     try:
-        decoded = base64.urlsafe_b64decode(b64_str)
-        urls = re.findall(rb'https?://[^\x00-\x1f\x7f-\xff\s"\'<>]+', decoded)
-        if urls:
-            return urls[0].decode('utf-8', 'ignore')
+        resp = session.get(gnews_url, timeout=4, allow_redirects=True)
+        if "google.com" not in resp.url:
+            return resp.url
+        meta_m = re.search(r'<meta[^>]*http-equiv=["\']refresh["\'][^>]*content=["\'][^"\']*url=([^"\']+)["\']', resp.text, re.I)
+        if meta_m and "google.com" not in meta_m.group(1):
+            return meta_m.group(1).strip()
+        data_m = re.search(r'data-n-a-u=["\'](https?://[^"\']+)["\']', resp.text, re.I)
+        if data_m and "google.com" not in data_m.group(1):
+            return data_m.group(1).strip()
     except Exception:
         pass
+
     return gnews_url
 
-def make_translated_link(url: str, src_lang: str = "zh-CN", target_lang: str = "en") -> str:
-    """Wraps URL in Google Translate web proxy so it opens in full English when clicked."""
-    real_url = resolve_gnews_url(url)
-    if "translate.google.com" in real_url:
-        return real_url
-    return f"https://translate.google.com/translate?sl={src_lang}&tl={target_lang}&u={quote(real_url)}"
-
 def translate_zh_to_en(text: str) -> str:
-    """Translates Chinese text into English using automated translation relay."""
+    """Translates Chinese text into English using dual-engine fallback."""
     if not text or not re.search(r'[\u4e00-\u9fff]', text):
         return text
-    # 1. Primary Google Translate API endpoint
+
+    # Engine 1: Google Translate GTX endpoint
     try:
         url = "https://translate.googleapis.com/translate_a/single"
-        params = {
-            "client": "gtx",
-            "sl": "zh-CN",
-            "tl": "en",
-            "dt": "t",
-            "q": text[:1500]
-        }
+        params = {"client": "gtx", "sl": "zh-CN", "tl": "en", "dt": "t", "q": text[:2000]}
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         resp = requests.get(url, params=params, headers=headers, timeout=6)
         if resp.status_code == 200:
             data = resp.json()
             if data and isinstance(data, list) and data[0]:
-                translated = "".join(seg[0] for seg in data[0] if seg and seg[0])
-                if translated.strip():
-                    return translated.strip()
+                translated = "".join(seg[0] for seg in data[0] if seg and seg[0]).strip()
+                if translated:
+                    return translated
     except Exception:
         pass
 
-    # 2. Free translation fallback
+    # Engine 2: Translation fallback relay
     try:
         url = "https://api.mymemory.translated.net/get"
-        params = {"q": text[:500], "langpair": "zh|en"}
+        params = {"q": text[:600], "langpair": "zh-CN|en"}
         resp = requests.get(url, params=params, timeout=5)
         if resp.status_code == 200:
             res = resp.json().get("responseData", {}).get("translatedText", "")
@@ -77,7 +120,7 @@ def translate_zh_to_en(text: str) -> str:
     return text
 
 def is_within_14_days(date_str: str) -> bool:
-    """Strictly enforces rolling 14-day cutoff across RFC, ISO, and standard dates."""
+    """Strictly enforces rolling 14-day cutoff across all standard date formats."""
     if not date_str:
         return False
     cutoff = datetime.now(timezone.utc) - timedelta(days=14)
@@ -108,9 +151,9 @@ def is_within_14_days(date_str: str) -> bool:
 
 class SpaceNewsScraper:
     """
-    Broad-Spectrum Multithreaded Space Intelligence Engine.
-    Polls 75+ global feeds concurrently, translates Chinese-language intelligence into English,
-    wraps Chinese-language links in web translation proxies, and enforces a strict rolling 14-day window.
+    Multithreaded Space Intelligence Engine.
+    Polls 75+ global space feeds concurrently, translates Chinese intelligence,
+    wraps destinations in full-page *.translate.goog proxies, and enforces a 14-day cutoff.
     """
     FEEDS = [
         # --- China Space Tracking & Doctrine ---
@@ -287,9 +330,7 @@ class SpaceNewsScraper:
                 a_m = re.search(r"<(?:dc:creator|author)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</(?:dc:creator|author)>", block, re.DOTALL | re.IGNORECASE)
 
                 title = self._clean_text(t_m.group(1)) if t_m else ""
-                link = ""
-                if l_m:
-                    link = (l_m.group(1) or "").strip()
+                link = (l_m.group(1) or "").strip() if l_m else ""
                 pub_date = p_m.group(1).strip() if p_m else ""
                 desc = self._clean_text(d_m.group(1)) if d_m else ""
                 author = self._clean_text(a_m.group(1)) if a_m else ""
@@ -317,17 +358,21 @@ class SpaceNewsScraper:
 
                 title = item['title']
                 desc = item['description']
-                link = item['link']
+                raw_link = item['link']
 
-                # Translate Chinese if detected
+                # Detect and translate Chinese text
                 is_chinese = bool(re.search(r'[\u4e00-\u9fff]', title) or re.search(r'[\u4e00-\u9fff]', desc))
                 if re.search(r'[\u4e00-\u9fff]', title):
                     title = translate_zh_to_en(title)
                 if re.search(r'[\u4e00-\u9fff]', desc):
                     desc = translate_zh_to_en(desc)
 
-                if is_chinese or "taibo.cn" in link:
-                    link = make_translated_link(link)
+                # Resolve opaque links and wrap in translate.goog
+                if is_chinese or "taibo.cn" in raw_link:
+                    resolved_url = unwrap_gnews_url(raw_link, self.session)
+                    final_link = to_translate_goog(resolved_url)
+                else:
+                    final_link = raw_link
 
                 corpus = f"{title} {desc}"
                 rel = evaluate_relevance(corpus)
@@ -343,8 +388,8 @@ class SpaceNewsScraper:
                     "author": item['author'] or feed['name'],
                     "pub_date": item['pub_date'][:16] if item['pub_date'] else "Recent",
                     "description": desc,
-                    "url": link,
-                    "raw_url": item['link'],
+                    "url": final_link,
+                    "raw_url": raw_link,
                     "classification": rel["classification"],
                     "is_golden_dome": rel["is_golden_dome"],
                     "is_space": rel["is_space"],
@@ -358,7 +403,7 @@ class SpaceNewsScraper:
             return []
 
     def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
-        """Scrapes reporting from china-in-space.com/archive, strictly validating publication dates."""
+        """Scrapes long-form reporting from china-in-space.com/archive."""
         archive_url = "https://www.china-in-space.com/archive"
         results = []
         try:
@@ -394,7 +439,7 @@ class SpaceNewsScraper:
                         "title": title,
                         "author": "China in Space",
                         "pub_date": pub_date[:10] if pub_date else "Recent",
-                        "description": f"China in Space reporting: {title}",
+                        "description": f"China in Space analysis: {title}",
                         "url": full_url,
                         "raw_url": full_url,
                         "classification": "Space Relevant",
@@ -409,66 +454,81 @@ class SpaceNewsScraper:
             logging.error(f"Error scraping china-in-space.com/archive: {e}")
         return results
 
-    def _fetch_taibo_chinese_news(self, limit: int = 30) -> List[dict]:
+    def _scrape_taibo_aerospace_direct(self, limit: int = 25) -> List[dict]:
         """
-        Polls Taibo.cn commercial space wire:
-        1. Translates Chinese headlines and summaries to English for dashboard display.
-        2. Wraps destination URLs in Google Translate web proxy so clicking opens in English.
-        3. Enforces strict 14-day rolling window.
+        Scrapes Taibo's commercial aerospace channel directly (https://www.taibo.cn/tag/aerospace):
+        1. Extracts direct /p/... and /newsflashes/... articles (bypassing Google News redirect wrappers).
+        2. Translates Chinese headlines and summaries into English.
+        3. Formats click destinations into *.translate.goog proxies for instant, complete in-browser English translation.
         """
-        logging.info("Querying Taibo.cn commercial aerospace wire and translating to English...")
-        query = "site:taibo.cn (商业航天 OR 卫星 OR 航天 OR 火箭 OR 星座 OR 遥感 OR 空间) when:14d"
-        feed_url = f"https://news.google.com/rss/search?q={requests.utils.quote(query)}&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+        logging.info("Scraping Taibo.cn aerospace channel directly...")
+        targets = [
+            "https://www.taibo.cn/tag/aerospace",
+            "https://www.taibo.cn"
+        ]
+        results = []
+        seen_urls = set()
 
-        translated_items = []
-        try:
-            resp = self.session.get(feed_url, timeout=12)
-            if resp.status_code != 200:
-                return []
-
-            root = ET.fromstring(resp.text.replace("&nbsp;", " "))
-            for item in root.findall(".//item"):
-                pub_date = (item.findtext("pubDate") or "").strip()
-                if not is_within_14_days(pub_date):
+        for target in targets:
+            try:
+                resp = self.session.get(target, timeout=10)
+                if resp.status_code != 200:
                     continue
 
-                raw_title = (item.findtext("title") or "").strip()
-                raw_link = (item.findtext("link") or "").strip()
-                raw_desc = self._clean_text(item.findtext("description") or "")
+                soup = BeautifulSoup(resp.text, "html.parser")
+                # Locate article links
+                article_tags = soup.find_all("a", href=re.compile(r"^/(?:p|newsflashes)/\d+"))
 
-                if " - " in raw_title:
-                    raw_title = raw_title.rsplit(" - ", 1)[0].strip()
+                for a in article_tags:
+                    raw_title = a.get_text().strip()
+                    href = a["href"].strip()
+                    full_url = f"https://www.taibo.cn{href}"
 
-                # Translate text for display
-                en_title = translate_zh_to_en(raw_title)
-                en_desc = translate_zh_to_en(raw_desc)
+                    if len(raw_title) < 12 or full_url in seen_urls:
+                        continue
+                    seen_urls.add(full_url)
 
-                # Wrap destination link so it opens fully translated in English when clicked
-                translated_link = make_translated_link(raw_link)
+                    # Extract parent card context for excerpts and relative date badges
+                    parent_block = a.find_parent(["div", "article", "li"])
+                    desc_text = ""
+                    pub_text = "Recent"
+                    if parent_block:
+                        desc_text = parent_block.get_text(" ", strip=True)
+                        time_match = re.search(r'(\d{1,2}\s*(?:小时前|天前|周前)|\d{4}-\d{2}-\d{2})', desc_text)
+                        if time_match:
+                            pub_text = time_match.group(1)
 
-                translated_items.append({
-                    "source": "Taibo (泰伯网)",
-                    "tier": "Chinese Commercial Space",
-                    "category": "China",
-                    "title": en_title,
-                    "author": "Taibo.cn",
-                    "pub_date": pub_date[:16] if pub_date else "Recent",
-                    "description": en_desc[:300],
-                    "url": translated_link,
-                    "raw_url": raw_link,
-                    "classification": "Space Relevant",
-                    "is_golden_dome": False,
-                    "is_space": True,
-                    "related_coverage": [],
-                    "ingested_at": datetime.now(timezone.utc).isoformat()
-                })
-                if len(translated_items) >= limit:
-                    break
-        except Exception as e:
-            logging.error(f"Error ingesting Taibo.cn: {e}")
+                    # Translate headline and summary excerpt to English
+                    en_title = translate_zh_to_en(raw_title)
+                    en_desc = translate_zh_to_en(desc_text[:350]) if desc_text else en_title
 
-        logging.info(f"Captured and translated {len(translated_items)} Taibo.cn articles.")
-        return translated_items
+                    # Create Google Translate full-page proxy URL
+                    translated_link = to_translate_goog(full_url)
+
+                    results.append({
+                        "source": "Taibo (泰伯网)",
+                        "tier": "Chinese Commercial Space",
+                        "category": "China",
+                        "title": en_title,
+                        "author": "Taibo.cn",
+                        "pub_date": pub_text,
+                        "description": en_desc,
+                        "url": translated_link,
+                        "raw_url": full_url,
+                        "classification": "Space Relevant",
+                        "is_golden_dome": False,
+                        "is_space": True,
+                        "related_coverage": [],
+                        "ingested_at": datetime.now(timezone.utc).isoformat()
+                    })
+
+                    if len(results) >= limit:
+                        break
+            except Exception as e:
+                logging.error(f"Error scraping Taibo directly from {target}: {e}")
+
+        logging.info(f"Captured and translated {len(results)} direct Taibo.cn articles.")
+        return results
 
     def _cluster_related_reporting(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         def get_keywords(t: str) -> Set[str]:
@@ -495,19 +555,18 @@ class SpaceNewsScraper:
         return articles
 
     def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
-        logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds (<= 14 days)...")
+        logging.info(f"Concurrent sweep across {len(self.FEEDS)} space feeds (<= 14 days)...")
         all_articles = []
         seen_keys: Set[str] = set()
 
         def get_dedup_key(item: dict) -> str:
-            # Resolve actual article target URL to avoid collision on google translate proxy URLs
-            real_url = resolve_gnews_url(item.get('raw_url') or item['url'])
-            # If still a translate wrapper, fall back to title as primary deduplication key
-            if "translate.google.com" in real_url:
+            raw = item.get('raw_url') or item['url']
+            clean = raw.split('?')[0].rstrip('/').lower()
+            if "translate" in clean:
                 return item['title'].strip().lower()
-            return real_url.split('?')[0].rstrip('/').lower()
+            return clean
 
-        # 1. Sweep all standard RSS feeds concurrently
+        # 1. Sweep all standard and allied RSS feeds concurrently
         with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
             for future in as_completed(future_to_feed):
@@ -519,15 +578,15 @@ class SpaceNewsScraper:
                     seen_keys.add(key)
                     all_articles.append(item)
 
-        # 2. Ingest translated Chinese articles from Taibo.cn (up to 30)
-        taibo_items = self._fetch_taibo_chinese_news(limit=30)
+        # 2. Scrape Taibo directly (translates Chinese + generates *.translate.goog destination links)
+        taibo_items = self._scrape_taibo_aerospace_direct(limit=25)
         for t in taibo_items:
             key = get_dedup_key(t)
             if key not in seen_keys:
                 seen_keys.add(key)
                 all_articles.append(t)
 
-        # 3. Ingest direct china-in-space.com/archive articles
+        # 3. Ingest China in Space Archive
         cis_items = self._scrape_china_in_space_archive(limit=10)
         for c in cis_items:
             key = get_dedup_key(c)

@@ -24,34 +24,34 @@ def main():
 
     # 1. Post-Award Contracts (Defense.gov)
     defense_scraper = DefenseGovScraper()
-    contracts = defense_scraper.scrape_recent_releases(limit=5)
+    contracts = defense_scraper.scrape_recent_releases(limit=5) or []
     logging.info(f"Captured {len(contracts)} Defense.gov contracts.")
 
     # 2. SAM.gov Pre-Award RFPs & SpEC Consortia OTAs
     pre_award_scraper = PreAwardScraper()
-    pre_award_data = pre_award_scraper.get_all_pre_award_signals()
-    solicitations = pre_award_data.get("standard_solicitations", [])
-    spec_otas = pre_award_data.get("spec_and_otas", [])
+    pre_award_data = pre_award_scraper.get_all_pre_award_signals() or {}
+    solicitations = pre_award_data.get("standard_solicitations", []) or []
+    spec_otas = pre_award_data.get("spec_and_otas", []) or []
     logging.info(f"Captured {len(solicitations)} SAM.gov RFPs and {len(spec_otas)} SpEC/OTA notices.")
 
     # 3. SpaceWERX, TacFI, StratFI, SBIR/STTR (DSIP)
     dsip_scraper = DSIPSbirScraper()
-    sbir_spacewerx = dsip_scraper.get_all_sbir_and_spacewerx()
+    sbir_spacewerx = dsip_scraper.get_all_sbir_and_spacewerx() or []
     logging.info(f"Captured {len(sbir_spacewerx)} SpaceWERX, TacFI/StratFI, and SBIR topics.")
 
     # 4. DIU CSOs, In-Q-Tel, NRO/NGA (IC Portals)
     ic_diu_scraper = ICDIUScraper()
-    ic_and_diu = ic_diu_scraper.get_all_ic_and_diu()
+    ic_and_diu = ic_diu_scraper.get_all_ic_and_diu() or []
     logging.info(f"Captured {len(ic_and_diu)} DIU, In-Q-Tel, and IC opportunities.")
 
     # 5. Global Space Wire (75+ Outlets)
     news_scraper = SpaceNewsScraper()
-    space_news = news_scraper.scrape_all_feeds(limit_per_feed=15)
+    space_news = news_scraper.scrape_all_feeds(limit_per_feed=15) or []
     logging.info(f"Captured {len(space_news)} global space news articles.")
 
     # 6. Tanagra Client Intelligence Wire (29 Clients)
     client_scraper = ClientIntelScraper()
-    client_intel = client_scraper.scrape_all_clients(contracts=contracts, solicitations=solicitations)
+    client_intel = client_scraper.scrape_all_clients(contracts=contracts, solicitations=solicitations) or []
     logging.info(f"Captured {len(client_intel)} Tanagra client reports.")
 
     # 7. Congressional Hearings (Congress.gov)
@@ -60,7 +60,7 @@ def main():
     if congress_key:
         try:
             congress_client = CongressGovSpaceClient(api_key=congress_key)
-            raw_hearings = congress_client.process_and_filter(days_back=7, days_forward=21)
+            raw_hearings = congress_client.process_and_filter(days_back=7, days_forward=21) or []
             hearing_pipeline = CongressionalHearingPipeline(api_key=congress_key)
             for h in raw_hearings:
                 enriched_hearings.append(hearing_pipeline.process_hearing_testimony(h))
@@ -90,9 +90,9 @@ def main():
                 sum(1 for n in space_news if n.get("is_golden_dome"))
             )
         },
-        "client_intel": client_intel,
-        "space_news": space_news,
         "defense_contracts": contracts,
+        "space_news": space_news,
+        "client_intel": client_intel,
         "pre_award_solicitations": solicitations,
         "spec_and_otas": spec_otas,
         "sbir_and_spacewerx": sbir_spacewerx,

@@ -66,11 +66,11 @@
       <div class="flex flex-wrap items-center gap-1.5 pt-1.5 pb-1 border-t border-slate-800/60" id="category-pills">
         <button data-cat="all" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-semibold bg-amber-600 text-white">All Events</button>
         <button data-cat="Launches" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🚀 Launches</button>
-        <button data-cat="Earnings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">📈 Earnings Calls</button>
-        <button data-cat="Hearings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🏛 Hearings & Posture</button>
         <button data-cat="Conferences" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🌐 Symposia & Conferences</button>
+        <button data-cat="Webinars" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">💻 Webinars & Briefings</button>
         <button data-cat="Military Exercises" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🛡 Military Exercises</button>
-        <button data-cat="Webinars" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">💻 Panels & Webinars</button>
+        <button data-cat="Hearings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">🏛 Hearings & Posture</button>
+        <button data-cat="Earnings" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">📈 Earnings Calls</button>
         <button data-cat="Golden Dome" class="cat-pill px-2.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30">★ Golden Dome</button>
       </div>
     </div>
@@ -87,7 +87,7 @@
       </div>
 
       <div class="w-64">
-        <input type="text" id="search-input" placeholder="Search launches, companies, cities..." 
+        <input type="text" id="search-input" placeholder="Search Orlando, Space Flag, CSIS, primes..." 
           class="w-full bg-slate-900 border border-slate-800 text-slate-100 text-[11px] rounded px-2 py-0.5 focus:outline-none focus:border-amber-500 transition">
       </div>
     </div>
@@ -127,6 +127,24 @@
       if (el) el.textContent = text;
     }
 
+    // Strict chronological date parser (Earliest upcoming dates first: Today -> Next Month -> Future)
+    function getEventTimestamp(evt) {
+      const d = (evt.date || evt.display_date || '').trim();
+      if (d) {
+        const match = d.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+        if (match) {
+          return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3])).getTime();
+        }
+        const parsed = Date.parse(d);
+        if (!isNaN(parsed)) return parsed;
+      }
+      return Date.now() + (365 * 24 * 60 * 60 * 1000);
+    }
+
+    function sortUpcomingAscending(arr) {
+      return (arr || []).slice().sort((a, b) => getEventTimestamp(a) - getEventTimestamp(b));
+    }
+
     function getPayloadUrl() {
       let path = window.location.pathname;
       if (path.endsWith('.html')) path = path.slice(0, path.lastIndexOf('/') + 1);
@@ -150,7 +168,8 @@
         if (!res.ok) throw new Error('HTTP ' + res.status + ' (' + res.statusText + ') requesting ' + targetUrl);
         const data = await res.json();
         
-        rawEvents = data.rolling_calendar || [];
+        // Strictly sort upcoming earliest dates first
+        rawEvents = sortUpcomingAscending(data.rolling_calendar || []);
         setSafeText('report-date', 'SCHEDULED THROUGH 2027');
         
         renderEvents();
@@ -170,17 +189,20 @@
       if (cat === 'Launches') {
         return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-emerald-950/50 text-emerald-300 border-emerald-800/60">Launch</span>';
       }
-      if (cat === 'Earnings') {
-        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-blue-950/50 text-blue-300 border-blue-800/60">Earnings</span>';
-      }
-      if (cat === 'Hearings') {
-        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-purple-950/50 text-purple-300 border-purple-800/60">Hearing</span>';
-      }
       if (cat === 'Conferences') {
         return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-cyan-950/50 text-cyan-300 border-cyan-800/60">Symposium</span>';
       }
+      if (cat === 'Webinars') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-sky-950/50 text-sky-300 border-sky-800/60">Webinar / Forum</span>';
+      }
       if (cat === 'Military Exercises') {
         return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-rose-950/50 text-rose-300 border-rose-800/60">Exercise</span>';
+      }
+      if (cat === 'Hearings') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-purple-950/50 text-purple-300 border-purple-800/60">Hearing / Hill</span>';
+      }
+      if (cat === 'Earnings') {
+        return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-blue-950/50 text-blue-300 border-blue-800/60">Earnings</span>';
       }
       return '<span class="text-[9px] font-mono font-medium border px-1.5 py-0 rounded shrink-0 bg-slate-800 text-slate-300 border-slate-700">' + escapeHtml(cat) + '</span>';
     }
@@ -197,7 +219,8 @@
           evt.title.toLowerCase().includes(query) || 
           (evt.location && evt.location.toLowerCase().includes(query)) ||
           (evt.description && evt.description.toLowerCase().includes(query)) ||
-          (evt.category && evt.category.toLowerCase().includes(query));
+          (evt.category && evt.category.toLowerCase().includes(query)) ||
+          (evt.source && evt.source.toLowerCase().includes(query));
 
         let matchesCat = true;
         if (currentCategory === 'Golden Dome') {
@@ -222,7 +245,7 @@
 
         const catBadge = getCategoryBadge(evt.category, evt.is_golden_dome);
 
-        // One line per event: [Date] [Category] [Title] [Location] [▸]
+        // One line per event: [Date] [Category] [Title] [Venue] [▸]
         row.innerHTML = 
           '<div class="story-header px-2.5 py-1 cursor-pointer flex items-center justify-between gap-2.5 select-none hover:bg-slate-800/40">' +
             '<div class="flex items-center gap-2 min-w-0 flex-1">' +

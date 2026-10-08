@@ -320,32 +320,47 @@ class SpaceNewsScraper:
         except Exception:
             return []
 
-    def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
-        """Scrapes long-form reporting directly from china-in-space.com/archive."""
+def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
+        """Scrapes reporting from china-in-space.com/archive, strictly validating publication dates."""
         archive_url = "https://www.china-in-space.com/archive"
         results = []
         try:
             resp = self.session.get(archive_url, timeout=10)
             if resp.status_code == 200:
                 soup = BeautifulSoup(resp.text, "html.parser")
-                links = soup.find_all("a", href=re.compile(r"/p/"))
+                # Find post preview blocks containing links and time tags
+                posts = soup.find_all(["div", "article"], class_=re.compile(r"post-preview|entry|portable-archive", re.I)) or soup.find_all("a", href=re.compile(r"/p/"))
                 seen_urls = set()
-                for a in links:
-                    title = a.get_text().strip()
-                    href = a["href"]
+
+                for elem in posts:
+                    a_tag = elem if elem.name == "a" else elem.find("a", href=re.compile(r"/p/"))
+                    if not a_tag:
+                        continue
+
+                    title = a_tag.get_text().strip()
+                    href = a_tag.get("href", "")
                     full_url = href if href.startswith("http") else f"https://www.china-in-space.com{href}"
+                    
                     if len(title) < 15 or full_url in seen_urls:
                         continue
-                    seen_urls.add(full_url)
 
+                    # Extract actual publication date from Substack <time> tag
+                    time_tag = elem.find("time") if elem.name != "a" else None
+                    pub_date = time_tag.get("datetime", "") if time_tag else ""
+
+                    # STRICT GATE: Only keep if verified within 14 days
+                    if pub_date and not is_within_14_days(pub_date):
+                        continue
+
+                    seen_urls.add(full_url)
                     results.append({
-                        "source": "China in Space (Archive)",
+                        "source": "China in Space",
                         "tier": "PRC Space Analysis",
                         "category": "China",
                         "title": title,
                         "author": "China in Space",
-                        "pub_date": "Recent",
-                        "description": f"Long-form reporting from China in Space archive: {title}",
+                        "pub_date": pub_date[:10] if pub_date else "Recent",
+                        "description": f"China in Space reporting: {title}",
                         "url": full_url,
                         "classification": "Space Relevant",
                         "is_golden_dome": False,

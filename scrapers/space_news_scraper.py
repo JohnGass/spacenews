@@ -172,11 +172,9 @@ class SpaceNewsScraper:
     def _classify_topic(self, title: str, description: str, source_name: str = "") -> str:
         corpus = f"{title} {description}".lower()
 
-        # Direct China attribution
         if "china in space" in source_name.lower() or "taibo" in source_name.lower():
             return "China"
 
-        # 1. Executive / C-Suite / Corporate M&A moves ALWAYS route to Commercial
         exec_pattern = re.compile(
             r"\b(names|appoints|taps|hires|named|executive|c-suite|ceo|coo|cfo|cto|president|"
             r"board\s+of\s+directors|merger|merges|acquires|acquisition|earnings|quarterly|"
@@ -186,33 +184,26 @@ class SpaceNewsScraper:
         if exec_pattern.search(title):
             return "Commercial"
 
-        # 2. Geopolitical Competitors
         if re.search(r"\b(china|chinese|cnsa|beijing|tiangong|chang'e|long\s*march|casc|casic|landspace|deep\s*blue|yuanwang|tianwen|qianfan)\b", corpus, re.I):
             return "China"
         if re.search(r"\b(russia|russian|roscosmos|moscow|angara|soyuz|vostochny|plesetsk|glonass)\b", corpus, re.I):
             return "Russia"
 
-        # 3. Policy, Hill & Regulatory
         if re.search(r"\b(congress|senate|house|hasc|sasc|appropriations|ndaa|lawmaker|capitol\s*hill|legislation|white\s*house|space\s*council|faa|fcc|treaty|budget|regulatory|commerce\s*department)\b", corpus, re.I):
             return "Policy & Hill"
 
-        # 4. Launch & Propulsion
         if re.search(r"\b(launch|launches|launched|launching|rocket|booster|liftoff|starship|falcon\s*9|falcon\s*heavy|new\s*glenn|vulcan|sls|super\s*heavy|electron|static\s*fire|engine\s*test|hot\s*fire|pad\s*[0-9a-zA-Z]+|spaceport|cape\s*canaveral|vandenberg|kourou)\b", corpus, re.I):
             return "Launch"
 
-        # 5. Spacecraft & In-Orbit Operations
         if re.search(r"\b(spacecraft|satellite|satellites|constellation|bus|rf-sensor|sensor|sensors|payload|on-orbit|in-orbit|orbital\s*target|orbital\s*debris|rendezvous|docking|proximity|rpo|space\s*domain\s*awareness|sda|ssa|space\s*tracking|maneuver|deorbit|flight\s*operations)\b", corpus, re.I):
             return "Spacecraft & Ops"
 
-        # 6. Novel Technology & Research
         if re.search(r"\b(optical\s*comm|laser|quantum|nuclear|solar\s*array|ai|edge\s*compute|isam|in-space\s*servicing|refueling|materials|additive)\b", corpus, re.I):
             return "Technology"
 
-        # 7. Commercial Space
         if re.search(r"\b(commercial|venture|startup|investment|spacex|blue\s*origin|rocket\s*lab|astrobotic|axiom|planet\s*labs|spire|capella|hawkeye)\b", corpus, re.I):
             return "Commercial"
 
-        # 8. Allied & International
         if re.search(r"\b(esa|europe|european|jaxa|japan|isro|india|uae|australia|uk\s*space|artemis\s*accords)\b", corpus, re.I):
             return "International"
 
@@ -252,13 +243,15 @@ class SpaceNewsScraper:
         except Exception:
             for block in re.findall(r"<(?:item|entry)>(.*?)</(?:item|entry)>", content, re.DOTALL | re.IGNORECASE):
                 t_m = re.search(r"<title(?:[^>]*)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", block, re.DOTALL | re.IGNORECASE)
-                l_m = re.search(r"<link(?:[^>]*href=[\"']([^\"']+)[\"']|[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</link>)", block, re.DOTALL | re.IGNORECASE)
+                l_m = re.search(r'<link[^>]*href="([^"]+)"', block, re.IGNORECASE) or re.search(r"<link[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</link>", block, re.DOTALL | re.IGNORECASE)
                 p_m = re.search(r"<(?:pubDate|published|updated)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</(?:pubDate|published|updated)>", block, re.DOTALL | re.IGNORECASE)
                 d_m = re.search(r"<(?:description|summary)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</(?:description|summary)>", block, re.DOTALL | re.IGNORECASE)
                 a_m = re.search(r"<(?:dc:creator|author)>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</(?:dc:creator|author)>", block, re.DOTALL | re.IGNORECASE)
 
                 title = self._clean_text(t_m.group(1)) if t_m else ""
-                link = (l_m.group(1) or l_m.group(2) or "").strip() if l_m else ""
+                link = ""
+                if l_m:
+                    link = (l_m.group(1) or "").strip()
                 pub_date = p_m.group(1).strip() if p_m else ""
                 desc = self._clean_text(d_m.group(1)) if d_m else ""
                 author = self._clean_text(a_m.group(1)) if a_m else ""
@@ -287,7 +280,6 @@ class SpaceNewsScraper:
                 title = item['title']
                 desc = item['description']
 
-                # Translate Chinese if detected
                 if re.search(r'[\u4e00-\u9fff]', title):
                     title = translate_zh_to_en(title)
                 if re.search(r'[\u4e00-\u9fff]', desc):
@@ -320,7 +312,7 @@ class SpaceNewsScraper:
         except Exception:
             return []
 
-def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
+    def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
         """Scrapes reporting from china-in-space.com/archive, strictly validating publication dates."""
         archive_url = "https://www.china-in-space.com/archive"
         results = []
@@ -328,7 +320,6 @@ def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
             resp = self.session.get(archive_url, timeout=10)
             if resp.status_code == 200:
                 soup = BeautifulSoup(resp.text, "html.parser")
-                # Find post preview blocks containing links and time tags
                 posts = soup.find_all(["div", "article"], class_=re.compile(r"post-preview|entry|portable-archive", re.I)) or soup.find_all("a", href=re.compile(r"/p/"))
                 seen_urls = set()
 
@@ -344,11 +335,9 @@ def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
                     if len(title) < 15 or full_url in seen_urls:
                         continue
 
-                    # Extract actual publication date from Substack <time> tag
                     time_tag = elem.find("time") if elem.name != "a" else None
                     pub_date = time_tag.get("datetime", "") if time_tag else ""
 
-                    # STRICT GATE: Only keep if verified within 14 days
                     if pub_date and not is_within_14_days(pub_date):
                         continue
 
@@ -399,7 +388,6 @@ def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
                 if " - " in raw_title:
                     raw_title = raw_title.rsplit(" - ", 1)[0].strip()
 
-                # Execute translation
                 en_title = translate_zh_to_en(raw_title)
                 en_desc = translate_zh_to_en(raw_desc)
 
@@ -433,56 +421,4 @@ def _scrape_china_in_space_archive(self, limit: int = 10) -> List[dict]:
             return words - stopwords
 
         for i, art in enumerate(articles):
-            kw_i = get_keywords(art["title"])
-            related = []
-            for j, other in enumerate(articles):
-                if i == j or art["source"] == other["source"]:
-                    continue
-                kw_j = get_keywords(other["title"])
-                shared = kw_i & kw_j
-                if len(shared) >= 2:
-                    related.append({
-                        "source": other["source"],
-                        "title": other["title"],
-                        "url": other["url"]
-                    })
-            art["related_coverage"] = related[:3]
-
-        return articles
-
-    def scrape_all_feeds(self, limit_per_feed: int = 15) -> List[Dict[str, Any]]:
-        logging.info(f"Concurrent sweep across {len(self.FEEDS)} global space feeds (<= 14 days)...")
-        all_articles = []
-        seen_links: Set[str] = set()
-
-        # 1. Sweep all standard and Chinese RSS feeds concurrently
-        with ThreadPoolExecutor(max_workers=25) as executor:
-            future_to_feed = {executor.submit(self._fetch_single_feed, feed, limit_per_feed): feed for feed in self.FEEDS}
-            for future in as_completed(future_to_feed):
-                feed_items = future.result()
-                for item in feed_items:
-                    clean_link = item['url'].split('?')[0].rstrip('/')
-                    if clean_link in seen_links:
-                        continue
-                    seen_links.add(clean_link)
-                    all_articles.append(item)
-
-        # 2. Ingest translated Chinese articles from Taibo.cn
-        taibo_items = self._fetch_taibo_chinese_news(limit=15)
-        for t in taibo_items:
-            clean_link = t['url'].split('?')[0].rstrip('/')
-            if clean_link not in seen_links:
-                seen_links.add(clean_link)
-                all_articles.append(t)
-
-        # 3. Ingest direct china-in-space.com/archive articles
-        cis_items = self._scrape_china_in_space_archive(limit=8)
-        for c in cis_items:
-            clean_link = c['url'].split('?')[0].rstrip('/')
-            if clean_link not in seen_links:
-                seen_links.add(clean_link)
-                all_articles.append(c)
-
-        clustered = self._cluster_related_reporting(all_articles)
-        logging.info(f"Ingested {len(clustered)} verified space articles from the past 14 days.")
-        return clustered
+            kw_i = get_

@@ -14,31 +14,355 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 class CalendarScraper:
     """
-    Exhaustive Worldwide Rolling Space & Defense Calendar Engine.
+    Worldwide Rolling Space & Defense Calendar Engine.
     Aggregates:
-    1. Global Orbital Launch Manifest (SpaceCalendar, Spaceflight Now, Launch Library 2)
-    2. Combatant Command Exercises (INDOPACOM, USSPACECOM, SOCOM, NATO, Allied)
-    3. Global Symposia & Conferences (SpaceAgenda.com, SpaceCalendar.com, AIAA, IEEE, IAF)
-    4. Policy Proceedings & Briefings (SpacePolicyOnline.com, Congress.gov)
+    1. Global Orbital Launch Manifests (Spaceflight Now & Launch Library 2)
+    2. Military Combatant Command Exercises (USSPACECOM, INDOPACOM, SOCOM, NATO, Allied)
+    3. Major Symposia & Conferences (SFA Spacepower Orlando, NSSA, POC, AIAA, Space Foundation)
+    4. Strategic Webinars & Think Tanks (CSIS, NSSA, Aerospace Corp CSPS, Payload, Mitchell Institute)
     5. Pure-Play Commercial Space & Defense Prime Earnings Calls
     """
     SPACENOW_LAUNCH_URL = "https://spaceflightnow.com/launch-schedule/"
-    SPACE_CALENDAR_URL = "https://spacecalendar.com/events/"
     SPACEPOLICY_FEED_URL = "https://spacepolicyonline.com/feed/"
-    LL2_UPCOMING_URL = "https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?limit=25"
+    LL2_UPCOMING_URL = "https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?limit=30"
     CONGRESS_API_URL = "https://api.congress.gov/v3/committee-meeting"
 
     # =========================================================================
-    # 1. COMBATANT COMMAND EXERCISES & TACTICAL WARGAMES CATALOG
+    # 1. CONFERENCES, SYMPOSIA & SUMMITS (Includes SFA Spacepower Orlando, NSSA, POC)
+    # =========================================================================
+    CONFERENCES_CATALOG = [
+        # --- Fall / Winter 2026 ---
+        {
+            "title": "NSSA Executive Dinner Series: The Hon. Erich Hernandez-Baquero",
+            "date": "2026-10-13",
+            "category": "Conferences",
+            "location": "Tower Club Tysons, Vienna, VA",
+            "description": "National Security Space Association executive dinner addressing national reconnaissance and space architecture modernization.",
+            "url": "https://nssaspace.org/upcoming/",
+            "source": "NSSA",
+            "is_golden_dome": False
+        },
+        {
+            "title": "2026 U.S. Space Forum - Project Constellation",
+            "date": "2026-10-15",
+            "category": "Conferences",
+            "location": "Vienna, Austria",
+            "description": "Diplomatic conference hosted by the U.S. Mission to International Organizations addressing international space norms and sustainability.",
+            "url": "https://vienna.usmission.gov/",
+            "source": "U.S. Department of State",
+            "is_golden_dome": False
+        },
+        {
+            "title": "ESPI 20th Annual Space Policy Conference",
+            "date": "2026-10-19",
+            "category": "Conferences",
+            "location": "Vienna, Austria",
+            "description": "European Space Policy Institute conference on European strategic autonomy, defense space capabilities, and sovereign launch access.",
+            "url": "https://espi.or.at/",
+            "source": "ESPI",
+            "is_golden_dome": False
+        },
+        {
+            "title": "NSSA International Security Space Forum 2026 (ISSF)",
+            "date": "2026-10-20",
+            "category": "Conferences",
+            "location": "Boeing Long Bridge, Arlington, VA",
+            "description": "National Security Space Association signature forum addressing coalition space integration, CSpO interoperability, and allied deterrence.",
+            "url": "https://nssaspace.org/upcoming/",
+            "source": "NSSA",
+            "is_golden_dome": True
+        },
+        {
+            "title": "AAS Division for Planetary Sciences (DPS 2026)",
+            "date": "2026-10-25",
+            "category": "Conferences",
+            "location": "Spokane, WA",
+            "description": "Major annual gathering of planetary scientists presenting planetary defense and lunar exploration research.",
+            "url": "https://dps.aas.org/meetings",
+            "source": "AAS",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Payload Space & Defense Investor Summit",
+            "date": "2026-11-03",
+            "category": "Conferences",
+            "location": "Los Angeles, CA",
+            "description": "High-level forum bringing together venture capital, private equity, defense primes, and government buyers in dual-use national security space.",
+            "url": "https://payloadspace.com/events/",
+            "source": "Payload Space",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Global MilSatCom 2026",
+            "date": "2026-11-03",
+            "category": "Conferences",
+            "location": "London, United Kingdom",
+            "description": "The world's premier military satellite communications conference featuring allied space leadership and commercial satcom providers.",
+            "url": "https://www.smgconferences.com/defence/uk/conference/global-milsatcom",
+            "source": "SAE Media Group",
+            "is_golden_dome": False
+        },
+        {
+            "title": "NSSA Executive Dinner Series: Gen. Douglas Schiess (USSF)",
+            "date": "2026-11-17",
+            "category": "Conferences",
+            "location": "Falls Church, VA",
+            "description": "NSSA executive address by Space Operations Command leadership detailing operational readiness and tactical mission deltas.",
+            "url": "https://nssaspace.org/upcoming/",
+            "source": "NSSA",
+            "is_golden_dome": True
+        },
+        {
+            "title": "Space Tech Expo Europe 2026",
+            "date": "2026-11-17",
+            "category": "Conferences",
+            "location": "Bremen, Germany",
+            "description": "Europe's largest B2B space exhibition covering manufacturing, space components, test facilities, and launch systems.",
+            "url": "https://www.spacetechexpo-europe.com/",
+            "source": "Space Tech Expo",
+            "is_golden_dome": False
+        },
+        {
+            "title": "NSSA Space Deterrence Forum 2026",
+            "date": "2026-11-18",
+            "category": "Conferences",
+            "location": "Peraton HQ, Chantilly, VA (TS/SCI)",
+            "description": "Classified signature forum reviewing adversary counterspace threats, resilient architectures, and operational deterrence posture.",
+            "url": "https://nssaspace.org/upcoming/",
+            "source": "NSSA",
+            "is_golden_dome": True
+        },
+        {
+            "title": "SFA Spacepower Conference 2026 (SPC26)",
+            "date": "2026-12-08",
+            "category": "Conferences",
+            "location": "Hilton Orlando, Orlando, FL",
+            "description": "Space Force Association flagship national gathering. Keynote address by Gen. Douglas A. Schiess (Chief of Space Operations). Features 5 stages covering Golden Dome missile defense, space nuclear power, in-space refueling/servicing, and warfighter debriefs.",
+            "url": "https://members.ussfa.org/",
+            "source": "Space Force Association (SFA)",
+            "is_golden_dome": True
+        },
+
+        # --- 2027 Flagship Symposia ---
+        {
+            "title": "AIAA SciTech Forum 2027",
+            "date": "2027-01-11",
+            "category": "Conferences",
+            "location": "Orlando, FL",
+            "description": "The world's largest aerospace R&D conference covering hypersonics, autonomous space systems, propulsion, and structural dynamics.",
+            "url": "https://www.aiaa.org/scitech",
+            "source": "AIAA",
+            "is_golden_dome": False
+        },
+        {
+            "title": "AIAA DEFENSE Forum 2027",
+            "date": "2027-01-20",
+            "category": "Conferences",
+            "location": "Laurel, MD (Secret / NOFORN)",
+            "description": "Classified defense conference examining military space programs, missile defense tracking layers, and contested orbital domain capabilities.",
+            "url": "https://www.aiaa.org/events-learning/event/2027/01/20/default-calendar/2027-aiaa-defense-forum",
+            "source": "AIAA",
+            "is_golden_dome": True
+        },
+        {
+            "title": "NSSA Defense and Intelligence Space Conference (DISC 2027)",
+            "date": "2027-02-08",
+            "category": "Conferences",
+            "location": "Hyatt Regency Reston, Reston, VA (Unclass & TS/SCI)",
+            "description": "Premier annual defense and intelligence space conference uniting leaders from USSF, NRO, NGA, and congressional authorizers.",
+            "url": "https://nssaspace.org/upcoming/",
+            "source": "NSSA",
+            "is_golden_dome": True
+        },
+        {
+            "title": "SmallSat Symposium Silicon Valley 2027",
+            "date": "2027-02-09",
+            "category": "Conferences",
+            "location": "Mountain View, CA",
+            "description": "Commercial satellite business convention covering constellation economics, private investment, and miniaturized payload tech.",
+            "url": "https://smallsatshow.com/",
+            "source": "SatNews",
+            "is_golden_dome": False
+        },
+        {
+            "title": "IEEE Aerospace Conference 2027",
+            "date": "2027-03-06",
+            "category": "Conferences",
+            "location": "Big Sky, MT",
+            "description": "International technical conference on spacecraft engineering, radar, quantum sensing, and deep space comms.",
+            "url": "https://www.aeroconf.org/",
+            "source": "IEEE",
+            "is_golden_dome": False
+        },
+        {
+            "title": "SRA Satellite 2027 Conference & Exhibition",
+            "date": "2027-03-15",
+            "category": "Conferences",
+            "location": "Washington, DC",
+            "description": "Landmark commercial satellite event featuring commercial constellation operators, launch providers, and DoD procurement leadership.",
+            "url": "https://www.satshow.com/",
+            "source": "Satellite Show",
+            "is_golden_dome": False
+        },
+        {
+            "title": "41st Space Symposium",
+            "date": "2027-04-12",
+            "category": "Conferences",
+            "location": "Broadmoor Hotel, Colorado Springs, CO",
+            "description": "The world's premier space gathering. Major keynote addresses by Chief of Space Operations, Space Systems Command, and allied space chiefs.",
+            "url": "https://www.spacesymposium.org/",
+            "source": "Space Foundation",
+            "is_golden_dome": True
+        },
+        {
+            "title": "Paris Air Show (SIAE 2027)",
+            "date": "2027-06-21",
+            "category": "Conferences",
+            "location": "Le Bourget, Paris, France",
+            "description": "The world's largest aerospace trade exhibition featuring launch vehicle rollouts, defense exhibits, and global space agency agreements.",
+            "url": "https://www.siae.fr/en/",
+            "source": "SIAE",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Potomac Officers Club 2027 Air & Space Summit",
+            "date": "2027-07-29",
+            "category": "Conferences",
+            "location": "Hilton McLean, McLean, VA",
+            "description": "Annual Potomac Officers Club gathering of DAF, USSF Portfolio Acquisition Executives (PAEs), and primes addressing DAF Battle Network and Golden Dome.",
+            "url": "https://www.potomacofficersclub.com/",
+            "source": "Potomac Officers Club",
+            "is_golden_dome": True
+        },
+        {
+            "title": "Small Satellite Conference (Utah SmallSat 2027)",
+            "date": "2027-08-07",
+            "category": "Conferences",
+            "location": "Logan, UT",
+            "description": "Global smallsat gathering covering bus engineering, rideshare launch integration, and proliferated LEO architectures.",
+            "url": "https://www.smallsat.org/",
+            "source": "USU / AIAA",
+            "is_golden_dome": False
+        },
+        {
+            "title": "SMDC Space and Missile Defense Symposium 2027",
+            "date": "2027-08-10",
+            "category": "Conferences",
+            "location": "Von Braun Center, Huntsville, AL",
+            "description": "Premier national missile defense convention reviewing Golden Dome layered homeland architecture, PWSA tracking layers, and GPI interceptors.",
+            "url": "https://smdsymposium.org/",
+            "source": "SMDC Symposium",
+            "is_golden_dome": True
+        },
+        {
+            "title": "AMOS Conference 2027",
+            "date": "2027-09-14",
+            "category": "Conferences",
+            "location": "Wailea, Maui, HI",
+            "description": "International technical conference dedicated to space domain awareness, orbital debris tracking, and telescope surveillance.",
+            "url": "https://amostech.com/",
+            "source": "Maui Economic Development Board",
+            "is_golden_dome": True
+        },
+        {
+            "title": "AFA Air, Space & Cyber Conference 2027",
+            "date": "2027-09-20",
+            "category": "Conferences",
+            "location": "National Harbor, MD",
+            "description": "Department of the Air Force and Space Force leadership posture addresses, industry exhibits, and acquisition announcements.",
+            "url": "https://www.afa.org/air-space-cyber-conference/",
+            "source": "AFA",
+            "is_golden_dome": False
+        },
+        {
+            "title": "International Astronautical Congress (IAC 2027)",
+            "date": "2027-10-11",
+            "category": "Conferences",
+            "location": "Poznań, Poland",
+            "description": "Global congress uniting all international space agencies (NASA, ESA, JAXA, ISRO, CNSA) and the commercial space industry.",
+            "url": "https://www.iafastro.org/",
+            "source": "IAF",
+            "is_golden_dome": False
+        }
+    ]
+
+    # =========================================================================
+    # 2. WEBINARS, THINK TANKS & BRIEFINGS (CSIS, Aerospace CSPS, Mitchell, NSSA)
+    # =========================================================================
+    WEBINARS_CATALOG = [
+        {
+            "title": "CSIS Aerospace Security: Proliferated Space & Missile Defense",
+            "date": "2026-10-21",
+            "category": "Webinars",
+            "location": "Virtual / CSIS HQ, Washington, DC",
+            "description": "Senior defense panel analyzing Space Development Agency Tranche tracking layers and fire-control interceptor integration.",
+            "url": "https://aerospace.csis.org/events/",
+            "source": "CSIS Aerospace Security Project",
+            "is_golden_dome": True
+        },
+        {
+            "title": "Aerospace Corp CSPS Space Policy Show: Dynamic Space Operations",
+            "date": "2026-10-28",
+            "category": "Webinars",
+            "location": "Virtual Webcast (Aerospace Center for Space Policy)",
+            "description": "The Aerospace Corporation briefing exploring dynamic space operations, on-orbit maneuvering without regret, and fuel replenishment.",
+            "url": "https://csps.aerospace.org/events",
+            "source": "Aerospace Corp CSPS",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Mitchell Institute Spacepower Series: Space Domain Awareness Realities",
+            "date": "2026-11-04",
+            "category": "Webinars",
+            "location": "Virtual Webcast",
+            "description": "Briefing with Space Operations Command leadership addressing non-cooperative orbital tracking and contested space defense.",
+            "url": "https://mitchellaerospacepower.org/events/",
+            "source": "Mitchell Institute Spacepower",
+            "is_golden_dome": True
+        },
+        {
+            "title": "Payload Digital Roundtable: The Small Satellite Agility Paradigm",
+            "date": "2026-11-12",
+            "category": "Webinars",
+            "location": "Virtual Executive Webcast",
+            "description": "Executive roundtable featuring constellation CTOs discussing propulsion, inter-satellite links, and tactically responsive satellite bus design.",
+            "url": "https://payloadspace.com/webinars/",
+            "source": "Payload Space",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Aerospace Corp CSPS: Interagency Space Traffic & Authorization",
+            "date": "2026-11-18",
+            "category": "Webinars",
+            "location": "Virtual Webcast",
+            "description": "Panel examining Office of Space Commerce TraCSS operational handoff and FAA Part 450 licensing regulatory updates.",
+            "url": "https://csps.aerospace.org/events",
+            "source": "Aerospace Corp CSPS",
+            "is_golden_dome": False
+        },
+        {
+            "title": "Atlantic Council Scowcroft Center: Allied Deterrence in the Space Domain",
+            "date": "2026-12-02",
+            "category": "Webinars",
+            "location": "Virtual / Washington, DC",
+            "description": "Strategic roundtable with Five Eyes space commanders on combined operations and counterspace escalation response options.",
+            "url": "https://www.atlanticcouncil.org/events/",
+            "source": "Atlantic Council",
+            "is_golden_dome": True
+        }
+    ]
+
+    # =========================================================================
+    # 3. MILITARY EXERCISES & WARGAMES CATALOG
     # =========================================================================
     MILITARY_EXERCISES_CATALOG = [
-        # --- U.S. Space Command & STARCOM ---
+        # --- USSPACECOM & STARCOM ---
         {
             "title": "Exercise Space Flag 27-1",
             "date": "2026-11-09",
             "category": "Military Exercises",
-            "location": "Schriever SFB, Colorado",
-            "description": "USSF STARCOM advanced tactical battlespace exercise simulating contested orbital warfighting, electronic warfare jamming, and co-orbital counterspace threats.",
+            "location": "Schriever SFB, CO",
+            "description": "STARCOM advanced tactical battlespace exercise simulating contested orbital warfighting, electronic warfare jamming, and co-orbital counterspace threats.",
             "url": "https://www.starcom.spaceforce.mil/",
             "source": "USSF STARCOM",
             "is_golden_dome": True
@@ -47,8 +371,8 @@ class CalendarScraper:
             "title": "Exercise Black Skies 27-1",
             "date": "2026-12-07",
             "category": "Military Exercises",
-            "location": "Peterson SFB, Colorado",
-            "description": "STARCOM live-fire tactical electronic warfare exercise training Space Force guardians to operate through contested electromagnetic spectrum jamming.",
+            "location": "Peterson SFB, CO",
+            "description": "STARCOM live-fire tactical electronic warfare exercise training Guardians to operate through contested electromagnetic spectrum jamming.",
             "url": "https://www.starcom.spaceforce.mil/",
             "source": "USSF STARCOM",
             "is_golden_dome": True
@@ -57,7 +381,7 @@ class CalendarScraper:
             "title": "Exercise Global Sentinel 27",
             "date": "2027-01-18",
             "category": "Military Exercises",
-            "location": "Vandenberg SFB, California",
+            "location": "Vandenberg SFB, CA",
             "description": "USSPACECOM premier multinational space domain awareness exercise integrating 25+ allied space operations centers in combined sensor data sharing.",
             "url": "https://www.spacecom.mil/",
             "source": "USSPACECOM",
@@ -67,8 +391,8 @@ class CalendarScraper:
             "title": "Exercise Red Skies 27-1",
             "date": "2027-02-15",
             "category": "Military Exercises",
-            "location": "Schriever SFB, Colorado",
-            "description": "Orbital warfare sprint testing satellite defensive maneuvers, proximity operations (RPO), and simulated adversary rendezvous interception.",
+            "location": "Schriever SFB, CO",
+            "description": "Orbital warfare sprint testing satellite defensive maneuvering, rendezvous operations (RPO), and simulated adversary interception.",
             "url": "https://www.starcom.spaceforce.mil/",
             "source": "USSF STARCOM",
             "is_golden_dome": True
@@ -77,7 +401,7 @@ class CalendarScraper:
             "title": "Exercise Space Flag 27-2",
             "date": "2027-04-19",
             "category": "Military Exercises",
-            "location": "Schriever SFB, Colorado",
+            "location": "Schriever SFB, CO",
             "description": "Spring iteration of Space Flag focusing on rapid satellite reconstitution, tactically responsive space (TacRS) launch, and multi-orbit custody.",
             "url": "https://www.starcom.spaceforce.mil/",
             "source": "USSF STARCOM",
@@ -87,8 +411,8 @@ class CalendarScraper:
             "title": "Exercise Polaris Hammer 27",
             "date": "2027-05-10",
             "category": "Military Exercises",
-            "location": "Buckley SFB, Colorado",
-            "description": "Space Operations Command (SpOC) C2 stress test validating missile warning and missile tracking deltas under simulated cyber and anti-satellite attacks.",
+            "location": "Buckley SFB, CO",
+            "description": "Space Operations Command (SpOC) C2 stress test validating missile warning and tracking deltas under cyber and anti-satellite attacks.",
             "url": "https://www.spoc.spaceforce.mil/",
             "source": "Space Operations Command",
             "is_golden_dome": True
@@ -97,20 +421,10 @@ class CalendarScraper:
             "title": "Exercise Thor's Hammer 2027",
             "date": "2027-06-14",
             "category": "Military Exercises",
-            "location": "Offutt AFB, Nebraska",
+            "location": "Offutt AFB, NE",
             "description": "USSTRATCOM and USSPACECOM joint strategic deterrence tabletop wargame projecting nuclear and counterspace escalation thresholds.",
             "url": "https://www.stratcom.mil/",
             "source": "USSTRATCOM / USSPACECOM",
-            "is_golden_dome": True
-        },
-        {
-            "title": "Exercise Space Flag 27-3",
-            "date": "2027-08-16",
-            "category": "Military Exercises",
-            "location": "Schriever SFB, Colorado",
-            "description": "Late-summer tactical combat exercise evaluating multi-domain integration between Space Deltas and Combatant Commands.",
-            "url": "https://www.starcom.spaceforce.mil/",
-            "source": "USSF STARCOM",
             "is_golden_dome": True
         },
         {
@@ -127,24 +441,14 @@ class CalendarScraper:
             "title": "Schriever Wargame 2027",
             "date": "2027-10-18",
             "category": "Military Exercises",
-            "location": "Maxwell AFB, Alabama",
+            "location": "Maxwell AFB, AL",
             "description": "Strategic-level multi-domain wargame projecting space conflict scenarios 10 years into the future with Five Eyes and NATO allies.",
             "url": "https://www.spacecom.mil/",
             "source": "USSF / Air University",
             "is_golden_dome": True
         },
-        {
-            "title": "Space Lightning / Space Thunder 27",
-            "date": "2026-11-16",
-            "category": "Military Exercises",
-            "location": "Peterson SFB / Offutt AFB",
-            "description": "Quarterly command-and-control exercise synchronizing global strike assets with space domain awareness and missile tracking layers.",
-            "url": "https://www.spacecom.mil/",
-            "source": "USSPACECOM",
-            "is_golden_dome": True
-        },
 
-        # --- Indo-Pacific Command (INDOPACOM) ---
+        # --- INDOPACOM ---
         {
             "title": "Exercise Keen Sword 27",
             "date": "2026-10-23",
@@ -180,7 +484,7 @@ class CalendarScraper:
             "date": "2027-07-19",
             "category": "Military Exercises",
             "location": "Queensland, Australia",
-            "description": "US-Australia premier multi-domain exercise featuring deployed Space Operations Command elements and space domain surveillance.",
+            "description": "US-Australia multi-domain exercise featuring deployed Space Operations Command elements and space surveillance radar links.",
             "url": "https://www.pacom.mil/",
             "source": "INDOPACOM / ADF",
             "is_golden_dome": False
@@ -195,28 +499,8 @@ class CalendarScraper:
             "source": "INDOPACOM",
             "is_golden_dome": True
         },
-        {
-            "title": "Exercise Super Garuda Shield 2027",
-            "date": "2027-08-30",
-            "category": "Military Exercises",
-            "location": "East Java, Indonesia",
-            "description": "Multinational joint exercise testing expeditionary communications and commercial satellite data integration across Southeast Asia.",
-            "url": "https://www.pacom.mil/",
-            "source": "INDOPACOM",
-            "is_golden_dome": False
-        },
 
-        # --- Special Operations Command (SOCOM) ---
-        {
-            "title": "Exercise Ridge Runner 2027",
-            "date": "2027-02-08",
-            "category": "Military Exercises",
-            "location": "West Virginia",
-            "description": "Special operations irregular warfare exercise utilizing non-standard satellite communications and low-signature tactical ground stations.",
-            "url": "https://www.socom.mil/",
-            "source": "USSOCOM",
-            "is_golden_dome": False
-        },
+        # --- SOCOM ---
         {
             "title": "Exercise Fused Response / Southern Star 27",
             "date": "2027-03-22",
@@ -231,7 +515,7 @@ class CalendarScraper:
             "title": "Exercise Sonic Spear 27",
             "date": "2027-04-12",
             "category": "Military Exercises",
-            "location": "MacDill AFB / Key West, Florida",
+            "location": "MacDill AFB / Key West, FL",
             "description": "SOCOM signature multi-domain exercise synchronizing special operations effects across every spectrum from seabed to low-Earth orbit.",
             "url": "https://www.socom.mil/",
             "source": "USSOCOM",
@@ -248,17 +532,7 @@ class CalendarScraper:
             "is_golden_dome": False
         },
 
-        # --- Allied & NATO Space Exercises ---
-        {
-            "title": "Exercise Joint Warrior 26-2",
-            "date": "2026-10-19",
-            "category": "Military Exercises",
-            "location": "Scotland / North Sea",
-            "description": "UK-led multinational maritime, air, and space warfare exercise stressing electronic warfare and satellite communications denial.",
-            "url": "https://www.royalnavy.mod.uk/",
-            "source": "UK Ministry of Defence",
-            "is_golden_dome": False
-        },
+        # --- Allied & NATO ---
         {
             "title": "Exercise AsterX 2027",
             "date": "2027-03-08",
@@ -278,274 +552,11 @@ class CalendarScraper:
             "url": "https://www.nato.int/",
             "source": "NATO Allied Command",
             "is_golden_dome": False
-        },
-        {
-            "title": "Exercise Steadfast Defender 2027",
-            "date": "2027-05-17",
-            "category": "Military Exercises",
-            "location": "Poland & Baltic States",
-            "description": "NATO collective defense exercise deploying combined space capabilities to protect allied troop movements against electronic warfare.",
-            "url": "https://www.nato.int/",
-            "source": "NATO Allied Command",
-            "is_golden_dome": False
         }
     ]
 
     # =========================================================================
-    # 2. WORLDWIDE CONFERENCES, SYMPOSIA & SUMMITS (SpaceAgenda.com / SpaceCalendar)
-    # =========================================================================
-    CONFERENCES_CATALOG = [
-        {
-            "title": "World Space Week 2026",
-            "date": "2026-10-04",
-            "category": "Conferences",
-            "location": "Worldwide",
-            "description": "Global celebration of space science and technology contributions with international aerospace symposia and academic panels.",
-            "url": "https://www.worldspaceweek.org/",
-            "source": "UN / World Space Week"
-        },
-        {
-            "title": "SPAICE: AI in and for Space",
-            "date": "2026-10-05",
-            "category": "Conferences",
-            "location": "Noordwijk, The Netherlands",
-            "description": "ESA-hosted symposium on artificial intelligence applications in autonomous satellite operations and on-orbit data processing.",
-            "url": "https://atpi.eventsair.com/spaice2026/",
-            "source": "European Space Agency (ESA)"
-        },
-        {
-            "title": "24th Meeting of the Venus Exploration Analysis Group (VEXAG)",
-            "date": "2026-10-08",
-            "category": "Conferences",
-            "location": "Boulder, Colorado",
-            "description": "NASA scientific assessment meeting reviewing planetary science mission trajectories, instrumentation, and exploration roadmaps.",
-            "url": "https://www.lpi.usra.edu/vexag/",
-            "source": "NASA Lunar & Planetary Institute"
-        },
-        {
-            "title": "2026 U.S. Space Forum - Project Constellation",
-            "date": "2026-10-15",
-            "category": "Conferences",
-            "location": "Vienna, Austria",
-            "description": "Diplomatic and technical conference hosted by the U.S. Mission to International Organizations addressing international space norms.",
-            "url": "https://vienna.usmission.gov/",
-            "source": "U.S. Department of State"
-        },
-        {
-            "title": "ESPI 20th Annual Conference",
-            "date": "2026-10-19",
-            "category": "Conferences",
-            "location": "Vienna, Austria",
-            "description": "European Space Policy Institute flagship conference addressing European strategic autonomy, defense space policy, and launch access.",
-            "url": "https://espi.or.at/",
-            "source": "European Space Policy Institute"
-        },
-        {
-            "title": "AAS Division for Planetary Sciences (DPS 2026)",
-            "date": "2026-10-25",
-            "category": "Conferences",
-            "location": "Spokane, Washington",
-            "description": "Major annual gathering of planetary scientists presenting peer-reviewed research on solar system exploration and small-body defense.",
-            "url": "https://dps.aas.org/meetings",
-            "source": "American Astronomical Society"
-        },
-        {
-            "title": "Global MilSatCom 2026",
-            "date": "2026-11-03",
-            "category": "Conferences",
-            "location": "London, United Kingdom",
-            "description": "The world's premier military satellite communications conference featuring allied defense space leadership and commercial satcom primes.",
-            "url": "https://www.smgconferences.com/defence/uk/conference/global-milsatcom",
-            "source": "SAE Media Group"
-        },
-        {
-            "title": "Space Tech Expo Europe 2026",
-            "date": "2026-11-17",
-            "category": "Conferences",
-            "location": "Bremen, Germany",
-            "description": "Europe's largest B2B space exhibition and conference covering manufacturing, supply chain, test equipment, and launch engineering.",
-            "url": "https://www.spacetechexpo-europe.com/",
-            "source": "Space Tech Expo"
-        },
-        {
-            "title": "Defense Leaders: Space Operations Summit",
-            "date": "2026-12-01",
-            "category": "Conferences",
-            "location": "London, United Kingdom",
-            "description": "International summit focusing on resilient C2, sovereign launch access, and space domain integration for NATO allies.",
-            "url": "https://defenceleaders.com/space-operations/",
-            "source": "Defense Leaders"
-        },
-        {
-            "title": "249th Meeting of the American Astronomical Society (AAS)",
-            "date": "2027-01-10",
-            "category": "Conferences",
-            "location": "Salt Lake City, Utah",
-            "description": "Winter meeting of the AAS featuring astrophysics briefings, Roman Space Telescope updates, and planetary defense science.",
-            "url": "https://aas.org/meetings/aas249",
-            "source": "AAS"
-        },
-        {
-            "title": "AIAA SciTech Forum 2027",
-            "date": "2027-01-11",
-            "category": "Conferences",
-            "location": "Orlando, Florida",
-            "description": "The world's largest aerospace R&D conference covering hypersonics, autonomous space systems, propulsion, and space structures.",
-            "url": "https://www.aiaa.org/scitech",
-            "source": "AIAA"
-        },
-        {
-            "title": "AIAA DEFENSE Forum 2027",
-            "date": "2027-01-20",
-            "category": "Conferences",
-            "location": "Laurel, Maryland",
-            "description": "Secret/NOFORN defense conference examining classified national security space programs, hypersonics, and Golden Dome intercept architectures.",
-            "url": "https://www.aiaa.org/events-learning/event/2027/01/20/default-calendar/2027-aiaa-defense-forum",
-            "source": "AIAA",
-            "is_golden_dome": True
-        },
-        {
-            "title": "SmallSat Symposium 2027",
-            "date": "2027-02-09",
-            "category": "Conferences",
-            "location": "Mountain View, California",
-            "description": "Silicon Valley's premier commercial satellite business and venture convention covering constellation finance and miniaturized payloads.",
-            "url": "https://smallsatshow.com/",
-            "source": "SatNews"
-        },
-        {
-            "title": "Global Space Congress 2027",
-            "date": "2027-02-22",
-            "category": "Conferences",
-            "location": "Abu Dhabi, United Arab Emirates",
-            "description": "Strategic gathering of Middle Eastern, Asian, and Western space agency directors addressing emerging space economy partnerships.",
-            "url": "https://www.globalspacecongress.com/",
-            "source": "UAE Space Agency"
-        },
-        {
-            "title": "IEEE Aerospace Conference 2027",
-            "date": "2027-03-06",
-            "category": "Conferences",
-            "location": "Big Sky, Montana",
-            "description": "Flagship international technical conference on spacecraft bus engineering, radar, quantum sensors, and deep space telemetry.",
-            "url": "https://www.aeroconf.org/",
-            "source": "IEEE"
-        },
-        {
-            "title": "SRA Satellite 2027 Exhibition & Conference",
-            "date": "2027-03-15",
-            "category": "Conferences",
-            "location": "Washington, DC",
-            "description": "The landmark global commercial satellite convention featuring commercial constellation operators, launch providers, and DoD buyers.",
-            "url": "https://www.satshow.com/",
-            "source": "Satellite Show"
-        },
-        {
-            "title": "Paris Space Week 2027",
-            "date": "2027-03-23",
-            "category": "Conferences",
-            "location": "Paris, France",
-            "description": "Global B2B space meeting connecting European aerospace primes, startups, and defense procurement officials.",
-            "url": "https://www.paris-space-week.com/",
-            "source": "Paris Space Week"
-        },
-        {
-            "title": "41st Space Symposium",
-            "date": "2027-04-12",
-            "category": "Conferences",
-            "location": "Colorado Springs, Colorado",
-            "description": "The world's premier space gathering. Keynotes from Chief of Space Operations, Space Systems Command, NASA Administrator, and allied chiefs.",
-            "url": "https://www.spacesymposium.org/",
-            "source": "Space Foundation",
-            "is_golden_dome": True
-        },
-        {
-            "title": "Space Tech Expo USA 2027",
-            "date": "2027-05-18",
-            "category": "Conferences",
-            "location": "Long Beach, California",
-            "description": "America's largest space manufacturing and engineering trade exhibition focusing on commercial supply chains and launch tech.",
-            "url": "https://www.spacetechexpo.com/",
-            "source": "Space Tech Expo"
-        },
-        {
-            "title": "UN COPUOS 70th Session",
-            "date": "2027-06-02",
-            "category": "Conferences",
-            "location": "Vienna International Centre, Austria",
-            "description": "United Nations Committee on the Peaceful Uses of Outer Space reviewing international space law, lunar governance, and space debris.",
-            "url": "https://www.unoosa.org/oosa/en/ourwork/copuos/index.html",
-            "source": "United Nations (UNOOSA)"
-        },
-        {
-            "title": "Paris Air Show (SIAE 2027)",
-            "date": "2027-06-21",
-            "category": "Conferences",
-            "location": "Le Bourget, Paris, France",
-            "description": "The world's largest aerospace trade show featuring major launch vehicle debuts, prime defense announcements, and space pavilion exhibits.",
-            "url": "https://www.siae.fr/en/",
-            "source": "SIAE Paris Air Show"
-        },
-        {
-            "title": "Small Satellite Conference (Utah SmallSat 2027)",
-            "date": "2027-08-07",
-            "category": "Conferences",
-            "location": "Logan, Utah",
-            "description": "The global hub for smallsat engineering, university rideshares, pLEO constellation buses, and miniaturized optical payloads.",
-            "url": "https://www.smallsat.org/",
-            "source": "Utah State University / AIAA"
-        },
-        {
-            "title": "SMDC Space and Missile Defense Symposium 2027",
-            "date": "2027-08-10",
-            "category": "Conferences",
-            "location": "Huntsville, Alabama",
-            "description": "Premier national defense conference on Golden Dome layered missile defense, tracking layers, and interceptor architectures.",
-            "url": "https://smdsymposium.org/",
-            "source": "SMDC Symposium",
-            "is_golden_dome": True
-        },
-        {
-            "title": "AIAA ASCEND 2027",
-            "date": "2027-08-23",
-            "category": "Conferences",
-            "location": "Las Vegas, Nevada",
-            "description": "Outcome-focused collaborative conference covering commercial LEO destinations, in-space manufacturing, and cislunar development.",
-            "url": "https://www.ascend.select/",
-            "source": "AIAA"
-        },
-        {
-            "title": "AMOS Conference 2027",
-            "date": "2027-09-14",
-            "category": "Conferences",
-            "location": "Wailea, Maui, Hawaii",
-            "description": "The foremost international technical conference dedicated to space domain awareness, orbital debris tracking, and telescope surveillance.",
-            "url": "https://amostech.com/",
-            "source": "Maui Economic Development Board",
-            "is_golden_dome": True
-        },
-        {
-            "title": "AFA Air, Space & Cyber Conference 2027",
-            "date": "2027-09-20",
-            "category": "Conferences",
-            "location": "National Harbor, Maryland",
-            "description": "Department of the Air Force and Space Force leadership posture addresses, acquisition exhibits, and force design rollouts.",
-            "url": "https://www.afa.org/air-space-cyber-conference/",
-            "source": "Air & Space Forces Association"
-        },
-        {
-            "title": "International Astronautical Congress (IAC 2027)",
-            "date": "2027-10-11",
-            "category": "Conferences",
-            "location": "Poznań, Poland",
-            "description": "The premier global congress uniting all international space agencies (NASA, ESA, JAXA, ISRO, CNSA) and the commercial space sector.",
-            "url": "https://www.iafastro.org/",
-            "source": "International Astronautical Federation"
-        }
-    ]
-
-    # =========================================================================
-    # 3. PURE-PLAY SPACE & DEFENSE PRIME EARNINGS CYCLES
+    # 4. PURE-PLAY SPACE & DEFENSE PRIME EARNINGS CALLS
     # =========================================================================
     EARNINGS_CYCLES = [
         {"ticker": "LMT", "company": "Lockheed Martin", "period": "Q3 2026 Earnings", "date": "2026-10-20", "source": "Lockheed Martin IR", "url": "https://investors.lockheedmartin.com/", "is_gd": True},
@@ -562,75 +573,11 @@ class CalendarScraper:
         {"ticker": "RKLB", "company": "Rocket Lab USA", "period": "Q4 & FY2026 Financial Results", "date": "2027-02-25", "source": "Rocket Lab IR", "url": "https://investors.rocketlabusa.com/", "is_gd": False}
     ]
 
-    # =========================================================================
-    # 4. POLICY PANELS, WEBINARS & HEARINGS LOOKAHEAD
-    # =========================================================================
-    POLICY_BRIEFINGS_CATALOG = [
-        {
-            "title": "GSOA Webinar: How the Rocket Revolution is Transforming the Satellite Ecosystem",
-            "date": "2026-10-08",
-            "category": "Webinars",
-            "location": "Virtual Webcast (10:00 am ET)",
-            "description": "Global Satellite Operators Association panel on heavy launch cost reductions and commercial constellation deployment.",
-            "url": "https://gsoasatellite.com/",
-            "source": "GSOA"
-        },
-        {
-            "title": "CSIS Aerospace Security: Proliferated Space Architectures & Missile Defense",
-            "date": "2026-10-21",
-            "category": "Webinars",
-            "location": "Virtual / CSIS HQ, Washington, DC",
-            "description": "Senior defense panel analyzing Space Development Agency Tranche tracking layers and fire-control interceptor loop integration.",
-            "url": "https://aerospace.csis.org/events/",
-            "source": "CSIS Aerospace Security Project",
-            "is_golden_dome": True
-        },
-        {
-            "title": "Mitchell Institute Spacepower Series: Space Domain Awareness Realities",
-            "date": "2026-11-04",
-            "category": "Webinars",
-            "location": "Virtual Webcast",
-            "description": "Briefing with Space Operations Command leadership addressing non-cooperative orbital tracking and dynamic operations.",
-            "url": "https://mitchellaerospacepower.org/events/",
-            "source": "Mitchell Institute Spacepower",
-            "is_golden_dome": False
-        },
-        {
-            "title": "FAA COMSTAC (Commercial Space Transportation Advisory Committee) Meeting",
-            "date": "2026-11-12",
-            "category": "Hearings",
-            "location": "DOT Headquarters, Washington, DC / Virtual",
-            "description": "Advisory committee session reviewing Part 450 launch licensing reform, spaceport capacity, and regulatory throughput.",
-            "url": "https://www.faa.gov/space/additional_information/comstac",
-            "source": "FAA Commercial Space Transportation"
-        },
-        {
-            "title": "HASC Strategic Forces Subcommittee: Posture Hearing on FY28 Space Programs",
-            "date": "2027-03-03",
-            "category": "Hearings",
-            "location": "Rayburn House Office Building, Washington, DC",
-            "description": "Congressional posture review examining USSF force design, NSSL Phase 3 launch awards, and SDA tracking layer procurement.",
-            "url": "https://armedservices.house.gov/",
-            "source": "House Armed Services Committee",
-            "is_golden_dome": True
-        },
-        {
-            "title": "SASC Strategic Forces Subcommittee: Hearing on Ballistic & Hypersonic Missile Defense",
-            "date": "2027-03-24",
-            "category": "Hearings",
-            "location": "Dirksen Senate Office Building, Washington, DC",
-            "description": "Senate posture session assessing Glide Phase Interceptor (GPI) milestones and space-based interceptor architecture.",
-            "url": "https://www.armed-services.senate.gov/",
-            "source": "Senate Armed Services Committee",
-            "is_golden_dome": True
-        }
-    ]
-
     def __init__(self):
         self.congress_api_key = os.getenv("CONGRESS_GOV_API_KEY")
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SpaceCalendarEngine/3.0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SpaceCalendarEngine/3.5",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         })
 
@@ -644,7 +591,7 @@ class CalendarScraper:
                 results = resp.json().get("results", [])
                 for item in results:
                     name = item.get("name", "")
-                    net = item.get("net", "") # ISO launch timestamp
+                    net = item.get("net", "")
                     pad = item.get("pad", {}).get("name", "")
                     location = item.get("pad", {}).get("location", {}).get("name", "Spaceport")
                     mission = item.get("mission", {}) or {}
@@ -655,7 +602,6 @@ class CalendarScraper:
                         continue
 
                     iso_date = net[:10]
-                    # Format display date
                     display_date = iso_date
                     try:
                         dt = datetime.strptime(iso_date, "%Y-%m-%d")
@@ -673,7 +619,7 @@ class CalendarScraper:
                         "category": "Launches",
                         "location": loc_str[:55],
                         "description": mission_desc[:380],
-                        "url": f"https://spaceflightnow.com/",
+                        "url": "https://spaceflightnow.com/",
                         "source": f"Global Manifest ({provider})",
                         "is_golden_dome": rel["is_golden_dome"]
                     })
@@ -733,7 +679,7 @@ class CalendarScraper:
         return launches
 
     def fetch_spacepolicyonline_calendar(self) -> List[Dict[str, Any]]:
-        """Parses SpacePolicyOnline.com upcoming events and policy briefs."""
+        """Parses SpacePolicyOnline.com upcoming policy events and briefings."""
         logging.info("Ingesting SpacePolicyOnline.com upcoming events...")
         events = []
         try:
@@ -746,136 +692,5 @@ class CalendarScraper:
                     link = (item.findtext("link") or "").strip()
                     pub = (item.findtext("pubDate") or "").strip()
 
-                    # Check for "What's Happening in Space Policy" or individual event announcements
                     if "what's happening" in title.lower() or "calendar" in title.lower() or "/events/" in link:
-                        clean_desc = re.sub(r'<[^>]+>', ' ', desc)
-                        events.append({
-                            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
-                            "display_date": "Current Week",
-                            "title": title[:130],
-                            "category": "Hearings",
-                            "location": "Washington, DC / Virtual",
-                            "description": clean_desc[:350],
-                            "url": link,
-                            "source": "SpacePolicyOnline.com",
-                            "is_golden_dome": False
-                        })
-        except Exception as e:
-            logging.error(f"Error parsing SpacePolicyOnline feed: {e}")
-        return events
-
-    def fetch_congressional_hearings(self) -> List[Dict[str, Any]]:
-        """Queries Congress.gov API for upcoming space/defense committee hearings."""
-        if not self.congress_api_key:
-            return []
-
-        logging.info("Querying Congress.gov for scheduled upcoming committee hearings...")
-        now = datetime.now(timezone.utc)
-        start_date = now.strftime("%Y-%m-%dT00:00:00Z")
-        hearings = []
-
-        try:
-            params = {
-                "api_key": self.congress_api_key,
-                "format": "json",
-                "fromDateTime": start_date,
-                "limit": 50,
-                "sort": "date+asc"
-            }
-            resp = self.session.get(self.CONGRESS_API_URL, params=params, timeout=12)
-            if resp.status_code == 200:
-                data = resp.json().get("committeeMeetings", [])
-                for m in data:
-                    title = m.get("title", "")
-                    date_str = m.get("date", "")
-                    committees = [c.get("name", "") for c in m.get("committees", [])]
-                    corpus = f"{title} {' '.join(committees)}"
-                    rel = evaluate_relevance(corpus)
-
-                    if not rel["is_relevant"]:
-                        continue
-
-                    iso_date = date_str[:10] if date_str else now.strftime("%Y-%m-%d")
-                    chamber = m.get("chamber", "Congress")
-
-                    hearings.append({
-                        "date": iso_date,
-                        "display_date": iso_date,
-                        "title": title[:140],
-                        "category": "Hearings",
-                        "location": f"Capitol Hill ({chamber})",
-                        "description": f"Committees: {', '.join(committees)} | Scheduled Congressional Hearing.",
-                        "url": m.get("url", "https://www.congress.gov"),
-                        "source": "Congress.gov Schedule",
-                        "is_golden_dome": rel["is_golden_dome"]
-                    })
-        except Exception as e:
-            logging.error(f"Error querying Congress.gov hearings: {e}")
-
-        return hearings
-
-    def get_rolling_calendar(self) -> List[Dict[str, Any]]:
-        """
-        Synthesizes live feeds with deep catalog matrices.
-        Sorts strictly forward-chronologically (Today -> Next Week -> 2027).
-        """
-        all_events = []
-
-        # 1. Ingest dynamic launches & manifests
-        ll2_launches = self.fetch_launch_library_manifest()
-        spacenow_launches = self.fetch_spaceflight_now_launches()
-        all_events.extend(ll2_launches)
-        all_events.extend(spacenow_launches)
-
-        # 2. Ingest dynamic policy & hearings
-        all_events.extend(self.fetch_spacepolicyonline_calendar())
-        all_events.extend(self.fetch_congressional_hearings())
-
-        # 3. Add military exercises & wargames
-        all_events.extend(self.MILITARY_EXERCISES_CATALOG)
-
-        # 4. Add global symposia, summits & conferences
-        all_events.extend(self.CONFERENCES_CATALOG)
-
-        # 5. Add corporate earnings calendar
-        for earn in self.EARNINGS_CYCLES:
-            all_events.append({
-                "date": earn["date"],
-                "display_date": earn["date"],
-                "title": f"{earn['company']} ({earn['ticker']}) • {earn['period']}",
-                "category": "Earnings",
-                "location": "Investor Webcast",
-                "description": f"Quarterly financial update and investor teleconference for {earn['company']}.",
-                "url": earn["url"],
-                "source": earn["source"],
-                "is_golden_dome": earn.get("is_gd", False)
-            })
-
-        # 6. Add policy briefings and webinars
-        all_events.extend(self.POLICY_BRIEFINGS_CATALOG)
-
-        # Forward-chronological date sorting
-        now_ts = datetime.now(timezone.utc).timestamp()
-        def parse_date_score(evt):
-            d_str = evt.get("date", "")
-            try:
-                dt = datetime.strptime(d_str[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
-                # Events in the past sink slightly, upcoming sort sequentially
-                ts = dt.timestamp()
-                return ts if ts >= (now_ts - 86400) else (ts + 100000000)
-            except Exception:
-                return now_ts + (365 * 86400)
-
-        all_events.sort(key=parse_date_score)
-
-        # Deduplicate
-        seen_keys = set()
-        deduped = []
-        for e in all_events:
-            key = f"{e['date']}_{e['title'][:35]}".lower()
-            if key not in seen_keys:
-                seen_keys.add(key)
-                deduped.append(e)
-
-        logging.info(f"Total rolling calendar events compiled: {len(deduped)}")
-        return deduped
+                        clean_desc

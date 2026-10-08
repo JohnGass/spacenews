@@ -3,98 +3,53 @@ import re
 import logging
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Set
-import xml.etree.ElementTree as ET
+from urllib.parse import quote
 import requests
+from bs4 import BeautifulSoup
 from scrapers.filter_rules import evaluate_relevance
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 class DSIPSbirScraper:
     """
-    Precision Space & Golden Dome SBIR/STTR Ingestion Engine.
-    Monitors:
-    1. SBA / DSIP Topic API across DoD Components (USSF, MDA, DARPA, DAF, NASA)
-    2. Deep Technical Space Subsystem Taxonomy (detects topics omitting 'space')
-    3. SpaceWERX TacFI, StratFI, and D2P2 Special Calls
+    Precision Space & Golden Dome SBIR/STTR and SpaceWERX Ingestion Engine.
+    1. Unpacks nested `solicitation_topics` from official SBIR.gov Solicitations API.
+    2. Deep technical space subsystem regex (catches topics omitting 'space').
+    3. Scrapes SpaceWERX rolling TACFI, STRATFI, and challenge opportunities.
+    4. Sweeps SAM.gov for SpaceWERX Commercial Solutions Openings (CSOs).
     """
-    TOPICS_API_URL = "https://api.www.sbir.gov/public/api/topics"
     SOLICITATIONS_API_URL = "https://api.www.sbir.gov/public/api/solicitations"
     SAM_API_URL = "https://api.sam.gov/opportunities/v2/search"
+    SPACEWERX_URL = "https://spacewerx.us/"
 
-    # Targeted Agencies & Military Components
-    TARGET_AGENCIES = ["DOD", "NASA"]
-    TARGET_BRANCHES = [
-        "SPACE FORCE",
-        "MISSILE DEFENSE AGENCY",
-        "DEFENSE ADVANCED RESEARCH PROJECTS AGENCY",
-        "AIR FORCE",
-        "NATIONAL AERONAUTICS AND SPACE ADMINISTRATION"
-    ]
-
-    # Technical Subsystem Keywords (topics that belong to space but omit the word 'space')
     SUBSYSTEM_TECHNICAL_PATTERNS = [
-        # Propulsion & Attitude Control
         r"\b(hall\s+effect\s+thruster|electric\s+propulsion|cold\s+gas\s+thruster|green\s+propellant)\b",
         r"\b(star\s+tracker|reaction\s+wheel|control\s+moment\s+gyro|orbital\s+insertion)\b",
-        r"\b(cryogenic\s+fluid\s+management|apogee\s+kick\s+motor|chemical\s+propulsion)\b",
-        # Payloads, Comm & Sensors
         r"\b(optical\s+inter-satellite|oisl|laser\s+communication\s+terminal|lct)\b",
         r"\b(focal\s+plane\s+array|fpa|opir|persistent\s+infrared|infrared\s+sensor)\b",
         r"\b(space\s+domain\s+awareness|sda|space\s+situational\s+awareness|ssa)\b",
-        r"\b(phased\s+array\s+antenna|ka-band\s+payload|x-band\s+downlink|telemetry,\s+tracking)\b",
-        r"\b(synthetic\s+aperture\s+radar|sar\s+payload|hyperspectral\s+sensor)\b",
-        # Orbital Regimes & Mechanics
+        r"\b(phased\s+array\s+antenna|ka-band\s+payload|x-band\s+downlink|synthetic\s+aperture\s+radar|sar\s+payload)\b",
         r"\b(cislunar|lagrange\s+point|vleo|very\s+low\s+earth|geostationary|geo\s+belt)\b",
         r"\b(rendezvous\s+and\s+proximity|rpo|non-cooperative\s+docking|deorbit\s+mechanism)\b",
         r"\b(in-space\s+servicing|assembly\s+and\s+manufacturing|isam|on-orbit\s+refueling)\b",
-        # Rad-Hard Hardware & Space Edge Compute
-        r"\b(radiation-hardened|rad-hard|single-event\s+upset|seu\s+mitigation)\b",
-        r"\b(spaceborne\s+edge|flight\s+computer|space-qualified|cubesat\s+bus|smallsat\s+bus)\b",
-        # Golden Dome & Missile Defense Specific
-        r"\b(glide\s+phase\s+interceptor|hbtss|missile\s+tracking\s+sensor|discrimination\s+algorithm)\b",
-        r"\b(hypersonic\s+tracking|boost-phase\s+tracking|c2bmc\s+integration)\b"
+        r"\b(radiation-hardened|rad-hard|spaceborne\s+edge|flight\s+computer|space-qualified|cubesat|smallsat)\b",
+        r"\b(glide\s+phase\s+interceptor|hbtss|missile\s+tracking|hypersonic\s+tracking|c2bmc)\b"
     ]
-
     COMPILED_TECH_REGEX = re.compile("|".join(SUBSYSTEM_TECHNICAL_PATTERNS), re.IGNORECASE)
 
     def __init__(self):
         self.sam_api_key = os.getenv("SAM_GOV_API_KEY")
+        self.scraper_api_key = os.getenv("SCRAPER_API_KEY")
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SpaceIntelPipeline/3.0",
             "Accept": "application/json, text/plain, */*"
         })
 
-    def _determine_lifecycle_stage(self, item: dict) -> str:
-        """Identifies whether a topic is Pre-Release, Open, or Special Matching."""
-        status = str(item.get("status") or "").lower()
-        title = str(item.get("topic_title") or item.get("title") or "").lower()
-        sol_title = str(item.get("solicitation_title") or "").lower()
-
-        if "pre-release" in status or "prerelease" in status or "pre-release" in sol_title:
-            return "Pre-Release (Contact TPOC)"
-        if "tacfi" in title or "tacfi" in sol_title:
-            return "TacFI ($1.5M Match)"
-        if "stratfi" in title or "stratfi" in sol_title:
-            return "StratFI ($15M Match)"
-        if "direct to phase ii" in title or "d2p2" in title or "direct to phase ii" in sol_title:
-            return "Direct-to-Phase II (D2P2)"
-        if "open" in status or item.get("open") == 1 or item.get("open") == "1":
-            return "Open for Submission"
-        return "Active Topic"
-
-    def _is_space_or_subsystem_relevant(self, text_corpus: str) -> dict:
-        """
-        Dual-gate evaluation:
-        Gate 1: Standard domain rules (filter_rules.py)
-        Gate 2: Deep subsystem vocabulary regex (catches topics without the word 'space')
-        """
-        # Run standard filter
+    def _is_space_relevant(self, text_corpus: str) -> dict:
         std_eval = evaluate_relevance(text_corpus)
         if std_eval["is_relevant"]:
             return std_eval
-
-        # Run technical subsystem check
         tech_match = self.COMPILED_TECH_REGEX.search(text_corpus)
         if tech_match:
             is_gd = any(term in text_corpus.lower() for term in ["glide phase", "hbtss", "missile tracking", "c2bmc"])
@@ -104,143 +59,201 @@ class DSIPSbirScraper:
                 "is_golden_dome": is_gd,
                 "classification": "Golden Dome Priority" if is_gd else "Space Relevant"
             }
-
         return {"is_relevant": False, "is_space": False, "is_golden_dome": False, "classification": "Non-Relevant"}
 
-    def fetch_targeted_topics(self) -> List[Dict[str, Any]]:
-        """
-        Sweeps SBA / DSIP Topic API targeting space components and technical queries.
-        """
-        logging.info("Sweeping DSIP / SBIR topics across DoD space components and technical subsystems...")
-        seen_ids: Set[str] = set()
+    def _determine_topic_type(self, title: str, desc: str, sol_title: str) -> str:
+        t_low = f"{title} {desc} {sol_title}".lower()
+        if "tacfi" in t_low:
+            return "TacFI ($1.5M Match)"
+        if "stratfi" in t_low:
+            return "StratFI ($15M Match)"
+        if "direct to phase ii" in t_low or "d2p2" in t_low:
+            return "Direct-to-Phase II (D2P2)"
+        if "sttr" in t_low:
+            return "STTR Topic"
+        if "phase ii" in t_low:
+            return "SBIR Phase II"
+        return "SBIR Phase I / Open"
+
+    def fetch_sbir_gov_topics(self) -> List[Dict[str, Any]]:
+        """Queries SBIR.gov Solicitations API and unpacks all nested space topics."""
+        logging.info("Querying SBIR.gov Solicitations API to unpack active space topics...")
+        seen_topic_numbers: Set[str] = set()
         topics = []
 
-        # Strategy A: Query by targeted space keywords across all agencies
-        broad_keywords = [
-            "satellite", "spacecraft", "orbital", "cislunar", "launch vehicle",
-            "space domain awareness", "optical inter-satellite", "hypersonic tracking",
-            "hall thruster", "star tracker", "rad-hard", "payload"
+        query_endpoints = [
+            {"open": "1", "rows": "50"},
+            {"keyword": "space", "open": "1", "rows": "50"},
+            {"agency": "DOD", "open": "1", "rows": "50"},
+            {"agency": "NASA", "open": "1", "rows": "50"}
         ]
 
-        for kw in broad_keywords:
+        raw_solicitations = []
+        seen_sol_ids = set()
+
+        for params in query_endpoints:
             try:
-                params = {"keyword": kw, "open": "1", "rows": "50"}
-                resp = self.session.get(self.TOPICS_API_URL, params=params, timeout=18)
-                if resp.status_code != 200:
-                    continue
+                resp = self.session.get(self.SOLICITATIONS_API_URL, params=params, timeout=20)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    if isinstance(data, list):
+                        for sol in data:
+                            sol_num = sol.get("solicitation_number") or sol.get("solicitation_title")
+                            if sol_num and sol_num not in seen_sol_ids:
+                                seen_sol_ids.add(sol_num)
+                                raw_solicitations.append(sol)
+            except Exception as e:
+                logging.error(f"Error querying SBIR.gov Solicitations API ({params}): {e}")
 
-                for item in resp.json():
-                    topic_id = str(item.get("topic_number") or item.get("topic_id") or "")
-                    title = item.get("topic_title") or item.get("title") or ""
-                    if not topic_id or topic_id in seen_ids:
-                        continue
+        logging.info(f"Retrieved {len(raw_solicitations)} active solicitations from SBIR.gov. Unpacking nested topics...")
 
-                    agency = item.get("agency") or "DoD"
-                    branch = item.get("branch") or ""
-                    desc = item.get("topic_description") or item.get("description") or ""
+        for sol in raw_solicitations:
+            sol_title = sol.get("solicitation_title", "")
+            agency = sol.get("agency", "DOD")
+            close_date = sol.get("close_date", "Open")
+            sol_link = sol.get("sbir_solicitation_link") or "https://www.sbir.gov/solicitations"
 
-                    corpus = f"{title} {agency} {branch} {desc[:600]}"
-                    rel = self._is_space_or_subsystem_relevant(corpus)
-                    if not rel["is_relevant"]:
-                        continue
+            sol_topics = sol.get("solicitation_topics", [])
 
-                    seen_ids.add(topic_id)
-                    stage = self._determine_lifecycle_stage(item)
-                    link = item.get("sbir_topic_link") or item.get("topic_link") or "https://www.dsip.defense.gov"
-
-                    # Extract TPOC info if available
-                    tpoc_info = item.get("tpoc_name") or "See Topic / SIT in DSIP"
-                    if item.get("tpoc_email"):
-                        tpoc_info += f" ({item.get('tpoc_email')})"
-
+            # Fallback: if solicitation has no unpacked topics, check solicitation title itself
+            if not sol_topics:
+                rel = self._is_space_relevant(f"{sol_title} {agency}")
+                if rel["is_relevant"]:
                     topics.append({
-                        "source": f"SBIR / {branch or agency}",
-                        "title": title,
-                        "solicitation_number": topic_id,
-                        "notice_type": stage,
-                        "agency_office": f"{agency} - {branch}" if branch else agency,
-                        "response_deadline": item.get("close_date") or item.get("expiration_date") or "See Schedule",
+                        "source": f"SBIR.gov / {agency}",
+                        "title": sol_title,
+                        "solicitation_number": sol.get("solicitation_number", "SBIR-SOL"),
+                        "notice_type": self._determine_topic_type(sol_title, "", sol_title),
+                        "agency_office": agency,
+                        "response_deadline": close_date,
                         "classification": rel["classification"],
                         "is_golden_dome": rel["is_golden_dome"],
                         "is_space": True,
-                        "url": link,
-                        "point_of_contact": tpoc_info,
+                        "url": sol_link,
+                        "point_of_contact": "See SBIR.gov Solicitation",
                         "ingested_at": datetime.now(timezone.utc).isoformat()
                     })
-            except Exception as e:
-                logging.error(f"Error querying SBIR Topics API for '{kw}': {e}")
+                continue
 
-        # Strategy B: Component Sweeps (Pull all topics for USSF, MDA, and NASA)
-        for agency in self.TARGET_AGENCIES:
-            try:
-                params = {"agency": agency, "open": "1", "rows": "100"}
-                resp = self.session.get(self.TOPICS_API_URL, params=params, timeout=18)
-                if resp.status_code != 200:
+            # Unpack each nested topic
+            for t in sol_topics:
+                t_title = t.get("topic_title") or t.get("title") or ""
+                t_num = str(t.get("topic_number") or t.get("topic_code") or "")
+                branch = str(t.get("branch") or agency).strip()
+                t_desc = str(t.get("topic_description") or "")
+                t_link = t.get("sbir_topic_link") or sol_link
+
+                if not t_title:
                     continue
 
-                for item in resp.json():
-                    topic_id = str(item.get("topic_number") or item.get("topic_id") or "")
-                    if not topic_id or topic_id in seen_ids:
-                        continue
+                corpus = f"{t_title} {sol_title} {branch} {t_desc[:500]}"
+                rel = self._is_space_relevant(corpus)
 
-                    title = item.get("topic_title") or item.get("title") or ""
-                    branch = str(item.get("branch") or "").upper()
-                    desc = item.get("topic_description") or item.get("description") or ""
+                if "SPACE" in branch.upper() or "SPACEWERX" in corpus.upper():
+                    rel["is_relevant"] = True
+                    rel["is_space"] = True
 
-                    # Automatic pass for Space Force or NASA topics
-                    is_auto_space = "SPACE" in branch or agency == "NASA"
-                    corpus = f"{title} {agency} {branch} {desc[:600]}"
-                    rel = self._is_space_or_subsystem_relevant(corpus)
+                if not rel["is_relevant"]:
+                    continue
 
-                    if not is_auto_space and not rel["is_relevant"]:
-                        continue
+                dedup_key = t_num if t_num else t_title[:40].lower()
+                if dedup_key in seen_topic_numbers:
+                    continue
+                seen_topic_numbers.add(dedup_key)
 
-                    seen_ids.add(topic_id)
-                    stage = self._determine_lifecycle_stage(item)
-                    link = item.get("sbir_topic_link") or item.get("topic_link") or "https://www.dsip.defense.gov"
+                topics.append({
+                    "source": f"SBIR / {branch}",
+                    "title": t_title,
+                    "solicitation_number": t_num or "Topic",
+                    "notice_type": self._determine_topic_type(t_title, t_desc, sol_title),
+                    "agency_office": f"{agency} - {branch}" if branch != agency else agency,
+                    "response_deadline": close_date,
+                    "classification": rel["classification"],
+                    "is_golden_dome": rel["is_golden_dome"],
+                    "is_space": True,
+                    "url": t_link,
+                    "point_of_contact": "See Topic details in DSIP",
+                    "ingested_at": datetime.now(timezone.utc).isoformat()
+                })
 
-                    tpoc_info = item.get("tpoc_name") or "See DSIP Topic Details"
-                    if item.get("tpoc_email"):
-                        tpoc_info += f" ({item.get('tpoc_email')})"
-
-                    topics.append({
-                        "source": f"SBIR / {branch or agency}",
-                        "title": title,
-                        "solicitation_number": topic_id,
-                        "notice_type": stage,
-                        "agency_office": f"{agency} - {branch}" if branch else agency,
-                        "response_deadline": item.get("close_date") or "See Schedule",
-                        "classification": rel["classification"],
-                        "is_golden_dome": rel["is_golden_dome"],
-                        "is_space": True,
-                        "url": link,
-                        "point_of_contact": tpoc_info,
-                        "ingested_at": datetime.now(timezone.utc).isoformat()
-                    })
-            except Exception as e:
-                logging.error(f"Error executing component sweep for {agency}: {e}")
-
-        logging.info(f"Captured {len(topics)} high-signal space/missile defense SBIR topics.")
+        logging.info(f"Captured {len(topics)} space-relevant SBIR/STTR topics from SBIR.gov.")
         return topics
 
-    def fetch_spacewerx_and_special_calls(self) -> List[Dict[str, Any]]:
-        """
-        Pulls SpaceWERX Open Topics, TacFI, StratFI, and D2P2 notices from SAM.gov.
-        """
+    def fetch_spacewerx_site_opportunities(self) -> List[Dict[str, Any]]:
+        """Scrapes active SpaceWERX announcements (TACFI NOO, Challenges, Releases) from spacewerx.us."""
+        logging.info("Scraping active SpaceWERX announcements (TACFI, Challenges, Releases)...")
+        fetch_url = self.SPACEWERX_URL
+        if self.scraper_api_key:
+            fetch_url = f"https://api.scraperapi.com?api_key={self.scraper_api_key}&url={quote(self.SPACEWERX_URL)}"
+
+        notices = []
+        try:
+            resp = self.session.get(fetch_url, timeout=20)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                blocks = soup.find_all(["div", "article", "section", "li"])
+                seen_titles = set()
+
+                for block in blocks:
+                    text = block.get_text(" ", strip=True)
+                    if not any(k in text.lower() for k in ["tacfi", "stratfi", "release", "now open", "challenge", "noo"]):
+                        continue
+                    if len(text) < 30 or len(text) > 400:
+                        continue
+
+                    a_tag = block.find("a", href=True)
+                    href = a_tag["href"] if a_tag else "https://spacewerx.us"
+                    full_url = href if href.startswith("http") else f"https://spacewerx.us{href}"
+
+                    lines = [l.strip() for l in text.split("  ") if len(l.strip()) > 10]
+                    title = lines[0] if lines else text[:120]
+
+                    t_key = title[:35].lower()
+                    if t_key in seen_titles or "menu" in t_key or "privacy" in t_key:
+                        continue
+                    seen_titles.add(t_key)
+
+                    n_type = "SpaceWERX Notice"
+                    if "tacfi" in text.lower():
+                        n_type = "TacFI ($1.5M Match - Rolling)"
+                    elif "stratfi" in text.lower():
+                        n_type = "StratFI ($15M Match)"
+                    elif "release" in text.lower():
+                        n_type = "SpaceWERX SBIR Release"
+                    elif "challenge" in text.lower():
+                        n_type = "SpaceWERX Challenge"
+
+                    notices.append({
+                        "source": "SpaceWERX",
+                        "title": title[:140],
+                        "solicitation_number": "SpaceWERX-Open",
+                        "notice_type": n_type,
+                        "agency_office": "USSF / SpaceWERX",
+                        "response_deadline": "Rolling / Check SpaceWERX",
+                        "classification": "Space Relevant",
+                        "is_golden_dome": False,
+                        "is_space": True,
+                        "url": full_url,
+                        "point_of_contact": "SpaceWERX Ventures Directorate",
+                        "ingested_at": datetime.now(timezone.utc).isoformat()
+                    })
+        except Exception as e:
+            logging.error(f"Error scraping SpaceWERX homepage: {e}")
+
+        logging.info(f"Captured {len(notices)} active SpaceWERX site opportunities.")
+        return notices
+
+    def fetch_spacewerx_sam_notices(self) -> List[Dict[str, Any]]:
+        """Queries SAM.gov for SpaceWERX, TACFI, and STRATFI postings."""
         if not self.sam_api_key:
             return []
 
-        logging.info("Querying SAM.gov for SpaceWERX Open Topic, TacFI, and StratFI calls...")
+        logging.info("Querying SAM.gov for SpaceWERX, TACFI, and STRATFI postings...")
         now = datetime.now(timezone.utc)
         posted_from = (now - timedelta(days=60)).strftime("%m/%d/%Y")
         posted_to = now.strftime("%m/%d/%Y")
 
-        queries = [
-            '"SpaceWERX"',
-            '"Space Systems Command" AND "SBIR"',
-            '"Space Systems Command" AND "StratFI"',
-            '"Space Force" AND "TacFI"'
-        ]
+        queries = ["SpaceWERX", "TACFI", "STRATFI"]
         seen_ids = set()
         special_calls = []
 
@@ -267,40 +280,45 @@ class DSIPSbirScraper:
                     office = item.get("fullParentPathName", "SpaceWERX / USSF")
                     desc = str(item.get("description") or "")
 
-                    rel = self._is_space_or_subsystem_relevant(f"{title} {office} {desc[:400]}")
+                    corpus = f"{title} {office} {desc[:400]}"
+                    rel = self._is_space_relevant(corpus)
+                    if "SPACE" in office.upper() or "SPACEWERX" in corpus.upper():
+                        rel["is_relevant"] = True
+                        rel["is_space"] = True
+
                     if not rel["is_relevant"]:
                         continue
 
                     seen_ids.add(nid)
-                    title_lower = title.lower()
-                    if "stratfi" in title_lower:
-                        notice_type = "StratFI ($15M Match)"
-                    elif "tacfi" in title_lower:
-                        notice_type = "TacFI ($1.5M Match)"
-                    elif "d2p2" in title_lower or "direct to phase" in title_lower:
-                        notice_type = "Direct-to-Phase II (D2P2)"
+                    t_low = title.lower()
+                    if "stratfi" in t_low:
+                        n_type = "StratFI ($15M Match)"
+                    elif "tacfi" in t_low:
+                        n_type = "TacFI ($1.5M Match)"
+                    elif "d2p2" in t_low or "direct to phase" in t_low:
+                        n_type = "Direct-to-Phase II (D2P2)"
                     else:
-                        notice_type = "SpaceWERX Challenge"
+                        n_type = "SpaceWERX Challenge / CSO"
 
                     special_calls.append({
-                        "source": "SpaceWERX / DAF",
+                        "source": "SpaceWERX / SAM.gov",
                         "title": title,
-                        "solicitation_number": item.get("solicitationNumber", "SpaceWERX"),
-                        "notice_type": notice_type,
+                        "solicitation_number": item.get("solicitationNumber", "SpaceWERX-CSO"),
+                        "notice_type": n_type,
                         "agency_office": office,
-                        "response_deadline": item.get("responseDeadLine", "See Listing"),
+                        "response_deadline": item.get("responseDeadLine", "See Notice"),
                         "classification": rel["classification"],
                         "is_golden_dome": rel["is_golden_dome"],
                         "is_space": True,
                         "url": f"https://sam.gov/opp/{nid}/view",
-                        "point_of_contact": "SpaceWERX Ventures Directorate",
+                        "point_of_contact": "SpaceWERX Contracting Officer",
                         "ingested_at": now.isoformat()
                     })
             except Exception as e:
-                logging.error(f"Error querying SpaceWERX calls: {e}")
+                logging.error(f"Error querying SAM.gov for '{q}': {e}")
 
-        logging.info(f"Captured {len(special_calls)} SpaceWERX / TacFI / StratFI notices.")
+        logging.info(f"Captured {len(special_calls)} SpaceWERX notices from SAM.gov.")
         return special_calls
 
     def get_all_sbir_and_spacewerx(self) -> List[Dict[str, Any]]:
-        return self.fetch_targeted_topics() + self.fetch_spacewerx_and_special_calls()
+        return self.fetch_sbir_gov_topics() + self.fetch_spacewerx_site_opportunities() + self.fetch_spacewerx_sam_notices()

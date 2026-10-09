@@ -2,10 +2,10 @@ name: Daily Space & Golden Dome Intelligence Scraper
 
 on:
   schedule:
-    # 10:30 UTC = 06:30 AM EST (Morning hearing agendas)
-    - cron: '30 10 * * 1-5'
-    # 21:45 UTC = 05:45 PM EST (Evening DoD contract awards)
-    - cron: '45 21 * * 1-5'
+    # 10:34 UTC = 06:34 AM EDT (Morning agendas; off-peak minute avoids queue delays)
+    - cron: '34 10 * * 1-5'
+    # 21:48 UTC = 05:48 PM EDT (Evening DoD contract awards)
+    - cron: '48 21 * * 1-5'
   workflow_dispatch:
 
 permissions:

@@ -2,7 +2,7 @@ name: Daily Space & Golden Dome Intelligence Scraper
 
 on:
   schedule:
-    # 10:34 UTC = 06:34 AM EDT (Morning agendas; off-peak minute avoids queue delays)
+    # 10:34 UTC = 06:34 AM EDT (Morning agendas)
     - cron: '34 10 * * 1-5'
     # 21:48 UTC = 05:48 PM EDT (Evening DoD contract awards)
     - cron: '48 21 * * 1-5'

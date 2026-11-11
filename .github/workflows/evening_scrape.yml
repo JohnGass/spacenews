@@ -3,7 +3,7 @@ name: Evening Space Intelligence Scraper
 on:
   schedule:
     # 21:48 UTC = 05:48 PM EDT (Monday - Friday)
-    - cron: '48 21 * * 1-5'
+    - cron: '48 22 * * 1-5'
   workflow_dispatch:
 
 permissions:

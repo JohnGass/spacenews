@@ -3,7 +3,7 @@ name: Morning Space Intelligence Scraper
 on:
   schedule:
     # 10:34 UTC = 06:34 AM EDT (Monday - Friday)
-    - cron: '34 10 * * 1-5'
+    - cron: '34 11 * * 1-5'
   workflow_dispatch:
 
 permissions:

@@ -9,13 +9,22 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 class NSTXLScraper:
     """
-    Scrapes all opportunities under the 'Current' tab on https://nstxl.org/nstxl-opportunities/
+    Scrapes only opportunities under the 'Current' tab on https://nstxl.org/nstxl-opportunities/
     without topic filtering.
     """
     OPPORTUNITIES_URL = "https://nstxl.org/nstxl-opportunities/"
 
+    NON_CURRENT_STATUSES = (
+        "awarded",
+        "under evaluation",
+        "rfi/rni - archived",
+        "archived",
+        "canceled",
+        "cancelled",
+        "closed"
+    )
+
     def _detect_consortium(self, text: str, img_hints: str) -> str:
-        """Identifies the consortium (SpEC, JDEC, S2MARTS, Microelectronics Commons, etc.) from card text or logo alt/src."""
         combined = f"{text} {img_hints}".lower()
         if "space enterprise consortium" in combined or re.search(r'\bspec\b', combined):
             return "NSTXL (SpEC)"
@@ -45,33 +54,29 @@ class NSTXLScraper:
                 page.goto(self.OPPORTUNITIES_URL, wait_until="networkidle", timeout=45000)
                 page.wait_for_timeout(2000)
 
-                logging.info(f"Loaded page: {page.url} | Title: {page.title()}")
                 if "login" in page.url.lower() or "wp-login" in page.url.lower():
                     logging.warning("NSTXL redirected unauthenticated runner to login page.")
                     browser.close()
                     return []
 
-                # Click the exact "Current" filter tab
-                clicked_current = False
-                for locator in [
-                    page.get_by_role("button", name="Current", exact=True),
-                    page.get_by_role("link", name="Current", exact=True),
-                    page.get_by_text("Current", exact=True)
-                ]:
-                    if locator.count() > 0:
-                        try:
-                            locator.first.click()
-                            page.wait_for_timeout(3000)
-                            clicked_current = True
-                            logging.info("Clicked 'Current' filter tab on NSTXL.")
-                            break
-                        except Exception:
-                            continue
+                # Click the 'Current' filter item (handles <label>, <span>, <li>, <button>, and <a>)
+                current_filter = page.locator("label, span, li, button, a").filter(
+                    has_text=re.compile(r"^\s*Current\s*$", re.I)
+                ).first
 
-                if not clicked_current:
-                    logging.warning("Could not click 'Current' tab explicitly; parsing visible grid.")
+                if current_filter.count() > 0:
+                    current_filter.scroll_into_view_if_needed()
+                    current_filter.click(force=True)
+                    try:
+                        page.wait_for_load_state("networkidle", timeout=10000)
+                    except Exception:
+                        pass
+                    page.wait_for_timeout(3000)
+                    logging.info("Clicked 'Current' filter on NSTXL.")
+                else:
+                    logging.warning("Could not locate 'Current' filter element on NSTXL.")
 
-                # Click "Load More" if pagination is present
+                # Expand any "Load More" pagination while on the Current filter
                 for _ in range(5):
                     load_more = page.locator("button:has-text('Load More'), a:has-text('Load More')").first
                     if load_more.count() > 0 and load_more.is_visible():
@@ -83,27 +88,28 @@ class NSTXLScraper:
                     else:
                         break
 
-                # Evaluate DOM directly so we handle both card-wrapping <a> tags and nested <a> tags
+                # Extract ONLY visible cards (ignore cards hidden via display:none)
                 raw_cards = page.evaluate("""() => {
                     const results = [];
                     const seen = new Set();
-                    // Target headings inside the main content area that represent opportunity titles
                     const headings = document.querySelectorAll('main h2, main h3, main h4, article h2, article h3, .elementor-widget-container h2, .elementor-widget-container h3, .jet-listing-grid__item h2, .jet-listing-grid__item h3');
-                    
+
                     headings.forEach(h => {
                         const title = (h.innerText || '').trim().replace(/\\s+/g, ' ');
                         if (!title || title.length < 8 || seen.has(title)) return;
                         if (['Search Opportunities', 'Opportunities', 'Filter by'].includes(title)) return;
 
-                        // Walk up to find the enclosing card container
                         let card = h.closest('article, .jet-listing-grid__item, .elementor-post, .card, li, div[class*="item"], div[class*="card"]') || h.parentElement?.parentElement;
                         if (!card) return;
 
-                        // Find link either wrapping the card or inside the card
+                        // Skip any card hidden by the active filter tab
+                        const style = window.getComputedStyle(card);
+                        if (card.offsetParent === null || style.display === 'none' || style.visibility === 'hidden') {
+                            return;
+                        }
+
                         let anchor = h.closest('a') || card.querySelector('a[href]');
                         let href = anchor ? anchor.getAttribute('href') : '';
-
-                        // Grab image alt/src attributes in the card to identify consortium logos (SpEC, JDEC, S2MARTS, etc.)
                         const imgs = Array.from(card.querySelectorAll('img')).map(img => `${img.alt || ''} ${img.src || ''}`).join(' ');
                         const bodyText = (card.innerText || '').trim();
 
@@ -124,11 +130,16 @@ class NSTXLScraper:
                         continue
 
                     body_text = item.get("bodyText", "")
+                    lower_body = body_text.lower()
+
+                    # Safeguard: skip if card explicitly displays a non-current status badge
+                    if any(status in lower_body for status in self.NON_CURRENT_STATUSES):
+                        continue
+
                     img_hints = item.get("imgHints", "")
                     href = item.get("href", "") or self.OPPORTUNITIES_URL
                     full_url = urljoin(self.OPPORTUNITIES_URL, href)
 
-                    # Extract deadline if shown on card
                     deadline_match = re.search(
                         r'(?:Due|Deadline|Closes|Closing|Submission Date)[:\s]*([A-Za-z0-9,/\-\s:]+?)(?:\n|$|\|)',
                         body_text,

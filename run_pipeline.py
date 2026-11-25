@@ -5,6 +5,7 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
+from scrapers.nstxl_scraper import NSTXLScraper
 from scrapers.defense_scraper import DefenseGovScraper
 from scrapers.sam_scraper import PreAwardScraper
 from scrapers.dsip_sbir_scraper import DSIPSbirScraper
@@ -35,6 +36,14 @@ def main():
     spec_otas = pre_award_data.get("spec_and_otas", []) or []
     logging.info(f"Captured {len(solicitations)} SAM.gov RFPs and {len(spec_otas)} SpEC/OTA notices.")
 
+    # Fetch all open NSTXL opportunities (SpEC, S2MARTS, TReX) and merge into SpEC & OTAs
+     nstxl_items = NSTXLScraper().fetch_open_opportunities()
+     existing_titles = {item.get("title", "").lower().strip() for item in spec_and_otas}
+
+     for item in nstxl_items:
+         if item["title"].lower().strip() not in existing_titles:
+             spec_and_otas.append(item)
+    
     # 3. SpaceWERX, TacFI, StratFI, SBIR/STTR (DSIP)
     dsip_scraper = DSIPSbirScraper()
     sbir_spacewerx = dsip_scraper.get_all_sbir_and_spacewerx() or []

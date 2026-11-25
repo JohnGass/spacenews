@@ -37,12 +37,12 @@ def main():
     logging.info(f"Captured {len(solicitations)} SAM.gov RFPs and {len(spec_otas)} SpEC/OTA notices.")
 
     # Fetch all open NSTXL opportunities (SpEC, S2MARTS, TReX) and merge into SpEC & OTAs
-     nstxl_items = NSTXLScraper().fetch_open_opportunities()
-     existing_titles = {item.get("title", "").lower().strip() for item in spec_and_otas}
+    nstxl_items = NSTXLScraper().fetch_open_opportunities()
+    existing_titles = {item.get("title", "").lower().strip() for item in spec_and_otas}
 
-     for item in nstxl_items:
-         if item["title"].lower().strip() not in existing_titles:
-             spec_and_otas.append(item)
+    for item in nstxl_items:
+        if item["title"].lower().strip() not in existing_titles:
+            spec_and_otas.append(item)
     
     # 3. SpaceWERX, TacFI, StratFI, SBIR/STTR (DSIP)
     dsip_scraper = DSIPSbirScraper()
